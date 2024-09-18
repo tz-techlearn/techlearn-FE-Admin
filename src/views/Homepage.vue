@@ -1,14 +1,9 @@
 <template>
-    <div>
-        <RouterView></RouterView>
-    </div>
+  <div>
+    <RouterView></RouterView>
+  </div>
 </template>
 
-<script setup>
-import student from './student/student.vue';
+<script setup></script>
 
-</script>
-
-<style>
-
-</style>
+<style></style>
