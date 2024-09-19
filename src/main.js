@@ -20,12 +20,13 @@ import Multiselect from 'vue-multiselect';
 
 const app = createApp(App);
 library.add(fas);
-app.component('fa', FontAwesomeIcon)
+app.component('fa', FontAwesomeIcon);
 app.use(store);
 app.use(router);
 app.use(Toast);
 app.use(BootstrapVue3);
 app.component('ToastContainer', ToastContainer);
+app.component('Multiselect', Multiselect);
 app.mount('#app');
 app.component('Multiselect', Multiselect);
 
