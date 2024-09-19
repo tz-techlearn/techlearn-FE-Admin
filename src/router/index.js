@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
 import Table from '@/components/Tables/Table.vue'
+import CourseUpdateForm from '@/components/CourseUpdateForm.vue'
 
 const routes = [
   {
@@ -12,7 +13,17 @@ const routes = [
     path: "/:catchAll(.*)",
     name: 'NotFound',
     component: NotFound
-  }
+  },
+  {
+    path: '/CourseUpdateForm',
+    name: 'CourseUpdateForm',
+    component: CourseUpdateForm
+  },
+  {
+    path: "/:catchAll(.*)",
+    name: 'NotFound',
+    component: NotFound
+  },
 ]
 
 const router = createRouter({

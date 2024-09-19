@@ -5,6 +5,7 @@
     <div class="content">
       <RouterView />
     </div>
+   
   </div>
 </template>
 
@@ -12,6 +13,7 @@
 import Navbar from "./components/Navbar/Navbar.vue";
 import { RouterView } from "vue-router";
 import Header from "./components/Header/Header.vue";
+
 </script>
 
 <style>

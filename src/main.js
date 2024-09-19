@@ -14,6 +14,8 @@ import 'bootstrap';
 import BootstrapVue3 from 'bootstrap-vue-3';
 import 'bootstrap/dist/css/bootstrap.css';
 import 'bootstrap-vue-3/dist/bootstrap-vue-3.css';
+import 'vue-multiselect/dist/vue-multiselect.min.css';
+import Multiselect from 'vue-multiselect';
 
 
 const app = createApp(App);
@@ -25,4 +27,5 @@ app.use(Toast);
 app.use(BootstrapVue3);
 app.component('ToastContainer', ToastContainer);
 app.mount('#app');
+app.component('Multiselect', Multiselect);
 
