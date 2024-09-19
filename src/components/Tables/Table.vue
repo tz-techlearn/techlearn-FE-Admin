@@ -19,7 +19,7 @@
           <td>{{ course.unit }}</td>
           <td class="text-center">
             <a
-              href="#"
+              href="#" 
               class="btn btn-primary btn-sm btn-action"
               @click.prevent="viewCourse(course)"
               >Xem</a
@@ -29,7 +29,7 @@
               class="btn btn-warning btn-sm btn-action"
               @click.prevent="editCourse(course)"
               >Sửa</a
-            >
+              >
             <a
               href="#"
               class="btn btn-danger btn-sm btn-action"
