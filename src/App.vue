@@ -1,5 +1,6 @@
 <template>
   <div class="home-page">
+    <Header class="header"></Header>
     <Navbar class="navbar"></Navbar>
     <div class="content">
       <RouterView />
@@ -10,6 +11,7 @@
 <script setup>
 import Navbar from "./components/Navbar/Navbar.vue";
 import { RouterView } from "vue-router";
+import Header from "./components/Header/Header.vue";
 </script>
 
 <style>
@@ -29,6 +31,7 @@ body {
 .home-page {
   display: grid;
   grid-template-areas:
+    "header header"
     "navbar content"
     "navbar content";
   grid-template-columns: 280px 1fr;
@@ -38,6 +41,9 @@ body {
 
 .navbar {
   grid-area: navbar;
+}
+.header {
+  grid-area: header;
 }
 
 .content {
