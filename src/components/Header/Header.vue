@@ -1,5 +1,5 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar-expand-lg navbar">
     <div class="container-fluid">
       <!-- Logo -->
       <a class="navbar-brand" href="#">MyWebsite</a>
@@ -37,7 +37,7 @@
 
 <style scoped>
 .navbar {
-  background-color: #8aaac8;
+  background-color: #a0b2c4;
 }
 
 .navbar-nav .nav-link {

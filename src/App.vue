@@ -48,6 +48,5 @@ body {
 
 .content {
   grid-area: content;
-  margin: 10px 20px;
 }
 </style>
