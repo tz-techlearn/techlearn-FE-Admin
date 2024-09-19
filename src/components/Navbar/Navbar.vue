@@ -3,12 +3,22 @@
     <!-- Modern Sidebar -->
     <div class="sidebar">
       <router-link to="/" class="brand">
-        <span>Logo</span>
+        <span>Tech Learn</span>
       </router-link>
       <ul class="nav flex-column">
         <li class="nav-item">
+          <router-link
+            to="/dashboard"
+            class="nav-link"
+            active-class="active"
+            exact
+          >
+            <i class="bi bi-house-door-fill"></i> Dashboard
+          </router-link>
+        </li>
+        <li class="nav-item">
           <router-link to="/" class="nav-link" active-class="active" exact>
-            <i class="bi bi-house-door-fill"></i> Home
+            <i class="bi bi-house-door-fill"></i> Trang chủ
           </router-link>
         </li>
         <li class="nav-item">
@@ -18,59 +28,10 @@
             active-class="active"
             exact
           >
-            <i class="bi bi-house-door-fill"></i> Profile
+            <i class="bi bi-person-circle"></i> Đăng xuất
           </router-link>
         </li>
-        <!-- <li class="nav-item">
-          <router-link to="/dashboard" class="nav-link" active-class="active">
-            <i class="bi bi-speedometer2"></i> Dashboard
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/orders" class="nav-link" active-class="active">
-            <i class="bi bi-table"></i> Orders
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/settings" class="nav-link" active-class="active">
-            <i class="bi bi-gear-fill"></i> Settings
-          </router-link>
-        </li>
-        <li class="nav-item">
-          <router-link to="/profile" class="nav-link" active-class="active">
-            <i class="bi bi-person-circle"></i> Profile
-          </router-link>
-        </li> -->
       </ul>
-
-      <!-- <div class="user-dropdown mt-auto">
-        <router-link to="/profile" class="user-info">
-          <img
-            src="https://via.placeholder.com/40"
-            alt="User"
-            class="user-img rounded-circle"
-          />
-          <strong>User</strong>
-        </router-link>
-        <ul class="dropdown-menu">
-          <li>
-            <router-link class="dropdown-item" to="/settings"
-              >Settings</router-link
-            >
-          </li>
-          <li>
-            <router-link class="dropdown-item" to="/profile"
-              >Profile</router-link
-            >
-          </li>
-          <li><hr class="dropdown-divider" /></li>
-          <li>
-            <router-link class="dropdown-item" to="/logout"
-              >Sign out</router-link
-            >
-          </li>
-        </ul>
-      </div> -->
     </div>
   </div>
 </template>
@@ -80,53 +41,71 @@
 <style scoped>
 /* Sidebar styling */
 .sidebar {
-  position: fixed; /* Fix position to the left side of the viewport */
+  position: fixed;
   top: 0;
   left: 0;
   width: 280px;
-  height: 100vh; /* Full viewport height */
+  height: 100vh;
   padding: 20px;
-  background-color: #2c3e50; /* Modern dark blue */
-  color: #ecf0f1; /* Light text */
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
-  overflow-y: auto; /* Enable scrolling for sidebar content if needed */
+  background: linear-gradient(
+    145deg,
+    #2c3e50,
+    #1a252f
+  ); /* Gradient for modern effect */
+  color: #ecf0f1;
+  box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2); /* Softer shadow */
+  overflow-y: auto;
+  transition: all 0.3s ease;
 }
 
 .brand {
   display: flex;
   align-items: center;
   margin-bottom: 30px;
-  font-size: 1.5rem;
+  font-size: 1.8rem; /* Slightly larger logo text */
   color: #ecf0f1;
   text-decoration: none;
+  font-weight: bold; /* Bold for logo */
+  transition: color 0.3s ease;
 }
 
 .brand:hover {
-  color: #3498db; /* Light blue */
+  color: #3498db; /* Hover effect on logo */
 }
 
 .nav-link {
   display: flex;
   align-items: center;
-  padding: 12px 10px;
+  padding: 12px 15px;
   color: #ecf0f1;
   text-decoration: none;
   transition: background 0.3s ease, color 0.3s ease;
   border-radius: 8px;
   margin-bottom: 10px;
+  font-weight: 500; /* More readable font */
 }
 
 .nav-link i {
-  margin-right: 8px;
+  margin-right: 12px; /* Increase space between icon and text */
+  font-size: 1.2rem; /* Larger icon */
+  transition: transform 0.3s ease, color 0.3s ease; /* Smooth transition for hover effect */
+}
+
+.nav-link:hover i {
+  transform: scale(1.1); /* Slight zoom effect on icon hover */
+  color: #ecf0f1; /* Keep icon color on hover */
 }
 
 .nav-link:hover {
-  background-color: #3498db; /* Light blue on hover */
+  background-color: #3498db;
+  color: white;
+  box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.15); /* Shadow for hover */
 }
 
 .nav-link.active {
-  background-color: #2980b9; /* Dark blue for active link */
+  background-color: #2980b9;
+  color: white;
+  border-left: 4px solid #3498db; /* Highlight active link with left border */
 }
 
 .user-dropdown {
