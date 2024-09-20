@@ -33,7 +33,7 @@
                     <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
                 </p>
                 <p>
-                    <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack }}
+                    <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.join(', ') || 'N/A' }}
                 </p>
             </div>
 
