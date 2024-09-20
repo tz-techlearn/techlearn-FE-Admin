@@ -15,9 +15,7 @@
     <div class="container text-center">
         <div class="row">
             <div class="col-md-5">
-                <img class="img-fluid"
-                    src="https://www.sqcacademy.com/_next/image?url=https%3A%2F%2Fappmaster.io%2Fapi%2F_files%2FhRaLG2N4DVjRZJQzCpN2zJ%2Fdownload%2F&w=1080&q=75"
-                    alt="">
+                <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="">
             </div>
             <div class="col-md-7 text-start">
                 <p>
