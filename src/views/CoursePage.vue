@@ -3,8 +3,14 @@
   <p class="mt-4" style="margin-left: 30px; font-weight: 600; font-size: 24px">
     Khóa học
   </p>
-  <Table :header="header" :data="data.courses" :keys="keys"></Table>
+  <Table
+    :header="header"
+    :data="data.courses"
+    :keys="keys"
+    @deleteItem="deleteCourse"
+  ></Table>
 </template>
+
 <script setup>
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
@@ -28,16 +34,28 @@ const header = [
 ];
 const keys = ["name", "price", "currencyUnit", "point"];
 
+// Fetch courses từ API
 const fetchCourses = async () => {
   try {
     const response = await axios.get(`${rootAPI}/courses`);
     data.courses = response.data.data.items;
-    console.log(courses);
-  } catch (error) {}
+  } catch (error) {
+    console.error("Error fetching courses", error);
+  }
 };
 
-onMounted(async () => {
-  await fetchCourses();
-});
+// Hàm xử lý xóa khóa học
+const deleteCourse = async (course) => {
+  try {
+    await axios.delete(`${rootAPI}/courses/${course.id}`);
+    // Cập nhật lại danh sách sau khi xóa
+    data.courses = data.courses.filter((item) => item.id !== course.id);
+  } catch (error) {
+    console.error("Error deleting the course", error);
+  }
+};
+
+onMounted(fetchCourses);
 </script>
+
 <style scoped></style>

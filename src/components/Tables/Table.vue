@@ -28,34 +28,55 @@
             <a href="#" class="btn btn-warning btn-sm btn-action">
               <i class="fas fa-edit"></i>
             </a>
-            <a href="#" class="btn btn-danger btn-sm btn-action">
+            <a
+              href="#"
+              class="btn btn-danger btn-sm btn-action"
+              @click="confirmDelete(item)"
+            >
               <i class="fas fa-trash"></i>
             </a>
           </td>
         </tr>
       </tbody>
     </table>
+
+    <!-- Modal -->
+    <b-modal
+      v-model="isModalVisible"
+      title="Xác nhận xóa"
+      ok-title="Xóa"
+      cancel-title="Đóng"
+      @ok="handleDelete"
+    >
+      <p>Bạn có chắc chắn xóa khóa học không?</p>
+    </b-modal>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
-
 const props = defineProps({
-  header: {
-    type: Array,
-    required: true,
-  },
-  data: {
-    type: Array,
-    required: true,
-  },
-  keys: {
-    type: Array,
-    required: true,
-  },
+  header: { type: Array, required: true },
+  data: { type: Array, required: true },
+  keys: { type: Array, required: true },
 });
+const emit = defineEmits(["deleteItem"]);
+
+const isModalVisible = ref(false);
+const itemToDelete = ref(null);
+
+// Xác nhận xóa và gọi hàm xóa
+const confirmDelete = (item) => {
+  itemToDelete.value = item;
+  isModalVisible.value = true;
+};
+
+// Gọi hàm xóa được truyền từ CoursePage
+const handleDelete = () => {
+  emit("deleteItem", itemToDelete.value);
+  isModalVisible.value = false;
+};
 </script>
 
 <style scoped>
@@ -66,16 +87,13 @@ const props = defineProps({
 .table {
   width: 95%;
 }
-
 .table-hover tbody tr:hover {
   background-color: #f1f1f1;
 }
-
 th,
 td {
   vertical-align: middle;
 }
-
 .container-fluid {
   padding-left: 10px;
   padding-right: 10px;

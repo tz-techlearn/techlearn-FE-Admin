@@ -39,7 +39,7 @@
 }
 .infor-container {
   background-color: white;
-  border: 1px solid rgb(156, 148, 148);
+  border: 2px solid rgb(156, 148, 148);
   border-radius: 10px;
   width: 300px;
   padding: 10px;
