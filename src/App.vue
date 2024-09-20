@@ -2,7 +2,7 @@
   <div class="home-page">
     <Header class="header"></Header>
     <Navbar class="navbar"></Navbar>
-    <div class="content">
+    <div class="content ms-4 mr-4">
       <RouterView />
     </div>
   </div>
@@ -42,6 +42,7 @@ body {
 .navbar {
   grid-area: navbar;
 }
+
 .header {
   grid-area: header;
 }
