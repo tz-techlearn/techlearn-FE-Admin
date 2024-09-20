@@ -1,16 +1,23 @@
 <template>
-  <div class="container-fluid my-5">
-    <table class="table table-hover table-striped w-100">
+  <div
+    class="container-fluid my-5"
+    style="margin-left: 20px; margin-right: 20px"
+  >
+    <table class="table table-hover table-striped">
       <thead class="thead-lb">
         <tr>
-          <th v-for="(header, index) in props.header" :key="index">
+          <th
+            v-for="(header, index) in props.header"
+            :key="index"
+            :class="{ 'text-center': header === 'STT' }"
+          >
             {{ header }}
           </th>
         </tr>
       </thead>
       <tbody>
         <tr v-for="(item, index) in props.data" :key="index">
-          <th scope="row">{{ index + 1 }}</th>
+          <th scope="row" class="text-center">{{ index + 1 }}</th>
           <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
             {{ item[key] || "N/A" }}
           </td>
@@ -57,7 +64,7 @@ const props = defineProps({
   gap: 8px;
 }
 .table {
-  width: 100%; /* Đặt chiều rộng bảng 100% để mở rộng toàn màn hình */
+  width: 95%;
 }
 
 .table-hover tbody tr:hover {
