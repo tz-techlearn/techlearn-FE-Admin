@@ -1,12 +1,12 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
-import Table from '@/components/Tables/Table.vue'
+import CoursePage from '@/views/CoursePage.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Table',
-    component: Table
+    name: 'CoursePage',
+    component: CoursePage
   },
   {
     path: "/:catchAll(.*)",
