@@ -55,11 +55,20 @@
   </template>
   
   <script>
+import axios from 'axios';
+import Multiselect from "vue-multiselect";
+import { onMounted } from 'vue';
+
 
   export default {
+    components: {
+    Multiselect,
+  },
+  props: ['id'],
     data() {
       return {
-        course: {
+          course: {
+          id: null,
           name: '',
           description: '',
           price: 0,
@@ -73,13 +82,37 @@
       };
     },
     methods: {
-      updateCourse() {
+    async updateCourse() {
+      try {
+        const rootAPI = process.env.VUE_APP_ROOT_API;
+        await axios.put(`${rootAPI}/api/v1/courses/${this.course.id}`, this.course);
         console.log('Course updated:', this.course);
-      },
-      goBack() {
-        console.log('Go back');
+        // Handle success (e.g., show a success message or redirect)
+      } catch (error) {
+        console.error('Error updating course:', error);
+        // Handle error (e.g., show an error message)
+      }
+    },
+    goBack() {
+      this.$router.go(-1);
+    },
+    addTag(newTag) {
+      this.techOptions.push(newTag);
+    }
+  },
+  async mounted() {
+    // Fetch the course data if you are editing an existing course
+    const courseId = this.$route.params.id;
+    if (courseId) {
+      const rootAPI = process.env.VUE_APP_ROOT_API;
+      try {
+        const response = await axios.get(`${rootAPI}/api/v1/courses/${courseId}`);
+        this.course = response.data;
+      } catch (error) {
+        console.error('Error fetching course:', error);
       }
     }
+  }
   };
   </script>
   

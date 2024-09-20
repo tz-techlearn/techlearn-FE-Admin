@@ -15,9 +15,10 @@ const routes = [
     component: NotFound
   },
   {
-    path: '/CourseUpdateForm',
+    path: '/courses-update/:id/',
     name: 'CourseUpdateForm',
-    component: CourseUpdateForm
+    component: CourseUpdateForm,
+    props: true
   }
 ]
 

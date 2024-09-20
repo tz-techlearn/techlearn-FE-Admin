@@ -27,9 +27,8 @@
             <a
               href="#"
               class="btn btn-warning btn-sm btn-action"
-              @click.prevent="editCourse(course)"
-              >Sửa</a
-              >
+              @click.prevent="editCourse(course.id)" 
+            >Sửa</a>
             <a
               href="#"
               class="btn btn-danger btn-sm btn-action"
@@ -45,20 +44,23 @@
 
 <script setup>
 import { ref } from "vue";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const courses = ref([
-  { name: "Khóa học lập trình JavaScript", price: "1499000", unit: "VND" },
-  { name: "Khóa học phát triển web", price: "1499000", unit: "VND" },
-  { name: "Khóa học lập trình JavaScript", price: "1499000", unit: "VND" },
-  { name: "Khóa học phát triển web", price: "1499000", unit: "VND" },
+  { id: 1, name: "Khóa học lập trình JavaScript", price: "1499000", unit: "VND" },
+  { id: 2, name: "Khóa học phát triển web", price: "1499000", unit: "VND" },
+  { id: 3, name: "Khóa học lập trình JavaScript", price: "1499000", unit: "VND" },
+  { id: 4, name: "Khóa học phát triển web", price: "1499000", unit: "VND" },
 ]);
 
 const viewCourse = (course) => {
   console.log("Viewing course:", course);
 };
 
-const editCourse = (course) => {
-  console.log("Editing course:", course);
+const editCourse = (id) => {
+  router.push({ name: 'CourseUpdateForm', params: { id } }); // Điều hướng đến CourseUpdate
 };
 
 const deleteCourse = (course) => {
