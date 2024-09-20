@@ -12,6 +12,7 @@
 import Navbar from "./components/Navbar/Navbar.vue";
 import { RouterView } from "vue-router";
 import Header from "./components/Header/Header.vue";
+
 </script>
 
 <style>
@@ -48,6 +49,5 @@ body {
 
 .content {
   grid-area: content;
-  margin: 10px 20px;
 }
 </style>

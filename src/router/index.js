@@ -1,13 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
-import Table from '@/components/Tables/Table.vue'
+import CoursePage from '@/views/CoursePage.vue'
 import CourseUpdateForm from '@/views/CourseUpdateForm.vue'
 
 const routes = [
   {
     path: '/',
-    name: 'Table',
-    component: Table
+    name: 'CoursePage',
+    component: CoursePage
   },
   {
     path: "/:catchAll(.*)",
@@ -26,6 +26,7 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
 
 export default router
 // onMounted(() => {
