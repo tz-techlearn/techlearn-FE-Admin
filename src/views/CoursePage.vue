@@ -7,6 +7,7 @@
     :header="header"
     :data="data.courses"
     :keys="keys"
+    :actions="actions"
     @deleteItem="deleteCourse"
   ></Table>
 </template>
@@ -15,8 +16,7 @@
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
-import { reactive } from "vue";
-import { onMounted } from "vue";
+import { reactive, onMounted } from "vue";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
@@ -24,15 +24,14 @@ const data = reactive({
   courses: [],
 });
 
-const header = [
-  "STT",
-  "Tên khóa học",
-  "Giá tiền",
-  "Đơn vị",
-  "Điểm",
-  "Hành động",
-];
-const keys = ["name", "price", "currencyUnit", "point"];
+const header = ["STT", "Tên khóa học", "Giá tiền", "Đơn vị", "Hành động"];
+const keys = ["name", "price", "currencyUnit"];
+
+const actions = {
+  view: (item) => `/chapters?idCourse=${item.id}`,
+  edit: (item) => `/courses/${item.id}`,
+  delete: (item) => `/courses/${item.id}`,
+};
 
 // Fetch courses từ API
 const fetchCourses = async () => {

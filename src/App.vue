@@ -1,8 +1,8 @@
 <template>
   <div :class="['home-page', { collapsed: isCollapsed }]">
     <Header class="header"></Header>
-    <Navbar class="navbar" @toggle="isCollapsed = $event"></Navbar>
-    <div class="content">
+    <Navbar class="navbar"></Navbar>
+    <div class="content ms-4 mr-4">
       <RouterView />
     </div>
   </div>
@@ -49,6 +49,7 @@ body {
 .navbar {
   grid-area: navbar;
 }
+
 .header {
   grid-area: header;
 }

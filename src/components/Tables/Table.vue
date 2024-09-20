@@ -21,20 +21,26 @@
           <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
             {{ item[key] || "N/A" }}
           </td>
-          <td class="action-buton">
-            <a href="#" class="btn btn-primary btn-sm btn-action">
+          <td class="action-button">
+            <router-link
+              :to="props.actions.view(item)"
+              class="btn btn-primary btn-sm btn-action"
+            >
               <i class="fas fa-eye"></i>
-            </a>
-            <a href="#" class="btn btn-warning btn-sm btn-action">
+            </router-link>
+            <router-link
+              :to="props.actions.edit(item)"
+              class="btn btn-warning btn-sm btn-action"
+            >
               <i class="fas fa-edit"></i>
-            </a>
-            <a
-              href="#"
+            </router-link>
+            <router-link
+              to=""
               class="btn btn-danger btn-sm btn-action"
               @click="confirmDelete(item)"
             >
               <i class="fas fa-trash"></i>
-            </a>
+            </router-link>
           </td>
         </tr>
       </tbody>
@@ -57,22 +63,34 @@
 import { ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
 const props = defineProps({
-  header: { type: Array, required: true },
-  data: { type: Array, required: true },
-  keys: { type: Array, required: true },
+  header: {
+    type: Array,
+    required: true,
+  },
+  data: {
+    type: Array,
+    required: true,
+  },
+  keys: {
+    type: Array,
+    required: true,
+  },
+  actions: {
+    type: Object,
+    required: true,
+  },
 });
+
 const emit = defineEmits(["deleteItem"]);
 
 const isModalVisible = ref(false);
 const itemToDelete = ref(null);
 
-// Xác nhận xóa và gọi hàm xóa
 const confirmDelete = (item) => {
   itemToDelete.value = item;
   isModalVisible.value = true;
 };
 
-// Gọi hàm xóa được truyền từ CoursePage
 const handleDelete = () => {
   emit("deleteItem", itemToDelete.value);
   isModalVisible.value = false;
@@ -80,10 +98,11 @@ const handleDelete = () => {
 </script>
 
 <style scoped>
-.action-buton {
+.action-button {
   display: flex;
   gap: 8px;
 }
+
 .table {
   width: 95%;
 }
