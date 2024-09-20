@@ -14,16 +14,16 @@
           <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
             {{ item[key] || "N/A" }}
           </td>
-          <td class="action-buton">
-            <a href="#" class="btn btn-primary btn-sm btn-action">
+          <td class="action-button">
+            <router-link :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
               <i class="fas fa-eye"></i>
-            </a>
-            <a href="#" class="btn btn-warning btn-sm btn-action" @click.prevent="editCourse(item.id)">
+            </router-link>
+            <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
               <i class="fas fa-edit"></i>
-            </a>
-            <a href="#" class="btn btn-danger btn-sm btn-action">
+            </router-link>
+            <router-link :to="props.actions.delete(item)" class="btn btn-danger btn-sm btn-action">
               <i class="fas fa-trash"></i>
-            </a>
+            </router-link>
           </td>
         </tr>
       </tbody>
@@ -51,6 +51,10 @@ const props = defineProps({
     type: Array,
     required: true,
   },
+  actions: {
+    type: Object,
+    required: true,
+  },
 });
 
 const editCourse = (id) => {
@@ -59,12 +63,13 @@ const editCourse = (id) => {
 </script>
 
 <style scoped>
-.action-buton {
+.action-button {
   display: flex;
   gap: 8px;
 }
+
 .table {
-  width: 100%; /* Đặt chiều rộng bảng 100% để mở rộng toàn màn hình */
+  width: 100%;
 }
 
 .table-hover tbody tr:hover {

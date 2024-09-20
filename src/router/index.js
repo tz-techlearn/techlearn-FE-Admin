@@ -1,6 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
 import CoursePage from '@/views/CoursePage.vue'
+import ChapterPage from '@/views/ChapterPage.vue'
 import CourseUpdateForm from '@/views/CourseUpdateForm.vue'
 
 const routes = [
@@ -8,6 +9,12 @@ const routes = [
     path: '/',
     name: 'CoursePage',
     component: CoursePage
+  },
+  {
+    path: '/chapters',
+    name: 'ChapterPage',
+    component: ChapterPage,
+    props: true
   },
   {
     path: "/:catchAll(.*)",

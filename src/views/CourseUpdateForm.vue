@@ -91,7 +91,7 @@ export default {
 
     const updateCourse = async () => {
       try {
-        await axios.put(`${rootAPI}/api/v1/courses/${course.id}`, course);
+        await axios.put(`${rootAPI}/courses/${course.id}`, course);
         // Handle success (e.g., show a success message or redirect)
       } catch (error) {
         console.error('Error updating course:', error);
@@ -109,7 +109,7 @@ export default {
 
     const fetchCourses = async (id) => {
       try {
-        const response = await axios.get(`${rootAPI}/api/v1/courses/${id}`);
+        const response = await axios.get(`${rootAPI}/courses/${id}`);
         Object.assign(course, response.data.data);
       } catch (error) {
         console.error('Error fetching course:', error);
