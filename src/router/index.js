@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
 import CoursePage from '@/views/CoursePage.vue'
 import ChapterPage from '@/views/ChapterPage.vue'
+import CourseUpdateForm from '@/views/CourseUpdateForm.vue'
 
 const routes = [
   {
@@ -19,6 +20,12 @@ const routes = [
     path: "/:catchAll(.*)",
     name: 'NotFound',
     component: NotFound
+  },
+  {
+    path: '/courses-update/:id/',
+    name: 'CourseUpdateForm',
+    component: CourseUpdateForm,
+    props: true
   }
 ]
 
@@ -26,6 +33,7 @@ const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
   routes
 })
+
 
 export default router
 // onMounted(() => {

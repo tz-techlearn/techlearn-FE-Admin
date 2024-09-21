@@ -62,6 +62,10 @@
 <script setup>
 import { ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
+
 const props = defineProps({
   header: {
     type: Array,

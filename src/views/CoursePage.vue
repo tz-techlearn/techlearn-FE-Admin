@@ -29,7 +29,7 @@ const keys = ["name", "price", "currencyUnit"];
 
 const actions = {
   view: (item) => `/chapters?idCourse=${item.id}`,
-  edit: (item) => `/courses/${item.id}`,
+  edit: (item) => `/courses-update/${item.id}`,
   delete: (item) => `/courses/${item.id}`,
 };
 
