@@ -103,48 +103,4 @@
   border-left: 4px solid #3498db;
   /* Highlight active link with left border */
 }
-
-.user-dropdown {
-  margin-top: auto;
-}
-
-.user-info {
-  display: flex;
-  align-items: center;
-  color: #ecf0f1;
-  text-decoration: none;
-  margin-bottom: 10px;
-}
-
-.user-info:hover {
-  color: #3498db;
-}
-
-.user-img {
-  margin-right: 10px;
-}
-
-.dropdown-menu {
-  background-color: #34495e;
-  color: #ecf0f1;
-  border: none;
-  padding: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  display: none;
-}
-
-.user-dropdown:hover .dropdown-menu {
-  display: block;
-}
-
-.dropdown-item {
-  color: #ecf0f1;
-  padding: 5px 10px;
-}
-
-.dropdown-item:hover {
-  background-color: #3498db;
-  border-radius: 5px;
-}
 </style>
