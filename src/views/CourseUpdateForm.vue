@@ -25,7 +25,7 @@
 
       <div class="mb-3">
         <label for="courseImageUrl" class="form-label">Đường dẫn ảnh khóa học</label>
-        <input type="url" class="form-control" id="courseImageUrl" v-model="course.imageUrl" />
+        <input type="url" class="form-control" id="courseImageUrl" v-model="course.thumbnailUrl" />
       </div>
       <div class="mb-3">
         <label for="coursetechStacks" class="form-label">Techstacks</label>
@@ -64,6 +64,8 @@ import axios from 'axios';
 import Multiselect from "vue-multiselect";
 import { onMounted, reactive } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
+import { toast } from 'vue3-toastify';
+import 'vue3-toastify/dist/index.css';
 
 export default {
   components: {
@@ -80,7 +82,7 @@ export default {
       description: '',
       price: 0,
       currencyUnit: 'VND',
-      thumbnailUrl: 'java_course_thumbnail.jpg',
+      thumbnailUrl: '',
       techStack: [],
       isActive: true,
       isPublic: true,
@@ -92,13 +94,16 @@ export default {
     const updateCourse = async () => {
       try {
         await axios.put(`${rootAPI}/courses/${course.id}`, course);
-        // Handle success (e.g., show a success message or redirect)
+        toast.success("Cập nhật khóa học thành công!", {
+          autoClose: 1000,
+        });
       } catch (error) {
+        toast.error("Cập nhật khóa học thất bại!", {
+          autoClose: 1000,
+        });
         console.error('Error updating course:', error);
-        // Handle error (e.g., show an error message)
       }
     };
-
     const goBack = () => {
       router.go(-1);
     };
