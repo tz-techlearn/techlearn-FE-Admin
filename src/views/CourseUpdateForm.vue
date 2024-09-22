@@ -1,7 +1,7 @@
 <template>
   <div class="container">
-    <h2 class="mb-4">Cập nhật khóa học</h2>
-    <form @submit.prevent="updateCourse">
+    <h2 class="mb-4">{{ isUpdate ? 'Cập nhật khóa học' : 'Tạo khóa học mới' }}</h2>
+    <form @submit.prevent="submitCourse">
       <div class="mb-3">
         <label for="courseName" class="form-label">Tên khóa học</label>
         <input type="text" class="form-control" id="courseName" v-model="course.name" />
@@ -20,17 +20,14 @@
           <option value="VND">VND</option>
           <option value="USD">USD</option>
         </select>
-
       </div>
-
       <div class="mb-3">
         <label for="courseImageUrl" class="form-label">Đường dẫn ảnh khóa học</label>
         <input type="url" class="form-control" id="courseImageUrl" v-model="course.thumbnailUrl" />
       </div>
       <div class="mb-3">
         <label for="coursetechStacks" class="form-label">Techstacks</label>
-        <Multiselect v-model="course.techStack" :options="techOptions" :multiple="true" :taggable="true"
-          @tag="addTag" />
+        <Multiselect v-model="course.techStack" :options="techOptions" :multiple="true" :taggable="true" @tag="addTag" />
       </div>
       <div class="d-flex justify-content-between mb-3">
         <div class="me-2 flex-grow-1">
@@ -48,21 +45,18 @@
           </select>
         </div>
       </div>
-
       <div class="d-flex justify-content-center">
-        <button type="submit" class="btn btn-primary mx-4">Cập nhật</button>
+        <button type="submit" class="btn btn-primary mx-4">{{ isUpdate ? 'Cập nhật' : 'Tạo mới' }}</button>
         <button type="button" class="btn btn-secondary mx-4" @click="goBack">Trở về</button>
       </div>
     </form>
   </div>
-
 </template>
 
 <script>
-
 import axios from 'axios';
 import Multiselect from "vue-multiselect";
-import { onMounted, reactive } from 'vue';
+import { onMounted, reactive, ref } from 'vue';
 import { useRouter, useRoute } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
@@ -76,6 +70,7 @@ export default {
     const route = useRoute();
     const rootAPI = process.env.VUE_APP_ROOT_API;
 
+    const isUpdate = ref(false);
     const course = reactive({
       id: null,
       name: '',
@@ -91,19 +86,28 @@ export default {
 
     const techOptions = ['Spring Boot', 'Vuejs', 'Reactjs', 'Angular', 'Node.js', 'Django'];
 
-    const updateCourse = async () => {
+    const submitCourse = async () => {
       try {
-        await axios.put(`${rootAPI}/courses/${course.id}`, course);
-        toast.success("Cập nhật khóa học thành công!", {
-          autoClose: 1000,
-        });
+        if (isUpdate.value) {
+          await axios.put(`${rootAPI}/courses/${course.id}`, course);
+          toast.success("Cập nhật khóa học thành công!", {
+            autoClose: 1000,
+          });
+        } else {
+          await axios.post(`${rootAPI}/courses`, course);
+          toast.success("Tạo khóa học mới thành công!", {
+            autoClose: 1000,
+          });
+        }
+        router.push('/courses'); // Redirect to the courses list page
       } catch (error) {
-        toast.error("Cập nhật khóa học thất bại!", {
+        toast.error(isUpdate.value ? "Cập nhật khóa học thất bại!" : "Tạo khóa học mới thất bại!", {
           autoClose: 1000,
         });
-        console.error('Error updating course:', error);
+        console.error('Error submitting course:', error);
       }
     };
+
     const goBack = () => {
       router.go(-1);
     };
@@ -112,7 +116,7 @@ export default {
       techOptions.push(newTag);
     };
 
-    const fetchCourses = async (id) => {
+    const fetchCourse = async (id) => {
       try {
         const response = await axios.get(`${rootAPI}/courses/${id}`);
         Object.assign(course, response.data.data);
@@ -121,22 +125,23 @@ export default {
       }
     };
 
-
     onMounted(async () => {
       const { id } = route.params;
       if (id) {
+        isUpdate.value = true;
         course.id = id;
-        await fetchCourses(id);
+        await fetchCourse(id);
       }
     });
+
     return {
       course,
       techOptions,
-      updateCourse,
+      isUpdate,
+      submitCourse,
       goBack,
       addTag,
     };
-
   }
 };
 </script>

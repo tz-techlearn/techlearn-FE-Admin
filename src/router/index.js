@@ -26,6 +26,12 @@ const routes = [
     name: 'CourseUpdateForm',
     component: CourseUpdateForm,
     props: true
+  },
+  {
+    path: '/courses-create',
+    name: 'CourseCreateForm',
+    component: CourseUpdateForm,
+    props: true
   }
 ]
 
