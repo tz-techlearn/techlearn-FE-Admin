@@ -7,7 +7,8 @@
             </div>
         </router-link>
         <div>
-            <button type="button" class="btn btn-primary mr-3">Thêm chương</button>
+            <router-link :to="{ path: '/add-chapter', query: { idCourse: idCourse } }" type="button"
+                class="btn btn-primary mr-3">Thêm chương</router-link>
             <button type="button" class="btn btn-primary">Sắp xếp chương</button>
         </div>
     </div>
@@ -34,12 +35,13 @@
                     <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.join(', ') || 'N/A' }}
                 </p>
             </div>
-
         </div>
     </div>
     <hr class="border border-grey border-1 opacity-50">
     <h5 class="mt-4" style="margin-left: 10px">Danh sách chương</h5>
-    <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions"></Table>
+    <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :isDraggable="true"
+        @updateOrder="updateChapterOrder" />
+
 </template>
 
 <script setup>
@@ -47,7 +49,8 @@ import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
 import { reactive } from "vue";
 import { onMounted } from "vue";
-import { useRoute } from 'vue-router'
+import { useRoute } from 'vue-router';
+import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 const route = useRoute();
@@ -65,8 +68,11 @@ const header = ["STT", "Tên chương", "Hành động"];
 const keys = ["name"];
 
 const actions = {
-    view: (item) => `/leeson?idChapter=${item.id}`,
-    edit: (item) => `/courses/${item.id}`,
+    view: (item) => `/lesson?idChapter=${item.id}`,
+    edit: (item) => ({
+        path: `/edit-chapter/${item.id}`,
+        query: { idCourse: idCourse }
+    }),
     delete: (item) => `/courses/${item.id}`,
 };
 
@@ -88,11 +94,32 @@ const fetchCourse = async () => {
     }
 }
 
+// update orderChapter
+async function updateChapterOrder(updatedData) {
+    const orderData = updatedData.map((item, index) => ({
+        id: item.id,
+        order: (index + 1)
+    }));
+
+    try {
+        await axios.patch(`${rootAPI}/chapters/update-order`, orderData);
+        toast.success("Cập nhật thứ tự thành công", {
+            position: "top-right",
+            autoClose: 3000,
+        });
+    } catch (error) {
+        toast.error("Lỗi cập nhật thứ tự chương", {
+            position: "top-right",
+            autoClose: 3000,
+        });
+        console.error("Lỗi cập nhật thứ tự chương:", error);
+    }
+}
+
 onMounted(async () => {
     await fetchChapter();
     await fetchCourse();
 });
-
 </script>
 
 <style scoped>

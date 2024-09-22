@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
 import CoursePage from '@/views/CoursePage.vue'
 import ChapterPage from '@/views/ChapterPage.vue'
+import EditChapterPage from '@/views/Chapter/EditChapterPage.vue'
+import AddChapterPage from '@/views/Chapter/AddChapterPage.vue'
 
 const routes = [
   {
@@ -19,6 +21,16 @@ const routes = [
     path: "/:catchAll(.*)",
     name: 'NotFound',
     component: NotFound
+  },
+  {
+    path: '/edit-chapter/:id',
+    name: 'EditChapterPage',
+    component: EditChapterPage,
+  },
+  {
+    path: '/add-chapter',
+    name: 'AddChapterPage',
+    component: AddChapterPage,
   }
 ]
 

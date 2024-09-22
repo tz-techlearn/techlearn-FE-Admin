@@ -8,32 +8,59 @@
           </th>
         </tr>
       </thead>
-      <tbody>
-        <tr v-for="(item, index) in props.data" :key="index">
-          <th scope="row">{{ index + 1 }}</th>
-          <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
-            {{ item[key] || "N/A" }}
-          </td>
-          <td class="action-button">
-            <router-link :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
-              <i class="fas fa-eye"></i>
-            </router-link>
-            <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
-              <i class="fas fa-edit"></i>
-            </router-link>
-            <router-link :to="props.actions.delete(item)" class="btn btn-danger btn-sm btn-action">
-              <i class="fas fa-trash"></i>
-            </router-link>
-          </td>
-        </tr>
-      </tbody>
+
+      <draggable tag="tbody" v-if="isDraggable" :list="props.data" :disabled="!enabled" ghost-class="ghost"
+        :move="checkMove" @start="dragging = true"
+        @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
+        <template #item="{ element, index }">
+          <tr :key="element.id" class="w-100">
+            <th scope="row">{{ index + 1 }}</th>
+            <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
+              {{ element[key] || "N/A" }}
+            </td>
+            <td class="action-button">
+              <router-link :to="props.actions.view(element)" class="btn btn-primary btn-sm btn-action">
+                <i class="fas fa-eye"></i>
+              </router-link>
+              <router-link :to="props.actions.edit(element)" class="btn btn-warning btn-sm btn-action">
+                <i class="fas fa-edit"></i>
+              </router-link>
+              <router-link :to="props.actions.delete(element)" class="btn btn-danger btn-sm btn-action">
+                <i class="fas fa-trash"></i>
+              </router-link>
+            </td>
+          </tr>
+        </template>
+      </draggable>
+      <template v-else>
+        <tbody>
+          <tr v-for="(item, index) in props.data" :key="item.id">
+            <th scope="row">{{ index + 1 }}</th>
+            <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
+              {{ item[key] || "N/A" }}
+            </td>
+            <td class="action-button">
+              <router-link :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
+                <i class="fas fa-eye"></i>
+              </router-link>
+              <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
+                <i class="fas fa-edit"></i>
+              </router-link>
+              <router-link :to="props.actions.delete(item)" class="btn btn-danger btn-sm btn-action">
+                <i class="fas fa-trash"></i>
+              </router-link>
+            </td>
+          </tr>
+        </tbody>
+      </template>
     </table>
   </div>
 </template>
 
 <script setup>
-import { defineProps } from "vue";
+import { defineProps, ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
+import draggable from "vuedraggable";
 
 const props = defineProps({
   header: {
@@ -52,7 +79,19 @@ const props = defineProps({
     type: Object,
     required: true,
   },
+  isDraggable: {
+    type: Boolean,
+    default: false,
+  },
 });
+
+const emit = defineEmits(['updateOrder']);
+const enabled = true;
+const dragging = ref(false);
+
+function checkMove(evt) {
+  return true;
+}
 </script>
 
 <style scoped>
@@ -77,5 +116,9 @@ td {
 .container-fluid {
   padding-left: 10px;
   padding-right: 10px;
+}
+
+.ghost {
+  background-color: #f8f9fa;
 }
 </style>
