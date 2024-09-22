@@ -1,8 +1,20 @@
 <template>
   <DashBoard></DashBoard>
-  <p class="mt-4" style="margin-left: 30px; font-weight: 600; font-size: 24px">
-    Khóa học
-  </p>
+  <div class="d-flex justify-content-between align-items-center mt-2">
+    <p
+      class="mt-4"
+      style="margin-left: 30px; font-weight: 600; font-size: 24px"
+    >
+      Khóa học
+    </p>
+    <button
+      type="button"
+      class="btn btn-primary mr-5"
+      style="width: 140px; height: 50px"
+    >
+      Thêm chương
+    </button>
+  </div>
   <Table
     :header="header"
     :data="data.courses"
