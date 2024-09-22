@@ -3,6 +3,7 @@ import NotFound from '@/components/NotFound/NotFound.vue'
 import CoursePage from '@/views/CoursePage.vue'
 import ChapterPage from '@/views/ChapterPage.vue'
 import CourseUpdateForm from '@/views/CourseUpdateForm.vue'
+import LessonsPage from '@/views/LessonsPage.vue'
 
 const routes = [
   {
@@ -25,6 +26,12 @@ const routes = [
     path: '/courses-update/:id/',
     name: 'CourseUpdateForm',
     component: CourseUpdateForm,
+    props: true
+  },
+  {
+    path: '/lessons',
+    name: "LessonsPage",
+    component: LessonsPage,
     props: true
   }
 ]
