@@ -1,25 +1,18 @@
 <template>
   <div class="d-flex mt-3 justify-content-between align-items-center">
-    <router-link
-      :to="`/chapters?idCourse=${idCourse}`"
-      class="text-decoration-none"
-    >
+    <router-link :to="`/chapters?idCourse=${idCourse}`" class="text-decoration-none">
       <div class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-arrow-left text-dark"></i>
         <p class="mb-0 text-dark">Danh sách các chương</p>
       </div>
     </router-link>
     <div>
-      <button type="button" class="btn btn-primary mr-3">Thêm bài tập</button>
+      <router-link :to="{ path: '/add-lessons', query: { idChapter: idChapter } }" type="button"
+        class="btn btn-primary mr-3">Thêm bài tập</router-link>
       <button type="button" class="btn btn-primary">Sắp xếp bài tập</button>
     </div>
   </div>
-  <Table
-    :header="header"
-    :data="data.assignments"
-    :keys="keys"
-    :actions="actions"
-  ></Table>
+  <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions"></Table>
 </template>
 
 <script setup>
@@ -44,7 +37,7 @@ const header = ["STT", "Tên Bài tập", "Hành động"];
 const keys = ["title"];
 
 const actions = {
-  view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`, //tu custom lai
+  view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
   edit: (item) => `/courses/${item.id}`,
   delete: (item) => `/courses/${item.id}`,
 };

@@ -43,13 +43,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <h5 class="mt-4" style="margin-left: 10px">Danh sách chương</h5>
-  <Table
-    :header="header"
-    :data="data.chapter"
-    :keys="keys"
-    :actions="actions"
-    @delete-item="deleteChapter"
-  ></Table>
+  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" @delete-item="deleteChapter"></Table>
 </template>
 
 <script setup>

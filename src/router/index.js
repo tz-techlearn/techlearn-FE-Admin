@@ -1,9 +1,10 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import NotFound from '@/components/NotFound/NotFound.vue'
-import CoursePage from '@/views/CoursePage.vue'
-import ChapterPage from '@/views/ChapterPage.vue'
-import CourseUpdateForm from '@/views/CourseUpdateForm.vue'
-import LessonsPage from '@/views/LessonsPage.vue'
+import CoursePage from '@/views/course/CoursePage.vue'
+import ChapterPage from '@/views/chapter/ChapterPage.vue'
+import CourseUpdateForm from '@/views/course/CourseUpdateForm.vue'
+import LessonsPage from '@/views/lesson/LessonsPage.vue'
+import AddLessonPage from '@/views/lesson/AddLessonPage.vue'
 
 const routes = [
   {
@@ -32,6 +33,12 @@ const routes = [
     path: '/lessons',
     name: "LessonsPage",
     component: LessonsPage,
+    props: true
+  },
+  {
+    path: '/add-lessons',
+    name: "AddLessonPage",
+    component: AddLessonPage,
     props: true
   }
 ]
