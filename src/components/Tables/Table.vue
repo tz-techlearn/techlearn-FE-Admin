@@ -54,7 +54,7 @@
       cancel-title="Đóng"
       @ok="handleDelete"
     >
-      <p>Bạn có chắc chắn xóa khóa học không?</p>
+      <p>Bạn có chắc chắn muốn xóa không?</p>
     </b-modal>
   </div>
 </template>
@@ -62,7 +62,7 @@
 <script setup>
 import { ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
-import { useRouter } from 'vue-router';
+import { useRouter } from "vue-router";
 
 const router = useRouter();
 
