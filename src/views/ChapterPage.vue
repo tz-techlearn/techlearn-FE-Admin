@@ -50,14 +50,26 @@
     :actions="actions"
     @delete-item="deleteChapter"
   ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
+    <p>Bạn có chắc chắn muốn xóa chương không?</p>
+  </b-modal>
 </template>
 
 <script setup>
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
+import { ref } from "vue";
 import { reactive } from "vue";
 import { onMounted } from "vue";
 import { useRoute } from "vue-router";
+import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 const route = useRoute();
@@ -66,6 +78,9 @@ const idCourse = route.query.idCourse;
 const data = reactive({
   chapter: [],
 });
+
+const isModalVisible = ref(false);
+const itemToDelete = ref();
 
 const dataCourse = reactive({
   course: {},
@@ -100,13 +115,35 @@ const fetchCourse = async () => {
   }
 };
 
-const deleteChapter = async (chapter) => {
+// const deleteChapter = async (chapter) => {
+//   try {
+//     await axios.delete(`${rootAPI}/chapters/${chapter.id}`);
+//     data.chapter = data.chapter.filter((chap) => chap.id !== chapter.id);
+//     toast.success("Xóa chương thành công");
+//   } catch (error) {
+//     console.log(error);
+//     toast.error("Có lỗi xảy ra");
+//   }
+// };
+
+const handleDelete = async () => {
   try {
-    await axios.delete(`${rootAPI}/chapters/${chapter.id}`);
-    data.chapter = data.chapter.filter((chap) => chap.id !== chapter.id);
+    await axios.delete(`${rootAPI}/chapters/${itemToDelete.value.id}`);
+    data.chapter = data.chapter.filter(
+      (item) => item.id !== itemToDelete.value.id
+    );
+    isModalVisible.value = false;
+    toast.success("Xóa chương thành công");
   } catch (error) {
     console.log(error);
+    toast.error("Có lỗi xảy ra");
   }
+};
+
+// Hàm xử lý xóa khóa học
+const deleteChapter = (chapter) => {
+  isModalVisible.value = true;
+  itemToDelete.value = chapter;
 };
 
 onMounted(async () => {

@@ -22,15 +22,30 @@
     :actions="actions"
     @deleteItem="deleteCourse"
   ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
+    <p>Bạn có chắc chắn xóa khóa học không?</p>
+  </b-modal>
 </template>
 
 <script setup>
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
+import { ref } from "vue";
 import { reactive, onMounted } from "vue";
+import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
+
+const isModalVisible = ref(false);
+const itemToDelete = ref();
 
 const data = reactive({
   courses: [],
@@ -55,15 +70,26 @@ const fetchCourses = async () => {
   }
 };
 
-// Hàm xử lý xóa khóa học
-const deleteCourse = async (course) => {
+const handleDelete = async () => {
   try {
-    await axios.delete(`${rootAPI}/courses/${course.id}`);
-    // Cập nhật lại danh sách sau khi xóa
-    data.courses = data.courses.filter((item) => item.id !== course.id);
+    await axios.delete(`${rootAPI}/courses/${itemToDelete.value.id}`);
+    data.courses = data.courses.filter(
+      (item) => item.id !== itemToDelete.value.id
+    );
+    isModalVisible.value = false;
+    toast.success("Xóa khóa học thành công");
   } catch (error) {
-    console.error("Error deleting the course", error);
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
   }
+};
+
+// Hàm xử lý xóa khóa học
+const deleteCourse = (course) => {
+  isModalVisible.value = true;
+  // await axios.delete(`${rootAPI}/courses/${course.id}`);
+  // data.courses = data.courses.filter((item) => item.id !== course.id);
+  itemToDelete.value = course;
 };
 
 onMounted(fetchCourses);
