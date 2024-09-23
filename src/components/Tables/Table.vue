@@ -13,21 +13,13 @@
         :move="checkMove" @start="dragging = true"
         @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
         <template #item="{ element, index }">
-          <tr :key="element.id" class="w-100">
+          <tr :key="element.id" class="w-100 drag-item">
             <th scope="row">{{ index + 1 }}</th>
             <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
               {{ element[key] || "N/A" }}
             </td>
-            <td class="action-button">
-              <router-link :to="props.actions.view(element)" class="btn btn-primary btn-sm btn-action">
-                <i class="fas fa-eye"></i>
-              </router-link>
-              <router-link :to="props.actions.edit(element)" class="btn btn-warning btn-sm btn-action">
-                <i class="fas fa-edit"></i>
-              </router-link>
-              <router-link :to="props.actions.delete(element)" class="btn btn-danger btn-sm btn-action">
-                <i class="fas fa-trash"></i>
-              </router-link>
+            <td>
+              {{ element.isPublic ? "Công khai" : "Riêng tư" }}
             </td>
           </tr>
         </template>
@@ -120,5 +112,9 @@ td {
 
 .ghost {
   background-color: #f8f9fa;
+}
+
+.drag-item {
+  cursor: pointer;
 }
 </style>
