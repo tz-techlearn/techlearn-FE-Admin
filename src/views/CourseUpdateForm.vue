@@ -26,8 +26,15 @@
         <input type="url" class="form-control" id="courseImageUrl" v-model="course.thumbnailUrl" />
       </div>
       <div class="mb-3">
-        <label for="coursetechStacks" class="form-label">Techstacks</label>
-        <Multiselect v-model="course.techStack" :options="techOptions" :multiple="true" :taggable="true" @tag="addTag" />
+        <label for="courseTechStacks" class="form-label">Techstacks</label>
+        <Multiselect 
+        v-model="course.techStack" 
+        :options="techStack.data" 
+        label="name"  
+        :multiple="true" 
+        :taggable="true" 
+        @tag="addTag"  
+        @remove="removeTag"/>
       </div>
       <div class="d-flex justify-content-between mb-3">
         <div class="me-2 flex-grow-1">
@@ -84,22 +91,24 @@ export default {
       point: 100,
     });
 
-    const techOptions = ['Spring Boot', 'Vuejs', 'Reactjs', 'Angular', 'Node.js', 'Django'];
+    const techStack = reactive({
+      data: []
+    });
 
     const submitCourse = async () => {
       try {
+        const courseData = { ...course, techStack: course.techStack.map(tech => tech.id) };
         if (isUpdate.value) {
-          await axios.put(`${rootAPI}/courses/${course.id}`, course);
+          await axios.put(`${rootAPI}/courses/${course.id}`, courseData);
           toast.success("Cập nhật khóa học thành công!", {
             autoClose: 1000,
           });
         } else {
-          await axios.post(`${rootAPI}/courses`, course);
+          await axios.post(`${rootAPI}/courses`, courseData);
           toast.success("Tạo khóa học mới thành công!", {
             autoClose: 1000,
           });
         }
-        router.push('/courses'); // Redirect to the courses list page
       } catch (error) {
         toast.error(isUpdate.value ? "Cập nhật khóa học thất bại!" : "Tạo khóa học mới thất bại!", {
           autoClose: 1000,
@@ -113,7 +122,13 @@ export default {
     };
 
     const addTag = (newTag) => {
-      techOptions.push(newTag);
+      course.techStack.push({ name: newTag }); 
+    };
+
+    const removeTag = (tagToRemove) => {
+    const techStackSet = new Set(course.techStack.map(tag => tag.name));
+    techStackSet.delete(tagToRemove.name);
+    course.techStack = Array.from(techStackSet).map(name => ({ name }));
     };
 
     const fetchCourse = async (id) => {
@@ -124,6 +139,11 @@ export default {
         console.error('Error fetching course:', error);
       }
     };
+    
+    const fetchTechStack = async () => {
+        const response = await axios.get(`${rootAPI}/tech-stacks`);
+        techStack.data = response.data.data.items; 
+      };
 
     onMounted(async () => {
       const { id } = route.params;
@@ -132,15 +152,17 @@ export default {
         course.id = id;
         await fetchCourse(id);
       }
+      await fetchTechStack();
     });
 
     return {
       course,
-      techOptions,
+      techStack,
       isUpdate,
       submitCourse,
       goBack,
       addTag,
+      removeTag,
     };
   }
 };
