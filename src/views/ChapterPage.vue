@@ -41,8 +41,6 @@
       </div>
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50" />
-  <h5 class="mt-4" style="margin-left: 10px">Danh sách chương</h5>
   <Table
     :header="header"
     :data="data.chapter"
@@ -90,7 +88,7 @@ const header = ["STT", "Tên chương", "Hành động"];
 const keys = ["name"];
 
 const actions = {
-  view: (item) => `/leeson?idChapter=${item.id}`,
+  view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
   edit: (item) => `/courses/${item.id}`,
   delete: (item) => `/courses/${item.id}`,
 };

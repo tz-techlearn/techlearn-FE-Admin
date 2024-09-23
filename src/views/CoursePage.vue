@@ -60,7 +60,6 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
-// Fetch courses từ API
 const fetchCourses = async () => {
   try {
     const response = await axios.get(`${rootAPI}/courses`);
@@ -87,8 +86,6 @@ const handleDelete = async () => {
 // Hàm xử lý xóa khóa học
 const deleteCourse = (course) => {
   isModalVisible.value = true;
-  // await axios.delete(`${rootAPI}/courses/${course.id}`);
-  // data.courses = data.courses.filter((item) => item.id !== course.id);
   itemToDelete.value = course;
 };
 
