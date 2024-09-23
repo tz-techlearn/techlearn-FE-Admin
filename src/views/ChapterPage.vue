@@ -48,6 +48,7 @@
     :data="data.chapter"
     :keys="keys"
     :actions="actions"
+    @delete-item="deleteChapter"
   ></Table>
 </template>
 
@@ -96,6 +97,15 @@ const fetchCourse = async () => {
     dataCourse.course = response.data.data;
   } catch (error) {
     console.error(error);
+  }
+};
+
+const deleteChapter = async (chapter) => {
+  try {
+    await axios.delete(`${rootAPI}/chapters/${chapter.id}`);
+    data.chapter = data.chapter.filter((chter) => chapter.id !== chter.id);
+  } catch (error) {
+    console.log(error);
   }
 };
 
