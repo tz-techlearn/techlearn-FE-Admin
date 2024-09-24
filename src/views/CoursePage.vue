@@ -1,9 +1,6 @@
 <template>
   <DashBoard></DashBoard>
-  <p class="mt-4" style="margin-left: 30px; font-weight: 600; font-size: 24px">
-    Khóa học
-  </p>
-=======
+
   <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
     <p class="course-list-title">
       Danh sách khóa học
@@ -12,23 +9,7 @@
       Thêm mới
     </button>
   </div>
-  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
-  <div class="d-flex justify-content-between align-items-center mt-2">
-    <p
-      class="mt-4"
-      style="margin-left: 30px; font-weight: 600; font-size: 24px"
-    >
-      Khóa học
-    </p>
-    <button
-      type="button"
-      class="btn btn-primary mr-5"
-      style="width: 140px; height: 50px"
-    >
-      Thêm chương
-    </button>
-  </div>
->>>>>>> upstream/feature/298
+  
   <Table
     :header="header"
     :data="data.courses"
@@ -36,24 +17,13 @@
     :actions="actions"
     @deleteItem="deleteCourse"
   ></Table>
-<<<<<<< HEAD
-=======
-  <b-modal
-    v-model="isModalVisible"
-    title="Xác nhận xóa"
-    ok-title="Xóa"
-    cancel-title="Đóng"
-    ok-variant="danger"
-    @ok="handleDelete"
-  >
-    <p>Bạn có chắc chắn xóa khóa học không?</p>
-  </b-modal>
->>>>>>> upstream/feature/298
+
+
 </template>
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, handleError } from 'vue';
 import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
