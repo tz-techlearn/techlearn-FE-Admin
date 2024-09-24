@@ -1,8 +1,29 @@
 <template>
   <DashBoard></DashBoard>
-  <p class="mt-4" style="margin-left: 30px; font-weight: 600; font-size: 24px">
-    Khóa học
-  </p>
+  <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
+    <p class="course-list-title">
+      Danh sách khóa học
+    </p>
+    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
+      Thêm mới
+    </button>
+  </div>
+  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
+  <div class="d-flex justify-content-between align-items-center mt-2">
+    <p
+      class="mt-4"
+      style="margin-left: 30px; font-weight: 600; font-size: 24px"
+    >
+      Khóa học
+    </p>
+    <button
+      type="button"
+      class="btn btn-primary mr-5"
+      style="width: 140px; height: 50px"
+    >
+      Thêm chương
+    </button>
+  </div>
   <Table
     :header="header"
     :data="data.courses"
@@ -10,15 +31,34 @@
     :actions="actions"
     @deleteItem="deleteCourse"
   ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
+    <p>Bạn có chắc chắn xóa khóa học không?</p>
+  </b-modal>
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+import { reactive, onMounted } from 'vue';
+import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
-import { reactive, onMounted } from "vue";
+import { ref } from "vue";
+import { toast } from "vue3-toastify";
 
+
+const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
+
+const isModalVisible = ref(false);
+const itemToDelete = ref();
 
 const data = reactive({
   courses: [],
@@ -33,7 +73,6 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
-// Fetch courses từ API
 const fetchCourses = async () => {
   try {
     const response = await axios.get(`${rootAPI}/courses`);
@@ -43,18 +82,37 @@ const fetchCourses = async () => {
   }
 };
 
-// Hàm xử lý xóa khóa học
 const deleteCourse = async (course) => {
   try {
     await axios.delete(`${rootAPI}/courses/${course.id}`);
-    // Cập nhật lại danh sách sau khi xóa
     data.courses = data.courses.filter((item) => item.id !== course.id);
   } catch (error) {
-    console.error("Error deleting the course", error);
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
   }
+};
+
+const createCourse = () => {
+  router.push('/courses-create');
+
 };
 
 onMounted(fetchCourses);
 </script>
 
-<style scoped></style>
+<style scoped>
+.course-list-title {
+  margin-left: 20px !important;
+  font-weight: 600;
+  font-size: 24px;
+  margin: 0;
+}
+
+.create-course-btn {
+  height: 30px;
+  margin-right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
