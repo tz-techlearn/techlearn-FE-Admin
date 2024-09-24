@@ -1,42 +1,60 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import NotFound from '@/components/NotFound/NotFound.vue'
-import CoursePage from '@/views/course/CoursePage.vue'
-import ChapterPage from '@/views/chapter/ChapterPage.vue'
-import CourseUpdateForm from '@/views/course/CourseUpdateForm.vue'
-import LessonsPage from '@/views/lesson/LessonsPage.vue'
-import AddLessonPage from '@/views/lesson/AddLessonPage.vue'
+import NotFound from "@/components/NotFound/NotFound.vue";
+import CoursePage from "@/views/course/CoursePage.vue";
+import EditChapterPage from "@/views/chapter/EditChapterPage.vue";
+import AddChapterPage from "@/views/chapter/AddChapterPage.vue";
+import SortChapterPage from "@/views/chapter/SortChapterPage.vue";
+import CourseUpdateForm from "@/views/course/CourseUpdateForm.vue";
+import LessonsPage from "@/views/lesson/LessonsPage.vue";
+import ChapterPage from "@/views/chapter/ChapterPage.vue";
+import AddLessonPage from '@/views/lesson/AddLessonPage.vue';
 
 const routes = [
   {
-    path: '/',
-    name: 'CoursePage',
-    component: CoursePage
+    path: "/",
+    name: "CoursePage",
+    component: CoursePage,
   },
   {
-    path: '/chapters',
-    name: 'ChapterPage',
+    path: "/chapters",
+    name: "ChapterPage",
     component: ChapterPage,
-    props: true
+    props: true,
+  },
+  {
+    path: "/edit-chapter/:id",
+    name: "EditChapterPage",
+    component: EditChapterPage,
+  },
+  {
+    path: "/add-chapter",
+    name: "AddChapterPage",
+    component: AddChapterPage,
+  },
+  {
+    path: "/sort-chapter",
+    name: "SortChapterPage",
+    component: SortChapterPage,
   },
   {
     path: "/:catchAll(.*)",
-    name: 'NotFound',
-    component: NotFound
+    name: "NotFound",
+    component: NotFound,
   },
   {
-    path: '/courses-update/:id/',
-    name: 'CourseUpdateForm',
+    path: "/courses-update/:id/",
+    name: "CourseUpdateForm",
     component: CourseUpdateForm,
-    props: true
+    props: true,
   },
   {
-    path: '/courses-create',
-    name: 'CourseCreateForm',
+    path: "/courses-create",
+    name: "CourseCreateForm",
     component: CourseUpdateForm,
-    props: true
+    props: true,
   },
   {
-    path: '/lessons',
+    path: "/lessons",
     name: "LessonsPage",
     component: LessonsPage,
     props: true
@@ -51,14 +69,14 @@ const routes = [
     path: '/lessons-update/:id/',
     name: 'UpdateLessonPage',
     component: AddLessonPage,
-    props: (route) => ({ idChapter: route.query.idChapter })
+    props: true
   },
 ]
 
 const router = createRouter({
   history: createWebHistory(process.env.BASE_URL),
-  routes
-})
+  routes,
+});
 
 
 export default router

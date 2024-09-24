@@ -47,8 +47,8 @@
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label">Công khai</label>
           <select class="form-select" id="coursePublicity" v-model="course.isPublic">
-            <option value=true>Riêng tư</option>
-            <option value=false>Công khai</option>
+            <option value=false>Riêng tư</option>
+            <option value=true>Công khai</option>
           </select>
         </div>
       </div>

@@ -18,11 +18,12 @@
 <script setup>
 import { useRouter } from 'vue-router';
 import { reactive, onMounted } from 'vue';
+import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
-import Table from "@/components/Tables/Table.vue";
-import axios from "axios";
+import Table from "@/components/Tables/Table.vue";;
 import { ref } from "vue";
 import { toast } from "vue3-toastify";
+
 
 const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
