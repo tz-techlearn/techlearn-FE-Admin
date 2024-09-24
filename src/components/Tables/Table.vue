@@ -76,7 +76,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['deleteItem']);
+const emit = defineEmits(['updateOrder', 'deleteItem']);
 const enabled = true;
 const dragging = ref(false);
 
