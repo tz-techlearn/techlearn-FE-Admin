@@ -9,6 +9,38 @@
     </button>
   </div>
   <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
+  <div class="d-flex justify-content-between align-items-center mt-2">
+    <p
+      class="mt-4"
+      style="margin-left: 30px; font-weight: 600; font-size: 24px"
+    >
+      Khóa học
+    </p>
+    <button
+      type="button"
+      class="btn btn-primary mr-5"
+      style="width: 140px; height: 50px"
+    >
+      Thêm chương
+    </button>
+  </div>
+  <Table
+    :header="header"
+    :data="data.courses"
+    :keys="keys"
+    :actions="actions"
+    @deleteItem="deleteCourse"
+  ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
+    <p>Bạn có chắc chắn xóa khóa học không?</p>
+  </b-modal>
 </template>
 
 <script setup>
@@ -17,9 +49,16 @@ import { reactive, onMounted } from 'vue';
 import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
+import axios from "axios";
+import { ref } from "vue";
+import { toast } from "vue3-toastify";
+
 
 const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
+
+const isModalVisible = ref(false);
+const itemToDelete = ref();
 
 const data = reactive({
   courses: [],
@@ -48,12 +87,14 @@ const deleteCourse = async (course) => {
     await axios.delete(`${rootAPI}/courses/${course.id}`);
     data.courses = data.courses.filter((item) => item.id !== course.id);
   } catch (error) {
-    console.error("Error deleting the course", error);
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
   }
 };
 
 const createCourse = () => {
   router.push('/courses-create');
+
 };
 
 onMounted(fetchCourses);
