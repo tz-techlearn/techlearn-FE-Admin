@@ -1,5 +1,14 @@
 <template>
   <DashBoard></DashBoard>
+  <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
+    <p class="course-list-title">
+      Danh sách khóa học
+    </p>
+    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
+      Thêm mới
+    </button>
+  </div>
+  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
   <div class="d-flex justify-content-between align-items-center mt-2">
     <p
       class="mt-4"
@@ -35,13 +44,17 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router';
+import { reactive, onMounted } from 'vue';
+import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
 import { ref } from "vue";
-import { reactive, onMounted } from "vue";
 import { toast } from "vue3-toastify";
 
+
+const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
 const isModalVisible = ref(false);
@@ -69,27 +82,37 @@ const fetchCourses = async () => {
   }
 };
 
-const handleDelete = async () => {
+const deleteCourse = async (course) => {
   try {
-    await axios.delete(`${rootAPI}/courses/${itemToDelete.value.id}`);
-    data.courses = data.courses.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
-    isModalVisible.value = false;
-    toast.success("Xóa khóa học thành công");
+    await axios.delete(`${rootAPI}/courses/${course.id}`);
+    data.courses = data.courses.filter((item) => item.id !== course.id);
   } catch (error) {
     console.log(error);
     toast.error("Có lỗi xảy ra");
   }
 };
 
-// Hàm xử lý xóa khóa học
-const deleteCourse = (course) => {
-  isModalVisible.value = true;
-  itemToDelete.value = course;
+const createCourse = () => {
+  router.push('/courses-create');
+
 };
 
 onMounted(fetchCourses);
 </script>
 
-<style scoped></style>
+<style scoped>
+.course-list-title {
+  margin-left: 20px !important;
+  font-weight: 600;
+  font-size: 24px;
+  margin: 0;
+}
+
+.create-course-btn {
+  height: 30px;
+  margin-right: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+</style>
