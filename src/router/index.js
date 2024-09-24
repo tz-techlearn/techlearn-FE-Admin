@@ -46,7 +46,13 @@ const routes = [
     name: "AddLessonPage",
     component: AddLessonPage,
     props: true
-  }
+  },
+  {
+    path: '/lessons-update/:id/',
+    name: 'UpdateLessonPage',
+    component: AddLessonPage,
+    props: (route) => ({ idChapter: route.query.idChapter })
+  },
 ]
 
 const router = createRouter({
@@ -56,26 +62,3 @@ const router = createRouter({
 
 
 export default router
-// onMounted(() => {
-//   myModal.value = new bootstrap.Modal(document.getElementById("exampleModal"));
-//   fetchStudents();
-// });
-
-// const handleDelete = async (data) => {
-//   try {
-//     await axios.delete(`${rootApi}/api/v1/users/${data.id}`);
-//     list.value = list.value.filter((item) => item.id !== data.id);
-//     closeModal();
-//   } catch (error) {
-//     console.error('Error deleting student:', error);
-//   }
-// };
-
-// const openModal = (student) => {
-//   seletedObject.value = student;
-//   myModal.value.show();
-// };
-
-// const closeModal = () => {
-//   myModal.value.hide();
-// };

@@ -52,7 +52,7 @@
           </select>
         </div>
       </div>
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center mb-4">
         <button type="submit" class="btn btn-primary mx-4">{{ isUpdate ? 'Cập nhật' : 'Tạo mới' }}</button>
         <button type="button" class="btn btn-secondary mx-4" @click="goBack">Trở về</button>
       </div>

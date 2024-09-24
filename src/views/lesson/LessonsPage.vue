@@ -1,11 +1,17 @@
 <template>
   <div class="d-flex mt-3 justify-content-between align-items-center">
-    <router-link :to="`/chapters?idCourse=${idCourse}`" class="text-decoration-none">
+    <!-- <router-link :to="`/chapters?idCourse=${idCourse}`" class="text-decoration-none">
       <div class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-arrow-left text-dark"></i>
         <p class="mb-0 text-dark">Danh sách các chương</p>
       </div>
-    </router-link>
+    </router-link> -->
+    <div class="text-decoration-none" style="cursor: pointer;" @click="goBack">
+      <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-arrow-left text-dark"></i>
+        <p class="mb-0 text-dark">Danh sách các chương</p>
+      </div>
+    </div>
     <div>
       <router-link :to="{ path: '/add-lessons', query: { idChapter: idChapter } }" type="button"
         class="btn btn-primary mr-3">Thêm bài tập</router-link>
@@ -19,12 +25,13 @@
 import axios from "axios";
 import { reactive } from "vue";
 import { onMounted } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Table from "@/components/Tables/Table.vue";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
 const route = useRoute();
+const router = useRouter();
 
 const idChapter = route.query.idChapter;
 const idCourse = route.query.idCourse;
@@ -38,7 +45,7 @@ const keys = ["title"];
 
 const actions = {
   view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
-  edit: (item) => `/courses/${item.id}`,
+  edit: (item) => ({ path: `/lessons-update/${item.id}`, query: { idChapter: idChapter } }),
   delete: (item) => `/courses/${item.id}`,
 };
 
@@ -71,6 +78,10 @@ const fetchAssignments = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+const goBack = () => {
+  router.go(-1);
 };
 
 onMounted(async () => {

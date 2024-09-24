@@ -46,7 +46,7 @@
                     </div>
                 </div>
             </div>
-            <div class="d-flex justify-content-center">
+            <div class="d-flex justify-content-center mb-4">
                 <button type="submit" class="btn btn-primary mx-4">{{ isUpdate ? 'Cập nhật' : 'Tạo mới' }}</button>
                 <button type="button" class="btn btn-secondary mx-4" @click="goBack">Trở về</button>
             </div>
@@ -55,15 +55,16 @@
 </template>
 
 <script setup>
-import { reactive } from "vue";
+import { onMounted, reactive } from "vue";
 import { ref } from "vue"
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { toast } from "vue3-toastify";
-import CKEditorComponent from "@/components/ckeditor/CKEditorComponent.vue";
+import CKEditorComponent from '@components/CKEditor/CKEditorComponent.vue';
 import axios from 'axios';
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 const route = useRoute();
+const router = useRouter();
 const isUpdate = ref(false);
 const idChapter = route.query.idChapter
 
@@ -77,6 +78,22 @@ const dataLesson = reactive({
 })
 
 const submitLessons = async () => {
+    if (isUpdate.value) {
+        try {
+            await axios.put(`${rootAPI}/lessons/${dataLesson.id}`, dataLesson);
+            toast.success("Cập nhật bài tập thành công", {
+                position: "top-right",
+                autoClose: 3000,
+            });
+        } catch (error) {
+            toast.error("Cập nhật bài tập thất bại", {
+                position: "top-right",
+                autoClose: 3000,
+            });
+            console.error('Cập nhật bài tập thất bại:', error);
+        }
+        return;
+    }
     try {
         await axios.post(`${rootAPI}/lessons`, dataLesson);
         toast.success("Thêm bài tập thành công", {
@@ -91,4 +108,25 @@ const submitLessons = async () => {
         console.error('Thêm bài tập thất bại:', error);
     }
 }
+
+const fetchLesson = async (id) => {
+    try {
+        const response = await axios.get(`${rootAPI}/lessons/${id}`);
+        Object.assign(dataLesson, response.data.data);
+    } catch (error) {
+        console.error('Lấy thông tin bài tập thất bại:', error);
+    }
+}
+
+const goBack = () => {
+    router.go(-1);
+};
+
+onMounted(async () => {
+    const { id } = route.params;
+    if (id) {
+        isUpdate.value = true;
+        await fetchLesson(id);
+    }
+});
 </script>
