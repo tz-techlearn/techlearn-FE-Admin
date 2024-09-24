@@ -7,55 +7,42 @@
       </div>
     </router-link>
     <div>
-      <button type="button" class="btn btn-primary mr-3">Thêm chương</button>
-      <button type="button" class="btn btn-primary">Sắp xếp chương</button>
+      <router-link :to="{ path: '/add-chapter', query: { idCourse: idCourse } }" type="button"
+        class="btn btn-primary mr-3">Thêm chương</router-link>
+      <router-link :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }" class="btn btn-primary">Sắp xếp
+        chương</router-link>
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50" />
+  <hr class="border border-grey border-1 opacity-50">
   <div class="container text-center">
     <div class="row">
       <div class="col-md-5">
-        <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
+        <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="">
       </div>
       <div class="col-md-7 text-start">
         <p>
-          <span class="fw-bold">Tên khoá học:</span>
-          {{ dataCourse.course.name }}
+          <span class="fw-bold">Tên khoá học:</span> {{ dataCourse.course.name }}
         </p>
         <p>
-          <span class="fw-bold">Mô tả khoá học:</span>
-          {{ dataCourse.course.description }}
+          <span class="fw-bold">Mô tả khoá học:</span> {{ dataCourse.course.description }}
         </p>
         <p>
-          <span class="fw-bold">Giá khoá học:</span>
-          {{ dataCourse.course.price }}
+          <span class="fw-bold">Giá khoá học:</span> {{ dataCourse.course.price }}
         </p>
         <p>
-          <span class="fw-bold">Đơn vị:</span>
-          {{ dataCourse.course.currencyUnit }}
+          <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
         </p>
         <p>
-          <span class="fw-bold">Tech stack:</span>
-          {{ dataCourse.course.techStack?.join(", ") || "N/A" }}
+          <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.join(', ') || 'N/A' }}
         </p>
       </div>
     </div>
   </div>
-  <Table
-    :header="header"
-    :data="data.chapter"
-    :keys="keys"
-    :actions="actions"
-    @delete-item="deleteChapter"
-  ></Table>
-  <b-modal
-    v-model="isModalVisible"
-    title="Xác nhận xóa"
-    ok-title="Xóa"
-    cancel-title="Đóng"
-    ok-variant="danger"
-    @ok="handleDelete"
-  >
+  <hr class="border border-grey border-1 opacity-50">
+  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách chương</h5>
+  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" @delete-item="deleteChapter"></Table>
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
     <p>Bạn có chắc chắn muốn xóa chương không?</p>
   </b-modal>
 </template>
@@ -63,9 +50,7 @@
 <script setup>
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
-import { ref } from "vue";
-import { reactive } from "vue";
-import { onMounted } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 
@@ -89,7 +74,10 @@ const keys = ["name"];
 
 const actions = {
   view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
-  edit: (item) => `/courses/${item.id}`,
+  edit: (item) => ({
+    path: `/edit-chapter/${item.id}`,
+    query: { idCourse: idCourse }
+  }),
   delete: (item) => `/courses/${item.id}`,
 };
 
@@ -112,17 +100,6 @@ const fetchCourse = async () => {
     console.error(error);
   }
 };
-
-// const deleteChapter = async (chapter) => {
-//   try {
-//     await axios.delete(`${rootAPI}/chapters/${chapter.id}`);
-//     data.chapter = data.chapter.filter((chap) => chap.id !== chapter.id);
-//     toast.success("Xóa chương thành công");
-//   } catch (error) {
-//     console.log(error);
-//     toast.error("Có lỗi xảy ra");
-//   }
-// };
 
 const handleDelete = async () => {
   try {
