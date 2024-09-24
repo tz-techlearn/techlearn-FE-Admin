@@ -1,6 +1,6 @@
 <template>
     <div class="d-flex mt-3 justify-content-between align-items-center">
-        <router-link :to="{ path: '/lessons', query: { idChapter: idChapter } }" class="text-decoration-none">
+        <router-link :to="{ path: '/lessons', query: { idChapter: idChapter, idCourse:idCourse } }" class="text-decoration-none">
             <div class="d-flex align-items-center gap-2">
                 <i class="fa-solid fa-arrow-left text-dark"></i>
                 <p class="mb-0 text-dark">Danh sách bài học</p>
@@ -67,6 +67,7 @@ const route = useRoute();
 const router = useRouter();
 const isUpdate = ref(false);
 const idChapter = route.query.idChapter
+const idCourse = route.query.idCourse
 
 const dataLesson = reactive({
     title: "",

@@ -40,7 +40,7 @@ const keys = ["title"];
 
 const actions = {
   view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
-  edit: (item) => ({ path: `/lessons-update/${item.id}`, query: { idChapter: idChapter } }),
+  edit: (item) => ({ path: `/lessons-update/${item.id}`, query: { idChapter: idChapter, idCourse: idCourse } }),
   delete: (item) => `/courses/${item.id}`,
 };
 
