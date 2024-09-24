@@ -9,36 +9,8 @@
     </button>
   </div>
   <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
-  <div class="d-flex justify-content-between align-items-center mt-2">
-    <p
-      class="mt-4"
-      style="margin-left: 30px; font-weight: 600; font-size: 24px"
-    >
-      Khóa học
-    </p>
-    <button
-      type="button"
-      class="btn btn-primary mr-5"
-      style="width: 140px; height: 50px"
-    >
-      Thêm chương
-    </button>
-  </div>
-  <Table
-    :header="header"
-    :data="data.courses"
-    :keys="keys"
-    :actions="actions"
-    @deleteItem="deleteCourse"
-  ></Table>
-  <b-modal
-    v-model="isModalVisible"
-    title="Xác nhận xóa"
-    ok-title="Xóa"
-    cancel-title="Đóng"
-    ok-variant="danger"
-    @ok="handleDelete"
-  >
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
     <p>Bạn có chắc chắn xóa khóa học không?</p>
   </b-modal>
 </template>
@@ -48,8 +20,7 @@ import { useRouter } from 'vue-router';
 import { reactive, onMounted } from 'vue';
 import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
-import Table from "@/components/Tables/Table.vue";
-import axios from "axios";
+import Table from "@/components/Tables/Table.vue";;
 import { ref } from "vue";
 import { toast } from "vue3-toastify";
 
