@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex mt-3 justify-content-between align-items-center">
+    <div class="d-flex mt-3 justify-content-between align-items-center chapter-header">
         <router-link :to="{ path: '/chapters', query: { idCourse: idCourse } }" class="text-decoration-none">
             <div class="d-flex align-items-center gap-2">
                 <i class="fa-solid fa-arrow-left text-dark"></i>
@@ -150,5 +150,9 @@ img {
     border-radius: 10px;
     max-width: 80%;
     height: auto;
+}
+
+.chapter-header {
+    height: 37.6px;
 }
 </style>

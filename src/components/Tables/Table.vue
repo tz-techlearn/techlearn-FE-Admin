@@ -1,14 +1,13 @@
 <template>
-  <div class="container-fluid my-5">
-    <table class="table table-hover table-striped w-100">
+  <div class="container-fluid my-5" style="margin-left: 20px; margin-right: 20px">
+    <table class="table table-hover table-striped">
       <thead class="thead-lb">
         <tr>
-          <th v-for="(header, index) in props.header" :key="index">
+          <th v-for="(header, index) in props.header" :key="index" :class="{ 'text-center': header === 'STT' }">
             {{ header }}
           </th>
         </tr>
       </thead>
-
       <draggable tag="tbody" v-if="isDraggable" :list="props.data" :disabled="!enabled" ghost-class="ghost"
         :move="checkMove" @start="dragging = true"
         @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
@@ -26,8 +25,8 @@
       </draggable>
       <template v-else>
         <tbody>
-          <tr v-for="(item, index) in props.data" :key="item.id">
-            <th scope="row">{{ index + 1 }}</th>
+          <tr v-for="(item, index) in props.data" :key="index">
+            <th scope="row" class="text-center">{{ index + 1 }}</th>
             <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
               {{ item[key] || "N/A" }}
             </td>
@@ -38,7 +37,7 @@
               <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
                 <i class="fas fa-edit"></i>
               </router-link>
-              <router-link :to="props.actions.delete(item)" class="btn btn-danger btn-sm btn-action">
+              <router-link to="" @click="confirmDelete(item)" class="btn btn-danger btn-sm btn-action">
                 <i class="fas fa-trash"></i>
               </router-link>
             </td>
@@ -77,13 +76,18 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['updateOrder']);
+const emit = defineEmits(['deleteItem']);
 const enabled = true;
 const dragging = ref(false);
 
 function checkMove(evt) {
   return true;
 }
+
+const confirmDelete = (item) => {
+  emit("deleteItem", item);
+};
+
 </script>
 
 <style scoped>
@@ -93,7 +97,7 @@ function checkMove(evt) {
 }
 
 .table {
-  width: 100%;
+  width: 95%;
 }
 
 .table-hover tbody tr:hover {

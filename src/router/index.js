@@ -1,10 +1,12 @@
 import { createRouter, createWebHistory } from "vue-router";
 import NotFound from "@/components/NotFound/NotFound.vue";
-import CoursePage from "@/views/CoursePage.vue";
-import ChapterPage from "@/views/ChapterPage.vue";
+import CoursePage from "@/views/course/CoursePage.vue";
 import EditChapterPage from "@/views/chapter/EditChapterPage.vue";
 import AddChapterPage from "@/views/chapter/AddChapterPage.vue";
 import SortChapterPage from "@/views/chapter/SortChapterPage.vue";
+import CourseUpdateForm from "@/views/course/CourseUpdateForm.vue";
+import LessonsPage from "@/views/lesson/LessonsPage.vue";
+import ChapterPage from "@/views/chapter/ChapterPage.vue";
 
 const routes = [
   {
@@ -37,6 +39,18 @@ const routes = [
     path: "/:catchAll(.*)",
     name: "NotFound",
     component: NotFound,
+  },
+  {
+    path: "/courses-update/:id/",
+    name: "CourseUpdateForm",
+    component: CourseUpdateForm,
+    props: true,
+  },
+  {
+    path: "/lessons",
+    name: "LessonsPage",
+    component: LessonsPage,
+    props: true,
   },
 ];
 

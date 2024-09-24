@@ -1,5 +1,5 @@
 <template>
-    <div class="d-flex mt-3 justify-content-between align-items-center">
+    <div class="d-flex mt-3 justify-content-between align-items-center chapter-header">
         <router-link :to="{ path: '/chapters', query: { idCourse: idCourse } }" class="text-decoration-none">
             <div class="d-flex align-items-center gap-2">
                 <i class="fa-solid fa-arrow-left text-dark"></i>
@@ -8,10 +8,10 @@
         </router-link>
     </div>
     <hr class="border border-grey border-1 opacity-50">
-    <h5 class="mt-5 title-sort" style="margin-left: 10px">Sắp xếp danh sách chương</h5>
+    <h5 class="mt-5 title-sort" style="margin-left: 30px">Sắp xếp danh sách chương</h5>
     <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :isDraggable="true"
-        @updateOrder="handleDragUpdate" />
-    <button class="d-flex m-auto btn btn-warning" @click="saveOrder">Lưu thay đổi</button>
+        @updateOrder="handleDragUpdate"></Table>
+    <button class="d-flex mx-auto btn-save btn btn-warning" @click="saveOrder">Lưu thay đổi</button>
 </template>
 <script setup>
 import Table from '@/components/Tables/Table.vue';
@@ -97,5 +97,13 @@ onMounted(async () => {
 <style scoped>
 .title-sort {
     margin-bottom: -35px;
+}
+
+.btn-save {
+    margin-top: -25px;
+}
+
+.chapter-header {
+    height: 37.6px;
 }
 </style>
