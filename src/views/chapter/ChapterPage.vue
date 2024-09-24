@@ -33,7 +33,11 @@
           <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
         </p>
         <p>
-          <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.join(', ') || 'N/A' }}
+          <span class="fw-bold">Tech stack: </span>
+          <span v-if="dataCourse.course && dataCourse.course.techStack && dataCourse.course.techStack.length > 0">
+            {{ dataCourse.course.techStack.map(stack => stack.name).join(', ') }}
+          </span>
+          <span v-else>N/A</span>
         </p>
       </div>
     </div>
