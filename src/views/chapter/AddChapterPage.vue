@@ -28,7 +28,7 @@
                     <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
                 </p>
                 <p>
-                    <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.join(', ') || 'N/A' }}
+                    <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.map(stack => stack.name).join(', ') || 'N/A' }}
                 </p>
             </div>
         </div>
@@ -49,6 +49,17 @@
                         </option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label for="supporter" class="form-label">Chế độ</label>
+                    <Multiselect
+                    v-model="supporters"
+                    :options="options"
+                    :multiple="true"
+                    :taggable="true"
+                    @tag="addTeacher"
+                    :close-on-select="false"
+                    />
+                </div>
 
                 <button type="submit" class="btn btn-primary">Thêm Chương</button>
             </form>
@@ -61,12 +72,14 @@ import axios from 'axios';
 import { toast } from "vue3-toastify";
 import { ref, onMounted, reactive } from 'vue';
 import { useRoute } from 'vue-router';
+import Multiselect from 'vue-multiselect';
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
 const chapterName = ref('');
 const isPublic = ref(true);
-
+const supporters = ref([]);
+const options = ["Tuan", "Vii", "Phap","cc","bb","aa"]
 const publicOptions = [
     { value: true, text: 'Công khai' },
     { value: false, text: 'Riêng tư' }
