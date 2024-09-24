@@ -1,14 +1,15 @@
 <template>
   <DashBoard></DashBoard>
-  <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
-    <p class="course-list-title">
-      Danh sách khóa học
-    </p>
-    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
-      Thêm mới
-    </button>
-  </div>
-  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
+  <p class="mt-4" style="margin-left: 30px; font-weight: 600; font-size: 24px">
+    Khóa học
+  </p>
+  <Table
+    :header="header"
+    :data="data.courses"
+    :keys="keys"
+    :actions="actions"
+    @deleteItem="deleteCourse"
+  ></Table>
 </template>
 
 <script setup>
@@ -18,8 +19,10 @@ import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
 
+
 const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
+
 
 const data = reactive({
   courses: [],
@@ -43,12 +46,15 @@ const fetchCourses = async () => {
   }
 };
 
+// Hàm xử lý xóa khóa học
 const deleteCourse = async (course) => {
   try {
     await axios.delete(`${rootAPI}/courses/${course.id}`);
+    // Cập nhật lại danh sách sau khi xóa
     data.courses = data.courses.filter((item) => item.id !== course.id);
   } catch (error) {
-    console.error("Error deleting the course", error);
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
   }
 };
 

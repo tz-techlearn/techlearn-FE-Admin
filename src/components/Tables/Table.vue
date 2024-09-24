@@ -45,26 +45,12 @@
         </tr>
       </tbody>
     </table>
-
-    <!-- Modal -->
-    <b-modal
-      v-model="isModalVisible"
-      title="Xác nhận xóa"
-      ok-title="Xóa"
-      cancel-title="Đóng"
-      @ok="handleDelete"
-    >
-      <p>Bạn có chắc chắn muốn xóa không?</p>
-    </b-modal>
   </div>
 </template>
 
 <script setup>
 import { ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
-import { useRouter } from "vue-router";
-
-const router = useRouter();
 
 const props = defineProps({
   header: {
@@ -87,17 +73,8 @@ const props = defineProps({
 
 const emit = defineEmits(["deleteItem"]);
 
-const isModalVisible = ref(false);
-const itemToDelete = ref(null);
-
 const confirmDelete = (item) => {
-  itemToDelete.value = item;
-  isModalVisible.value = true;
-};
-
-const handleDelete = () => {
-  emit("deleteItem", itemToDelete.value);
-  isModalVisible.value = false;
+  emit("deleteItem", item);
 };
 </script>
 
