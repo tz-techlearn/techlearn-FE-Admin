@@ -13,20 +13,23 @@
         @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
         <template #item="{ element, index }">
           <tr :key="element.id" class="w-100 drag-item">
-            <th scope="row" class="text-center">{{ index + 1 }}</th>
-            <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
-              {{ element[key] || "N/A" }}
-            </td>
-            <td v-if="viewPublic">
-              {{ element.isPublic ? "Công khai" : "Riêng tư" }}
-            </td>
+            <<<<<<< HEAD <th scope="row" class="text-center">{{ (currentPage - 1) * props.perPage + index + 1 }}</th>
+              =======
+              <th scope="row" class="text-center">{{ index + 1 }}</th>
+              >>>>>>> upstream/feature/298
+              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
+                {{ element[key] || "N/A" }}
+              </td>
+              <td v-if="viewPublic">
+                {{ element.isPublic ? "Công khai" : "Riêng tư" }}
+              </td>
           </tr>
         </template>
       </draggable>
       <template v-else>
         <tbody>
-          <tr v-for="(item, index) in props.data" :key="index">
-            <th scope="row" class="text-center">{{ index + 1 }}</th>
+          <tr v-for="(item, index) in props.data" :key="item.id">
+            <th scope="row" class="text-center">{{ (currentPage - 1) * props.perPage + index + 1 }}</th>
             <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
               {{ item[key] || "N/A" }}
             </td>
@@ -45,11 +48,13 @@
         </tbody>
       </template>
     </table>
+    <b-pagination class="pagination" v-model="currentPage" :total-rows="totalRows" :per-page="1"
+      aria-controls="my-table" first-number last-number @change="pageChanged" />
   </div>
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, ref, watch } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
 import draggable from "vuedraggable";
 
@@ -74,6 +79,14 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  totalRows: {
+    type: Number,
+    required: true,
+  },
+  perPage: {
+    type: Number,
+    default: 10,
+  },
   viewPublic: {
     type: Boolean,
     default: true,
@@ -84,7 +97,10 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['updateOrder', 'deleteItem']);
+
+const currentPage = ref(1);
+
+const emit = defineEmits(['updateOrder', 'deleteItem', 'pageChange']);
 const enabled = true;
 const dragging = ref(false);
 
@@ -96,6 +112,14 @@ const confirmDelete = (item) => {
   emit("deleteItem", item);
 };
 
+watch(currentPage, (newPage) => {
+  pageChanged();
+});
+
+
+const pageChanged = () => {
+  emit("pageChange", currentPage.value);
+};
 </script>
 
 <style scoped>
@@ -128,5 +152,10 @@ td {
 
 .drag-item {
   cursor: pointer;
+}
+
+.pagination {
+  display: flex;
+  justify-content: center !important;
 }
 </style>
