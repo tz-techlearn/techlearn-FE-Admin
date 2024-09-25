@@ -36,6 +36,17 @@
         @tag="addTag"
         @remove="removeTag"/>
       </div>
+      <div class="mb-3">
+        <label for="supporter" class="form-label">Người hổ trợ</label>
+        <Multiselect
+          v-model="supporters"
+          :options="options"
+          :multiple="true"
+          :taggable="true"
+          @tag="addTeacher"
+          :close-on-select="false"
+        />
+      </div>
       <div class="d-flex justify-content-between mb-3">
         <div class="me-2 flex-grow-1">
           <label for="courseActivation" class="form-label">Kích hoạt</label>
@@ -80,7 +91,8 @@ export default {
     const router = useRouter();
     const route = useRoute();
     const rootAPI = process.env.VUE_APP_ROOT_API;
-
+    const supporters = ref([]);
+    const options = ["Tuan", "Vii", "Phap","cc","bb","aa"]
     const isUpdate = ref(false);
     const course = reactive({
       id: null,
@@ -167,6 +179,8 @@ export default {
       goBack,
       addTag,
       removeTag,
+      supporters,
+      options
     };
   }
 };
