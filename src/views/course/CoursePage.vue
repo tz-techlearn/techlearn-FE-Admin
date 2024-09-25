@@ -75,9 +75,7 @@ const deleteCourse = (course) => {
 const handleDelete = async () => {
   try {
     await axios.delete(`${rootAPI}/courses/${itemToDelete.value.id}`);
-    data.courses = data.courses.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
+    await fetchCourses();
     isModalVisible.value = false;
     toast.success("Xóa khóa học thành công");
   } catch (error) {

@@ -28,16 +28,28 @@
     :data="data.assignments"
     :keys="keys"
     :actions="actions"
+    @delete-item="deleteLesson"
     :viewDetail="false"
   ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
+    <p>Bạn có chắc chắn muốn xóa bài tập không?</p>
+  </b-modal>
 </template>
 
 <script setup>
 import axios from "axios";
 import { reactive } from "vue";
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Table from "@/components/Tables/Table.vue";
+import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
@@ -49,6 +61,9 @@ const idCourse = route.query.idCourse;
 const data = reactive({
   assignments: [],
 });
+
+const isModalVisible = ref(false);
+const itemToDelete = ref();
 
 const header = ["STT", "Tên Bài tập", "Hành động"];
 const keys = ["title"];
@@ -91,6 +106,24 @@ const fetchAssignments = async () => {
   } catch (error) {
     console.log(error);
   }
+};
+
+// xử lý xóa bài tập
+const handleDelete = async () => {
+  try {
+    await axios.delete(`${rootAPI}/lessons/${itemToDelete.value.id}`);
+    await fetchAssignments();
+    isModalVisible.value = false;
+    toast.success("Xóa bài tập thành công");
+  } catch (error) {
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
+  }
+};
+
+const deleteLesson = (lesson) => {
+  isModalVisible.value = true;
+  itemToDelete.value = lesson;
 };
 
 onMounted(async () => {
