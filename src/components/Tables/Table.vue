@@ -13,16 +13,13 @@
         @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
         <template #item="{ element, index }">
           <tr :key="element.id" class="w-100 drag-item">
-            <<<<<<< HEAD <th scope="row" class="text-center">{{ (currentPage - 1) * props.perPage + index + 1 }}</th>
-              =======
-              <th scope="row" class="text-center">{{ index + 1 }}</th>
-              >>>>>>> upstream/feature/298
-              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
-                {{ element[key] || "N/A" }}
-              </td>
-              <td v-if="viewPublic">
-                {{ element.isPublic ? "Công khai" : "Riêng tư" }}
-              </td>
+            <th scope="row" class="text-center">{{ (currentPage - 1) * props.perPage + index + 1 }}</th>
+            <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
+              {{ element[key] || "N/A" }}
+            </td>
+            <td v-if="viewPublic">
+              {{ element.isPublic ? "Công khai" : "Riêng tư" }}
+            </td>
           </tr>
         </template>
       </draggable>
