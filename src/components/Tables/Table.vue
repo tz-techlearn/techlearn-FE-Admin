@@ -13,13 +13,16 @@
         @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
         <template #item="{ element, index }">
           <tr :key="element.id" class="w-100 drag-item">
-            <th scope="row" class="text-center">{{ (currentPage - 1) * props.perPage + index + 1 }}</th>
-            <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
-              {{ element[key] || "N/A" }}
-            </td>
-            <td>
-              {{ element.isPublic ? "Công khai" : "Riêng tư" }}
-            </td>
+            <<<<<<< HEAD <th scope="row" class="text-center">{{ (currentPage - 1) * props.perPage + index + 1 }}</th>
+              =======
+              <th scope="row" class="text-center">{{ index + 1 }}</th>
+              >>>>>>> upstream/feature/298
+              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
+                {{ element[key] || "N/A" }}
+              </td>
+              <td v-if="viewPublic">
+                {{ element.isPublic ? "Công khai" : "Riêng tư" }}
+              </td>
           </tr>
         </template>
       </draggable>
@@ -31,7 +34,7 @@
               {{ item[key] || "N/A" }}
             </td>
             <td class="action-button">
-              <router-link :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
+              <router-link v-if="viewDetail" :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
                 <i class="fas fa-eye"></i>
               </router-link>
               <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
@@ -83,6 +86,14 @@ const props = defineProps({
   perPage: {
     type: Number,
     default: 10,
+  },
+  viewPublic: {
+    type: Boolean,
+    default: true,
+  },
+  viewDetail: {
+    type: Boolean,
+    default: true,
   },
 });
 
