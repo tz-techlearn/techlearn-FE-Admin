@@ -91,16 +91,16 @@ const handleDelete = async () => {
       (item) => item.id !== itemToDelete.value.id
     );
     isModalVisible.value = false;
-    toast.success("Xóa chương thành công");
+    toast.success("Xóa bài tập thành công");
   } catch (error) {
     console.log(error);
     toast.error("Có lỗi xảy ra");
   }
 };
 
-const deleteLesson = (chapter) => {
+const deleteLesson = (lesson) => {
   isModalVisible.value = true;
-  itemToDelete.value = chapter;
+  itemToDelete.value = lesson;
 };
 
 onMounted(async () => {
