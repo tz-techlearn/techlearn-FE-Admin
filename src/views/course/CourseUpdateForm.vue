@@ -37,7 +37,7 @@
         @remove="removeTag"/>
       </div>
       <div class="mb-3">
-        <label for="supporter" class="form-label">Người hổ trợ</label>
+        <label for="supporter" class="form-label">Giảng viên</label>
         <Multiselect
           v-model="supporters"
           :options="options"
