@@ -12,14 +12,13 @@
       <button type="button" class="btn btn-primary">Sắp xếp bài tập</button>
     </div>
   </div>
+  <hr class="border border-grey border-1 opacity-50">
+  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách bài đọc</h5>
   <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions" @delete-item="deleteLesson"></Table>
   <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
     @ok="handleDelete">
     <p>Bạn có chắc chắn muốn xóa bài tập không?</p>
   </b-modal>
-  <hr class="border border-grey border-1 opacity-50">
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách bài đọc</h5>
-  <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions"></Table>
 </template>
 
 <script setup>
