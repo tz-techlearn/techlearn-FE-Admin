@@ -87,7 +87,7 @@ const actions = {
 };
 
 const currentPage = ref(1);
-const perPage = ref(10);
+const perPage = ref(0);
 const totalRows = ref(0);
 
 const fetchChapter = async () => {
@@ -97,7 +97,6 @@ const fetchChapter = async () => {
       params: {
         idCourse: idCourse,
         page: currentPage.value,
-        pageSize: perPage.value
       }
     }
     );
