@@ -35,7 +35,7 @@ const dataCourse = reactive({
     course: {}
 });
 
-const header = ["STT", "Tên Bài tập"];
+const header = ["STT", "Tên Bài Học"];
 const keys = ["title"];
 
 function handleDragUpdate(updatedData) {
