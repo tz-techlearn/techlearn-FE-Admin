@@ -1,16 +1,35 @@
 <template>
-  <div class="container-fluid my-5" style="margin-left: 20px; margin-right: 20px">
+  <div
+    class="container-fluid my-5"
+    style="margin-left: 20px; margin-right: 20px"
+  >
     <table class="table table-hover table-striped">
       <thead class="thead-lb">
         <tr>
-          <th v-for="(header, index) in props.header" :key="index" :class="{ 'text-center': header === 'STT' }">
+          <th
+            v-for="(header, index) in props.header"
+            :key="index"
+            :class="{ 'text-center': header === 'STT' }"
+          >
             {{ header }}
           </th>
         </tr>
       </thead>
-      <draggable tag="tbody" v-if="isDraggable" :list="props.data" :disabled="!enabled" ghost-class="ghost"
-        :move="checkMove" @start="dragging = true"
-        @end="(evt) => { dragging = false; emit('updateOrder', props.data); }">
+      <draggable
+        tag="tbody"
+        v-if="isDraggable"
+        :list="props.data"
+        :disabled="!enabled"
+        ghost-class="ghost"
+        :move="checkMove"
+        @start="dragging = true"
+        @end="
+          (evt) => {
+            dragging = false;
+            emit('updateOrder', props.data);
+          }
+        "
+      >
         <template #item="{ element, index }">
           <tr :key="element.id" class="w-100 drag-item">
             <th scope="row">{{ index + 1 }}</th>
@@ -31,13 +50,24 @@
               {{ item[key] || "N/A" }}
             </td>
             <td class="action-button">
-              <router-link :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
+              <router-link
+                v-if="props.viewDetail"
+                :to="props.actions.view(item)"
+                class="btn btn-primary btn-sm btn-action"
+              >
                 <i class="fas fa-eye"></i>
               </router-link>
-              <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
+              <router-link
+                :to="props.actions.edit(item)"
+                class="btn btn-warning btn-sm btn-action"
+              >
                 <i class="fas fa-edit"></i>
               </router-link>
-              <router-link to="" @click="confirmDelete(item)" class="btn btn-danger btn-sm btn-action">
+              <router-link
+                to=""
+                @click="confirmDelete(item)"
+                class="btn btn-danger btn-sm btn-action"
+              >
                 <i class="fas fa-trash"></i>
               </router-link>
             </td>
@@ -49,7 +79,7 @@
 </template>
 
 <script setup>
-import { defineProps, ref } from "vue";
+import { defineProps, onMounted, ref } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
 import draggable from "vuedraggable";
 
@@ -74,9 +104,13 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  viewDetail: {
+    type: Boolean,
+    default: true,
+  },
 });
 
-const emit = defineEmits(['updateOrder', 'deleteItem']);
+const emit = defineEmits(["updateOrder", "deleteItem"]);
 const enabled = true;
 const dragging = ref(false);
 
@@ -88,6 +122,9 @@ const confirmDelete = (item) => {
   emit("deleteItem", item);
 };
 
+onMounted(async () => {
+  console.log(props.viewDetail);
+});
 </script>
 
 <style scoped>
