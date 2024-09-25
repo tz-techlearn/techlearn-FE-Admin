@@ -44,7 +44,8 @@
   </div>
   <hr class="border border-grey border-1 opacity-50">
   <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách chương</h5>
-  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" @delete-item="deleteChapter"></Table>
+  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @delete-item="deleteChapter" @pageChange="handlePageChange"></Table>
   <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
     @ok="handleDelete">
     <p>Bạn có chắc chắn muốn xóa chương không?</p>
@@ -68,9 +69,6 @@ const data = reactive({
 
 const isModalVisible = ref(false);
 const itemToDelete = ref();
-const currentPage = ref(1);
-const perPage = ref(10);
-const totalRows = ref(0);
 
 const dataCourse = reactive({
   course: {},
@@ -88,6 +86,10 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
+const currentPage = ref(1);
+const perPage = ref(10);
+const totalRows = ref(0);
+
 const fetchChapter = async () => {
   try {
     const response = await axios.get(
@@ -95,16 +97,21 @@ const fetchChapter = async () => {
       params: {
         idCourse: idCourse,
         page: currentPage.value,
-        size: perPage.value
+        pageSize: perPage.value
       }
     }
     );
     data.chapter = response.data.data.items;
-    totalRows.value = response.data.data.totalItems;
+
+    console.log(response.data.data);
+
+    perPage.value = response.data.data.pageSize
+    totalRows.value = response.data.data.totalPage;
   } catch (error) {
     console.error(error);
   }
 };
+
 
 const fetchCourse = async () => {
   try {
@@ -133,6 +140,11 @@ const handleDelete = async () => {
 const deleteChapter = (chapter) => {
   isModalVisible.value = true;
   itemToDelete.value = chapter;
+};
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  fetchChapter();
 };
 
 onMounted(async () => {

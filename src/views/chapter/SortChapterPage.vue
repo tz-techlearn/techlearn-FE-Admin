@@ -10,13 +10,14 @@
     <hr class="border border-grey border-1 opacity-50">
     <h5 class="mt-5 title-sort" style="margin-left: 30px">Sắp xếp danh sách chương</h5>
     <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :isDraggable="true"
-        @updateOrder="handleDragUpdate"></Table>
+        @updateOrder="handleDragUpdate" :totalRows="totalRows" :perPage="perPage" @pageChange="handlePageChange">
+    </Table>
     <button class="d-flex mx-auto btn-save btn btn-warning" @click="saveOrder">Lưu thay đổi</button>
 </template>
 <script setup>
 import Table from '@/components/Tables/Table.vue';
 import axios from "axios";
-import { reactive, onMounted } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import { toast } from "vue3-toastify";
 import { useRoute } from 'vue-router';
 
@@ -43,7 +44,7 @@ function handleDragUpdate(updatedData) {
     }));
 }
 
-// Save order when clicking the Save button
+
 async function saveOrder() {
     if (!data.updatedOrder.length) {
         toast.info("Không có thay đổi thứ tự nào", {
@@ -69,10 +70,24 @@ async function saveOrder() {
     }
 }
 
+const currentPage = ref(1);
+const perPage = ref(50);
+const totalRows = ref(0);
+
 const fetchChapter = async () => {
     try {
-        const response = await axios.get(`${rootAPI}/chapters?idCourse=${idCourse}`);
+        const response = await axios.get(
+            `${rootAPI}/chapters`, {
+            params: {
+                idCourse: idCourse,
+                page: currentPage.value,
+                pageSize: perPage.value
+            }
+        }
+        );
         data.chapter = response.data.data.items;
+        perPage.value = response.data.data.pageSize
+        totalRows.value = response.data.data.totalPage;
     } catch (error) {
         console.error(error);
     }
