@@ -98,9 +98,9 @@ const handleDelete = async () => {
   }
 };
 
-const deleteLesson = (chapter) => {
+const deleteLesson = (lesson) => {
   isModalVisible.value = true;
-  itemToDelete.value = chapter;
+  itemToDelete.value = lesson;
 };
 
 onMounted(async () => {
