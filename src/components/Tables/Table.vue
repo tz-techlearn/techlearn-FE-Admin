@@ -32,11 +32,11 @@
       >
         <template #item="{ element, index }">
           <tr :key="element.id" class="w-100 drag-item">
-            <th scope="row">{{ index + 1 }}</th>
+            <th scope="row" class="text-center">{{ index + 1 }}</th>
             <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
               {{ element[key] || "N/A" }}
             </td>
-            <td>
+            <td v-if="viewPublic">
               {{ element.isPublic ? "Công khai" : "Riêng tư" }}
             </td>
           </tr>
@@ -51,7 +51,7 @@
             </td>
             <td class="action-button">
               <router-link
-                v-if="props.viewDetail"
+                v-if="viewDetail"
                 :to="props.actions.view(item)"
                 class="btn btn-primary btn-sm btn-action"
               >
@@ -103,6 +103,10 @@ const props = defineProps({
   isDraggable: {
     type: Boolean,
     default: false,
+  },
+  viewPublic: {
+    type: Boolean,
+    default: true,
   },
   viewDetail: {
     type: Boolean,

@@ -8,7 +8,7 @@
         </router-link>
     </div>
     <div class="container">
-        <h2 class="mb-4 mt-4">{{ isUpdate ? 'Cập nhật bài đọc' : 'Thêm bài đọc' }}</h2>
+        <h2 class="mb-4 mt-4">{{ isUpdate ? 'Cập nhật bài học' : 'Thêm bài học' }}</h2>
         <form @submit.prevent="submitLessons">
             <div class="row">
                 <div class="row mb-3">

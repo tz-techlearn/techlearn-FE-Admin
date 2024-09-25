@@ -11,12 +11,22 @@
     </router-link>
     <div>
       <router-link
-        :to="{ path: '/add-lessons', query: { idChapter: idChapter } }"
+        :to="{
+          path: '/add-lessons',
+          query: { idChapter: idChapter, idCourse: idCourse },
+        }"
         type="button"
         class="btn btn-primary mr-3"
-        >Thêm bài tập</router-link
+        >Thêm bài học</router-link
       >
-      <button type="button" class="btn btn-primary">Sắp xếp bài tập</button>
+      <router-link
+        :to="{
+          path: '/sort-lessons',
+          query: { idChapter: idChapter, idCourse: idCourse },
+        }"
+        class="btn btn-primary"
+        >Sắp xếp bài học</router-link
+      >
     </div>
   </div>
   <hr class="border border-grey border-1 opacity-50" />
@@ -65,7 +75,7 @@ const data = reactive({
 const isModalVisible = ref(false);
 const itemToDelete = ref();
 
-const header = ["STT", "Tên Bài tập", "Hành động"];
+const header = ["STT", "Tên Bài Học", "Hành động"];
 const keys = ["title"];
 
 const actions = {
