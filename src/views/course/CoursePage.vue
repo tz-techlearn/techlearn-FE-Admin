@@ -1,29 +1,43 @@
 <template>
   <DashBoard></DashBoard>
-  <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
-    <p class="course-list-title">
-      Danh sách khóa học
-    </p>
-    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
+  <div
+    class="d-flex justify-content-between align-items-center mt-4 container my-4"
+  >
+    <p class="course-list-title">Danh sách khóa học</p>
+    <button
+      class="btn btn-primary create-course-btn align-items-center"
+      @click="createCourse"
+    >
       Thêm mới
     </button>
   </div>
-  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
-  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
-    @ok="handleDelete">
+  <Table
+    :header="header"
+    :data="data.courses"
+    :keys="keys"
+    :actions="actions"
+    @deleteItem="deleteCourse"
+  ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
     <p>Bạn có chắc chắn xóa khóa học không?</p>
   </b-modal>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-import { reactive, onMounted } from 'vue';
-import axios from 'axios';
+import { useRouter } from "vue-router";
+import { reactive, onMounted } from "vue";
+import axios from "axios";
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
-import Table from "@/components/Tables/Table.vue";;
+import Table from "@/components/Tables/Table.vue";
 import { ref } from "vue";
 import { toast } from "vue3-toastify";
-
 
 const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
@@ -53,10 +67,19 @@ const fetchCourses = async () => {
   }
 };
 
-const deleteCourse = async (course) => {
+const deleteCourse = (course) => {
+  isModalVisible.value = true;
+  itemToDelete.value = course;
+};
+
+const handleDelete = async () => {
   try {
-    await axios.delete(`${rootAPI}/courses/${course.id}`);
-    data.courses = data.courses.filter((item) => item.id !== course.id);
+    await axios.delete(`${rootAPI}/courses/${itemToDelete.value.id}`);
+    data.courses = data.courses.filter(
+      (item) => item.id !== itemToDelete.value.id
+    );
+    isModalVisible.value = false;
+    toast.success("Xóa khóa học thành công!");
   } catch (error) {
     console.log(error);
     toast.error("Có lỗi xảy ra");
@@ -64,11 +87,15 @@ const deleteCourse = async (course) => {
 };
 
 const createCourse = () => {
-  router.push('/courses-create');
-
+  router.push("/courses-create");
 };
 
 onMounted(fetchCourses);
+
+// const viewItem = async (item) => {
+//   const idCourse = item.id;
+//   store.dispatch("updateIdCourse", idCourse);
+// };
 </script>
 
 <style scoped>

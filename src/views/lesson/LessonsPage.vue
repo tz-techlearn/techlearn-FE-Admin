@@ -1,23 +1,54 @@
 <template>
   <div class="d-flex mt-3 justify-content-between align-items-center">
-    <router-link :to="`/chapters?idCourse=${idCourse}`" class="text-decoration-none">
+    <router-link
+      :to="`/chapters?idCourse=${idCourse}`"
+      class="text-decoration-none"
+    >
       <div class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-arrow-left text-dark"></i>
         <p class="mb-0 text-dark">Danh sách các chương</p>
       </div>
     </router-link>
     <div>
-      <router-link :to="{ path: '/add-lessons', query: { idChapter: idChapter, idCourse: idCourse } }" type="button"
-        class="btn btn-primary mr-3">Thêm bài học</router-link>
-      <router-link :to="{ path: '/sort-lessons', query: { idChapter: idChapter, idCourse: idCourse } }" class="btn btn-primary">Sắp xếp
-        bài học</router-link>
+      <router-link
+        :to="{
+          path: '/add-lessons',
+          query: { idChapter: idChapter, idCourse: idCourse },
+        }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Thêm bài học</router-link
+      >
+      <router-link
+        :to="{
+          path: '/sort-lessons',
+          query: { idChapter: idChapter, idCourse: idCourse },
+        }"
+        class="btn btn-primary"
+        >Sắp xếp bài học</router-link
+      >
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50">
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách bài đọc</h5>
-  <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions" @delete-item="deleteLesson" :viewDetail="false"></Table>
-  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
-    @ok="handleDelete">
+  <hr class="border border-grey border-1 opacity-50" />
+  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
+    Danh sách bài đọc
+  </h5>
+  <Table
+    :header="header"
+    :data="data.assignments"
+    :keys="keys"
+    :actions="actions"
+    @delete-item="deleteLesson"
+    :viewDetail="false"
+  ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
     <p>Bạn có chắc chắn muốn xóa bài tập không?</p>
   </b-modal>
 </template>
@@ -32,6 +63,7 @@ import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
+const router = useRouter();
 const route = useRoute();
 
 const idChapter = route.query.idChapter;
@@ -49,7 +81,10 @@ const keys = ["title"];
 
 const actions = {
   view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
-  edit: (item) => ({ path: `/lessons-update/${item.id}`, query: { idChapter: idChapter, idCourse: idCourse } }),
+  edit: (item) => ({
+    path: `/lessons-update/${item.id}`,
+    query: { idChapter: idChapter, idCourse: idCourse },
+  }),
   delete: (item) => `/courses/${item.id}`,
 };
 
@@ -92,6 +127,10 @@ const handleDelete = async () => {
       (item) => item.id !== itemToDelete.value.id
     );
     isModalVisible.value = false;
+    router.replace({
+      path: route.path,
+      query: { idCourse: idCourse, idChapter: idChapter },
+    });
     toast.success("Xóa bài tập thành công");
   } catch (error) {
     console.log(error);
