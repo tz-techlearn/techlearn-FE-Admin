@@ -7,14 +7,15 @@
       </div>
     </router-link>
     <div>
-      <router-link :to="{ path: '/add-lessons', query: { idChapter: idChapter } }" type="button"
-        class="btn btn-primary mr-3">Thêm bài tập</router-link>
-      <button type="button" class="btn btn-primary">Sắp xếp bài tập</button>
+      <router-link :to="{ path: '/add-lessons', query: { idChapter: idChapter, idCourse: idCourse } }" type="button"
+        class="btn btn-primary mr-3">Thêm bài học</router-link>
+      <router-link :to="{ path: '/sort-lessons', query: { idChapter: idChapter, idCourse: idCourse } }" class="btn btn-primary">Sắp xếp
+        bài học</router-link>
     </div>
   </div>
   <hr class="border border-grey border-1 opacity-50">
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách bài đọc</h5>
-  <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions"></Table>
+  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách bài học</h5>
+  <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions" :viewDetail="false"></Table>
 </template>
 
 <script setup>
@@ -35,7 +36,7 @@ const data = reactive({
   assignments: [],
 });
 
-const header = ["STT", "Tên Bài tập", "Hành động"];
+const header = ["STT", "Tên Bài Học", "Hành động"];
 const keys = ["title"];
 
 const actions = {
