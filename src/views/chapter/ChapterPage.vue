@@ -68,6 +68,9 @@ const data = reactive({
 
 const isModalVisible = ref(false);
 const itemToDelete = ref();
+const currentPage = ref(1);
+const perPage = ref(10);
+const totalRows = ref(0);
 
 const dataCourse = reactive({
   course: {},
@@ -88,9 +91,16 @@ const actions = {
 const fetchChapter = async () => {
   try {
     const response = await axios.get(
-      `${rootAPI}/chapters?idCourse=${idCourse}`
+      `${rootAPI}/chapters`, {
+      params: {
+        idCourse: idCourse,
+        page: currentPage.value,
+        size: perPage.value
+      }
+    }
     );
     data.chapter = response.data.data.items;
+    totalRows.value = response.data.data.totalItems;
   } catch (error) {
     console.error(error);
   }
