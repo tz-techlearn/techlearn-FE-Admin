@@ -70,7 +70,10 @@
     :data="data.chapter"
     :keys="keys"
     :actions="actions"
+    :totalRows="totalRows"
+    :perPage="perPage"
     @delete-item="deleteChapter"
+    @pageChange="handlePageChange"
   ></Table>
   <b-modal
     v-model="isModalVisible"
@@ -118,12 +121,24 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
+const currentPage = ref(1);
+const perPage = ref(0);
+const totalRows = ref(0);
+
 const fetchChapter = async () => {
   try {
-    const response = await axios.get(
-      `${rootAPI}/chapters?idCourse=${idCourse}`
-    );
+    const response = await axios.get(`${rootAPI}/chapters`, {
+      params: {
+        idCourse: idCourse,
+        page: currentPage.value,
+      },
+    });
     data.chapter = response.data.data.items;
+
+    console.log(response.data.data);
+
+    perPage.value = response.data.data.pageSize;
+    totalRows.value = response.data.data.totalPage;
   } catch (error) {
     console.error(error);
   }
@@ -154,6 +169,11 @@ const handleDelete = async () => {
 const deleteChapter = (chapter) => {
   isModalVisible.value = true;
   itemToDelete.value = chapter;
+};
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  fetchChapter();
 };
 
 onMounted(async () => {
