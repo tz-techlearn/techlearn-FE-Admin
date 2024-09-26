@@ -158,9 +158,7 @@ const fetchCourse = async () => {
 const handleDelete = async () => {
   try {
     await axios.delete(`${rootAPI}/chapters/${itemToDelete.value.id}`);
-    data.chapter = data.chapter.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
+    await fetchChapter();
     isModalVisible.value = false;
     router.replace({ path: route.path, query: { idCourse: idCourse } });
     toast.success("Xóa chương thành công");

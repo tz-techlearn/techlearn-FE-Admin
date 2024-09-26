@@ -31,7 +31,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
-    Danh sách bài đọc
+    Danh sách bài học
   </h5>
   <Table
     :header="header"
@@ -40,6 +40,9 @@
     :actions="actions"
     @delete-item="deleteLesson"
     :viewDetail="false"
+    :totalRows="totalRows"
+    :perPage="perPage"
+    @pageChange="handlePageChange"
   ></Table>
   <b-modal
     v-model="isModalVisible"
@@ -49,7 +52,7 @@
     ok-variant="danger"
     @ok="handleDelete"
   >
-    <p>Bạn có chắc chắn muốn xóa bài tập không?</p>
+    <p>Bạn có chắc chắn muốn xóa bài học không?</p>
   </b-modal>
 </template>
 
@@ -88,11 +91,20 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
+const currentPage = ref(1);
+const perPage = ref(0);
+const totalRows = ref(0);
+
 const fetchAssignments = async () => {
   try {
-    const response = await axios.get(
-      `${rootAPI}/lessons?idChapter=${idChapter}`
-    );
+    const response = await axios.get(`${rootAPI}/lessons`, {
+      params: {
+        idChapter: idChapter,
+        page: currentPage.value,
+      },
+    });
+    perPage.value = response.data.data.pageSize;
+    totalRows.value = response.data.data.totalPage;
     data.assignments = response.data.data.items;
     data.assignments = data.assignments.map((item) => {
       let titleUpdated = item.title;
@@ -119,13 +131,16 @@ const fetchAssignments = async () => {
   }
 };
 
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  fetchAssignments();
+};
+
 // xử lý xóa bài tập
 const handleDelete = async () => {
   try {
     await axios.delete(`${rootAPI}/lessons/${itemToDelete.value.id}`);
-    data.assignments = data.assignments.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
+    await fetchAssignments();
     isModalVisible.value = false;
     router.replace({
       path: route.path,
