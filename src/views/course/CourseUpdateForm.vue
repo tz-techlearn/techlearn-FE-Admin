@@ -39,12 +39,13 @@
       <div class="mb-3">
         <label for="supporter" class="form-label">Giảng viên</label>
         <Multiselect
-          v-model="supporters"
-          :options="options"
+          v-model="course.teacher"
+          :options="teachers.data"
+          label="name"
           :multiple="true"
           :taggable="true"
           @tag="addTeacher"
-          :close-on-select="false"
+          @remove="removeTeacher"
         />
       </div>
       <div class="d-flex justify-content-between mb-3">
@@ -92,7 +93,6 @@ export default {
     const route = useRoute();
     const rootAPI = process.env.VUE_APP_ROOT_API;
     const supporters = ref([]);
-    const options = ["Tuan", "Vii", "Phap","cc","bb","aa"]
     const isUpdate = ref(false);
     const course = reactive({
       id: null,
@@ -102,6 +102,7 @@ export default {
       currencyUnit: 'VND',
       thumbnailUrl: '',
       techStack: [],
+      teacher: [],
       isActive: true,
       isPublic: true,
       point: 100,
@@ -110,10 +111,12 @@ export default {
     const techStack = reactive({
       data: []
     });
-
+    const teachers = reactive({
+      data: []  
+    });
     const submitCourse = async () => {
       try {
-        const courseData = { ...course, techStack: course.techStack.map(tech => tech.id) };
+        const courseData = { ...course, techStack: course.techStack.map(tech => tech.id)};
         if (isUpdate.value) {
           await axios.put(`${rootAPI}/courses/${course.id}`, courseData);
           toast.success("Cập nhật khóa học thành công!", {
@@ -140,6 +143,9 @@ export default {
     const addTag = (newTag) => {
       course.techStack.push({ name: newTag }); 
     };
+    const addTeacher = (newTeacher) => {
+      course.teacher.push({ name: newTeacher });
+    };
 
     const removeTag = (tagToRemove) => {
     const techStackSet = new Set(course.techStack.map(tag => tag.name));
@@ -147,19 +153,38 @@ export default {
     course.techStack = Array.from(techStackSet).map(name => ({ name }));
     };
 
+    const removeTeacher = (tToRemove) => {
+    const teacherSet = new Set(course.teacher.map(t => t.name));
+    teacherSet.delete(tToRemove.name);
+    course.teacher = Array.from(teacherSet).map(name => ({ name }));
+    };
+
     const fetchCourse = async (id) => {
       try {
         const response = await axios.get(`${rootAPI}/courses/${id}`);
         Object.assign(course, response.data.data);
+        console.log(response.data.data);
+        
       } catch (error) {
         console.error('Error fetching course:', error);
       }
     };
-    
+
     const fetchTechStack = async () => {
         const response = await axios.get(`${rootAPI}/tech-stacks`);
         techStack.data = response.data.data.items; 
       };
+
+      const fetchTeachers = async () => {
+        const response = await axios.get(`${rootAPI}/teachers`);
+        teachers.data = response.data.data.items.map(teacher => ({
+          id: teacher.id,
+          name: teacher.name,       
+          avatar: teacher.avatar,
+          color:  teacher.color
+        }));
+        
+      }
 
     onMounted(async () => {
       const { id } = route.params;
@@ -169,18 +194,21 @@ export default {
         await fetchCourse(id);
       }
       await fetchTechStack();
+      await fetchTeachers();
+
     });
 
     return {
       course,
       techStack,
+      teachers,
       isUpdate,
       submitCourse,
       goBack,
       addTag,
       removeTag,
-      supporters,
-      options
+      addTeacher,
+      removeTeacher    
     };
   }
 };
