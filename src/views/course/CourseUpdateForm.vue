@@ -27,14 +27,25 @@
       </div>
       <div class="mb-3">
         <label for="courseTechStacks" class="form-label">Techstacks</label>
-        <Multiselect 
-        v-model="course.techStack" 
-        :options="techStack.data" 
-        label="name"  
-        :multiple="true" 
-        :taggable="true" 
-        @tag="addTag"  
+        <Multiselect
+        v-model="course.techStack"
+        :options="techStack.data"
+        label="name"
+        :multiple="true"
+        :taggable="true"
+        @tag="addTag"
         @remove="removeTag"/>
+      </div>
+      <div class="mb-3">
+        <label for="supporter" class="form-label">Giảng viên</label>
+        <Multiselect
+          v-model="supporters"
+          :options="options"
+          :multiple="true"
+          :taggable="true"
+          @tag="addTeacher"
+          :close-on-select="false"
+        />
       </div>
       <div class="d-flex justify-content-between mb-3">
         <div class="me-2 flex-grow-1">
@@ -47,12 +58,16 @@
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label">Công khai</label>
           <select class="form-select" id="coursePublicity" v-model="course.isPublic">
-            <option value=true>Riêng tư</option>
-            <option value=false>Công khai</option>
+            <option value=false>Riêng tư</option>
+            <option value=true>Công khai</option>
           </select>
         </div>
+        <div class="ms-2 flex-grow-1">
+          <label for="coursePublicity" class="form-label">Lượt hổ trợ</label>
+          <input type="number" class="form-control"/>
+        </div>
       </div>
-      <div class="d-flex justify-content-center">
+      <div class="d-flex justify-content-center mb-4">
         <button type="submit" class="btn btn-primary mx-4">{{ isUpdate ? 'Cập nhật' : 'Tạo mới' }}</button>
         <button type="button" class="btn btn-secondary mx-4" @click="goBack">Trở về</button>
       </div>
@@ -76,7 +91,8 @@ export default {
     const router = useRouter();
     const route = useRoute();
     const rootAPI = process.env.VUE_APP_ROOT_API;
-
+    const supporters = ref([]);
+    const options = ["Tuan", "Vii", "Phap","cc","bb","aa"]
     const isUpdate = ref(false);
     const course = reactive({
       id: null,
@@ -163,6 +179,8 @@ export default {
       goBack,
       addTag,
       removeTag,
+      supporters,
+      options
     };
   }
 };

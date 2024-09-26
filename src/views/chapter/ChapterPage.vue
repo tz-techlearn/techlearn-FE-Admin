@@ -7,8 +7,17 @@
       </div>
     </router-link>
     <div>
-      <button type="button" class="btn btn-primary mr-3">Thêm chương</button>
-      <button type="button" class="btn btn-primary">Sắp xếp chương</button>
+      <router-link
+        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Thêm chương</router-link
+      >
+      <router-link
+        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
+        class="btn btn-primary"
+        >Sắp xếp chương</router-link
+      >
     </div>
   </div>
   <hr class="border border-grey border-1 opacity-50" />
@@ -35,18 +44,36 @@
           {{ dataCourse.course.currencyUnit }}
         </p>
         <p>
-          <span class="fw-bold">Tech stack:</span>
-          {{ dataCourse.course.techStack?.join(", ") || "N/A" }}
+          <span class="fw-bold">Tech stack: </span>
+          <span
+            v-if="
+              dataCourse.course &&
+              dataCourse.course.techStack &&
+              dataCourse.course.techStack.length > 0
+            "
+          >
+            {{
+              dataCourse.course.techStack.map((stack) => stack.name).join(", ")
+            }}
+          </span>
+          <span v-else>N/A</span>
         </p>
       </div>
     </div>
   </div>
+  <hr class="border border-grey border-1 opacity-50" />
+  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
+    Danh sách chương
+  </h5>
   <Table
     :header="header"
     :data="data.chapter"
     :keys="keys"
     :actions="actions"
+    :totalRows="totalRows"
+    :perPage="perPage"
     @delete-item="deleteChapter"
+    @pageChange="handlePageChange"
   ></Table>
   <b-modal
     v-model="isModalVisible"
@@ -63,14 +90,14 @@
 <script setup>
 import Table from "@/components/Tables/Table.vue";
 import axios from "axios";
-import { ref } from "vue";
-import { reactive } from "vue";
-import { onMounted } from "vue";
+import { reactive, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 const route = useRoute();
+const router = useRouter();
 const idCourse = route.query.idCourse;
 
 const data = reactive({
@@ -89,16 +116,31 @@ const keys = ["name"];
 
 const actions = {
   view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
-  edit: (item) => `/courses/${item.id}`,
+  edit: (item) => ({
+    path: `/edit-chapter/${item.id}`,
+    query: { idCourse: idCourse },
+  }),
   delete: (item) => `/courses/${item.id}`,
 };
 
+const currentPage = ref(1);
+const perPage = ref(0);
+const totalRows = ref(0);
+
 const fetchChapter = async () => {
   try {
-    const response = await axios.get(
-      `${rootAPI}/chapters?idCourse=${idCourse}`
-    );
+    const response = await axios.get(`${rootAPI}/chapters`, {
+      params: {
+        idCourse: idCourse,
+        page: currentPage.value,
+      },
+    });
     data.chapter = response.data.data.items;
+
+    console.log(response.data.data);
+
+    perPage.value = response.data.data.pageSize;
+    totalRows.value = response.data.data.totalPage;
   } catch (error) {
     console.error(error);
   }
@@ -113,24 +155,12 @@ const fetchCourse = async () => {
   }
 };
 
-// const deleteChapter = async (chapter) => {
-//   try {
-//     await axios.delete(`${rootAPI}/chapters/${chapter.id}`);
-//     data.chapter = data.chapter.filter((chap) => chap.id !== chapter.id);
-//     toast.success("Xóa chương thành công");
-//   } catch (error) {
-//     console.log(error);
-//     toast.error("Có lỗi xảy ra");
-//   }
-// };
-
 const handleDelete = async () => {
   try {
     await axios.delete(`${rootAPI}/chapters/${itemToDelete.value.id}`);
-    data.chapter = data.chapter.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
+    await fetchChapter();
     isModalVisible.value = false;
+    router.replace({ path: route.path, query: { idCourse: idCourse } });
     toast.success("Xóa chương thành công");
   } catch (error) {
     console.log(error);
@@ -144,9 +174,16 @@ const deleteChapter = (chapter) => {
   itemToDelete.value = chapter;
 };
 
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  fetchChapter();
+};
+
 onMounted(async () => {
   await fetchChapter();
   await fetchCourse();
+  // store.dispatch("updateIdCourse", route.query.idCourse);
+  // console.log(store.getters.getIdCourse)
 });
 </script>
 
