@@ -42,6 +42,7 @@
           v-model="course.teacher"
           :options="teachers.data"
           label="name"
+            track-by="id"
           :multiple="true"
           :taggable="true"
           @tag="addTeacher"
@@ -65,7 +66,7 @@
         </div>
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label">Lượt hổ trợ</label>
-          <input type="number" class="form-control"/>
+          <input type="number" class="form-control" v-model="course.point"/>
         </div>
       </div>
       <div class="d-flex justify-content-center mb-4">
@@ -154,9 +155,9 @@ export default {
     };
 
     const removeTeacher = (tToRemove) => {
-    const teacherSet = new Set(course.teacher.map(t => t.name));
+    const teacherSet = new Set(course.teacher);
     teacherSet.delete(tToRemove.name);
-    course.teacher = Array.from(teacherSet).map(name => ({ name }));
+    course.teacher = Array.from(teacherSet);
     };
 
     const fetchCourse = async (id) => {
