@@ -27,7 +27,19 @@
                     <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
                 </p>
                 <p>
-                    <span class="fw-bold">Tech stack:</span> {{ dataCourse.course.techStack?.join(', ') || 'N/A' }}
+          <span class="fw-bold">Công nghệ: </span>
+          <span
+            v-if="
+              dataCourse.course &&
+              dataCourse.course.techStack &&
+              dataCourse.course.techStack.length > 0
+            "
+          >
+            {{
+              dataCourse.course.techStack.map((stack) => stack.name).join(", ")
+            }}
+          </span>
+          <span v-else>N/A</span>
                 </p>
             </div>
         </div>
@@ -39,7 +51,7 @@
                     <input type="text" id="chapterName" class="form-control" v-model="chapterName" required />
                 </div>
                 <div class="mb-3">
-                    <label for="isPublic" class="form-label">Công khai</label>
+                    <label for="isPublic" class="form-label">Trạng thái</label>
                     <select id="isPublic" class="form-select" v-model="isPublic" required>
                         <option v-for="option in publicOptions" :key="option.value" :value="option.value">
                             {{ option.text }}
@@ -47,16 +59,17 @@
                     </select>
                 </div>
                 <div class="mb-3">
-                    <label for="supporter" class="form-label">Người hổ trợ</label>
+                    <label for="supporter" class="form-label">Người hỗ trợ</label>
                     <Multiselect
                     v-model="mentors.data"
-                    :options="options.data"
+                    :options="options.data || []"
                     label="name"
                     track-by="id"
                     :multiple="true"
                     @tag="addTeacher"
                     @remove="removeTeacher"
                     :close-on-select="false"
+                    placeholder="Chọn người hỗ trợ"
                     />
                 </div>
                 <button type="submit" class="btn btn-primary">Cập nhật</button>

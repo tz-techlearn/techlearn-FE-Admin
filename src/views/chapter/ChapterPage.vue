@@ -44,7 +44,7 @@
           {{ dataCourse.course.currencyUnit }}
         </p>
         <p>
-          <span class="fw-bold">Tech stack: </span>
+          <span class="fw-bold">Công nghệ: </span>
           <span
             v-if="
               dataCourse.course &&
