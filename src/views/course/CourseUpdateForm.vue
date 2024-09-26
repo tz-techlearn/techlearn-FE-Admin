@@ -142,10 +142,11 @@ export default {
     };
 
     const removeTag = (tagToRemove) => {
-    const techStackSet = new Set(course.techStack.map(tag => tag.name));
-    techStackSet.delete(tagToRemove.name);
-    course.techStack = Array.from(techStackSet).map(name => ({ name }));
+    const techStackMap = new Map(course.techStack.map(tag => [tag.name, tag]));
+    techStackMap.delete(tagToRemove.name);
+    course.techStack = Array.from(techStackMap.values());
     };
+
 
     const fetchCourse = async (id) => {
       try {
