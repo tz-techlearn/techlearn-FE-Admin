@@ -46,6 +46,19 @@
                         </option>
                     </select>
                 </div>
+                <div class="mb-3">
+                    <label for="supporter" class="form-label">Người hổ trợ</label>
+                    <Multiselect
+                    v-model="mentors.data"
+                    :options="options.data"
+                    label="name"
+                    track-by="id"
+                    :multiple="true"
+                    @tag="addTeacher"
+                    @remove="removeTeacher"
+                    :close-on-select="false"
+                    />
+                </div>
                 <button type="submit" class="btn btn-primary">Cập nhật</button>
             </form>
         </div>
@@ -64,7 +77,12 @@ const route = useRoute();
 
 const chapterId = route.params.id;
 const idCourse = route.query.idCourse;
-
+const mentors = reactive({
+    data:[]
+})
+const options = reactive({
+    data:[]
+})
 const chapterName = ref('');
 const isPublic = ref(true);
 const chapterOrder = ref(0);
@@ -77,6 +95,7 @@ const publicOptions = [
 const fetchChapter = async () => {
     try {
         const response = await axios.get(`${rootAPI}/chapters/${chapterId}`);
+        mentors.data = response.data.data.mentor;
         chapterName.value = response.data.data.name;
         isPublic.value = response.data.data.isPublic;
         chapterOrder.value = response.data.data.chapterOrder;
@@ -91,7 +110,9 @@ const updateChapter = async () => {
             name: chapterName.value,
             chapterOrder: chapterOrder.value,
             isPublic: isPublic.value,
-            courseId: idCourse
+            courseId: idCourse,
+            mentor:mentors.data,
+            id:chapterId
         };
 
         await axios.put(`${rootAPI}/chapters/${chapterId}`, updatedChapter);
@@ -121,10 +142,25 @@ const fetchCourse = async () => {
         console.error(error);
     }
 }
+const fetchMentors = async () => {
+    try {
+        const response = await axios.get(`${rootAPI}/mentors`);
+        options.data = response.data.data.items;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+    const removeTeacher = (tagToRemove) => {
+        const teacherSet = new Set( mentors.data);
+        teacherSet.delete(tagToRemove);
+        mentors.data = Array.from(teacherSet)
+    };
 
 onMounted(async () => {
     await fetchChapter();
     await fetchCourse();
+    await fetchMentors();
 });
 </script>
 
