@@ -52,12 +52,15 @@
                 <div class="mb-3">
                     <label for="supporter" class="form-label">Người hổ trợ</label>
                     <Multiselect
-                    v-model="supporters"
-                    :options="options"
+                    v-model="mentors.data"
+                    :options="options.data"
+                    label="name"
                     :multiple="true"
                     :taggable="true"
                     @tag="addTeacher"
+                    @remove="removeTeacher"
                     :close-on-select="false"
+                    placeholder="Chọn người hổ trợ"
                     />
                 </div>
 
@@ -78,8 +81,12 @@ const rootAPI = process.env.VUE_APP_ROOT_API;
 
 const chapterName = ref('');
 const isPublic = ref(true);
-const supporters = ref([]);
-const options = ["Tuan", "Vii", "Phap","cc","bb","aa"]
+const mentors = reactive({
+    data:[]
+})
+const options = reactive({
+    data:[]
+})
 const publicOptions = [
     { value: true, text: 'Công khai' },
     { value: false, text: 'Riêng tư' }
@@ -94,9 +101,9 @@ const addChapter = async () => {
         const newChapter = {
             name: chapterName.value,
             isPublic: isPublic.value,
-            courseId: idCourse
+            courseId: idCourse,
+            mentor: mentors.data
         };
-
         const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/chapters`, newChapter);
 
         toast.success("Thêm chương thành công", {
@@ -130,6 +137,7 @@ const fetchCourse = async () => {
     try {
         const response = await axios.get(`${rootAPI}/courses/${idCourse}`);
         dataCourse.course = response.data.data;
+        // dataCourse.course = {...dataCourse.course, mentor:[]}
         console.log("dataCourse", dataCourse.course);
 
     } catch (error) {
@@ -137,7 +145,24 @@ const fetchCourse = async () => {
     }
 }
 
+const fetchMentors = async () => {
+    try {
+        const response = await axios.get(`${rootAPI}/mentors`);
+        options.data = response.data.data.items;
+    }catch(err){
+        console.log(err);
+    }
+}
+
+const removeTeacher = (tagToRemove) => {
+    const teacherSet = new Set(mentors.data);
+    teacherSet.delete(tagToRemove);
+    mentors.data = Array.from(teacherSet);
+
+};
+
 onMounted(async () => {
+    await fetchMentors();
     await fetchChapters();
     await fetchCourse();
 });
