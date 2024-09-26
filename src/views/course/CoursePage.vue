@@ -106,6 +106,11 @@ const createCourse = () => {
 };
 
 onMounted(fetchCourses);
+
+// const viewItem = async (item) => {
+//   const idCourse = item.id;
+//   store.dispatch("updateIdCourse", idCourse);
+// };
 </script>
 
 <style scoped>

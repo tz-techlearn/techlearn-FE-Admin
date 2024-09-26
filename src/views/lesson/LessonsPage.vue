@@ -66,6 +66,7 @@ import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
+const router = useRouter();
 const route = useRoute();
 
 const idChapter = route.query.idChapter;
@@ -141,6 +142,10 @@ const handleDelete = async () => {
     await axios.delete(`${rootAPI}/lessons/${itemToDelete.value.id}`);
     await fetchAssignments();
     isModalVisible.value = false;
+    router.replace({
+      path: route.path,
+      query: { idCourse: idCourse, idChapter: idChapter },
+    });
     toast.success("Xóa bài tập thành công");
   } catch (error) {
     console.log(error);

@@ -93,9 +93,11 @@ import axios from "axios";
 import { reactive, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 const route = useRoute();
+const router = useRouter();
 const idCourse = route.query.idCourse;
 
 const data = reactive({
@@ -158,6 +160,7 @@ const handleDelete = async () => {
     await axios.delete(`${rootAPI}/chapters/${itemToDelete.value.id}`);
     await fetchChapter();
     isModalVisible.value = false;
+    router.replace({ path: route.path, query: { idCourse: idCourse } });
     toast.success("Xóa chương thành công");
   } catch (error) {
     console.log(error);
@@ -179,6 +182,8 @@ const handlePageChange = (page) => {
 onMounted(async () => {
   await fetchChapter();
   await fetchCourse();
+  // store.dispatch("updateIdCourse", route.query.idCourse);
+  // console.log(store.getters.getIdCourse)
 });
 </script>
 
