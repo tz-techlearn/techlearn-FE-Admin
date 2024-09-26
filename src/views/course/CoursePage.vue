@@ -1,29 +1,45 @@
 <template>
   <DashBoard></DashBoard>
-  <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
-    <p class="course-list-title">
-      Danh sách khóa học
-    </p>
-    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
+  <div
+    class="d-flex justify-content-between align-items-center mt-4 container my-4"
+  >
+    <p class="course-list-title">Danh sách khóa học</p>
+    <button
+      class="btn btn-primary create-course-btn align-items-center"
+      @click="createCourse"
+    >
       Thêm mới
     </button>
   </div>
-  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
-  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
-    @ok="handleDelete">
+  <Table
+    :header="header"
+    :data="data.courses"
+    :keys="keys"
+    :actions="actions"
+    :totalRows="totalRows"
+    :perPage="perPage"
+    @deleteItem="deleteCourse"
+    @pageChange="handlePageChange"
+  ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
     <p>Bạn có chắc chắn xóa khóa học không?</p>
   </b-modal>
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
-import { reactive, onMounted } from 'vue';
-import axios from 'axios';
+import { useRouter } from "vue-router";
+import { reactive, onMounted, ref } from "vue";
+import axios from "axios";
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
-import Table from "@/components/Tables/Table.vue";;
-import { ref } from "vue";
+import Table from "@/components/Tables/Table.vue";
 import { toast } from "vue3-toastify";
-
 
 const router = useRouter();
 const rootAPI = process.env.VUE_APP_ROOT_API;
@@ -44,19 +60,41 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
+const currentPage = ref(1);
+const perPage = ref(0);
+const totalRows = ref(0);
+
 const fetchCourses = async () => {
   try {
-    const response = await axios.get(`${rootAPI}/courses`);
+    const response = await axios.get(`${rootAPI}/courses`, {
+      params: {
+        page: currentPage.value,
+      },
+    });
     data.courses = response.data.data.items;
+    perPage.value = response.data.data.pageSize;
+    totalRows.value = response.data.data.totalPage;
   } catch (error) {
     console.error("Error fetching courses", error);
   }
 };
 
-const deleteCourse = async (course) => {
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  fetchCourses();
+};
+
+const deleteCourse = (course) => {
+  isModalVisible.value = true;
+  itemToDelete.value = course;
+};
+
+const handleDelete = async () => {
   try {
-    await axios.delete(`${rootAPI}/courses/${course.id}`);
-    data.courses = data.courses.filter((item) => item.id !== course.id);
+    await axios.delete(`${rootAPI}/courses/${itemToDelete.value.id}`);
+    await fetchCourses();
+    isModalVisible.value = false;
+    toast.success("Xóa khóa học thành công");
   } catch (error) {
     console.log(error);
     toast.error("Có lỗi xảy ra");
@@ -64,11 +102,15 @@ const deleteCourse = async (course) => {
 };
 
 const createCourse = () => {
-  router.push('/courses-create');
-
+  router.push("/courses-create");
 };
 
 onMounted(fetchCourses);
+
+// const viewItem = async (item) => {
+//   const idCourse = item.id;
+//   store.dispatch("updateIdCourse", idCourse);
+// };
 </script>
 
 <style scoped>
