@@ -31,7 +31,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
-    Danh sách bài đọc
+    Danh sách bài học
   </h5>
   <Table
     :header="header"
@@ -139,9 +139,7 @@ const handlePageChange = (page) => {
 const handleDelete = async () => {
   try {
     await axios.delete(`${rootAPI}/lessons/${itemToDelete.value.id}`);
-    data.assignments = data.assignments.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
+    await fetchAssignments();
     isModalVisible.value = false;
     toast.success("Xóa bài tập thành công");
   } catch (error) {

@@ -7,47 +7,82 @@
       </div>
     </router-link>
     <div>
-      <router-link :to="{ path: '/add-chapter', query: { idCourse: idCourse } }" type="button"
-        class="btn btn-primary mr-3">Thêm chương</router-link>
-      <router-link :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }" class="btn btn-primary">Sắp xếp
-        chương</router-link>
+      <router-link
+        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Thêm chương</router-link
+      >
+      <router-link
+        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
+        class="btn btn-primary"
+        >Sắp xếp chương</router-link
+      >
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50">
+  <hr class="border border-grey border-1 opacity-50" />
   <div class="container text-center">
     <div class="row">
       <div class="col-md-5">
-        <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="">
+        <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
       </div>
       <div class="col-md-7 text-start">
         <p>
-          <span class="fw-bold">Tên khoá học:</span> {{ dataCourse.course.name }}
+          <span class="fw-bold">Tên khoá học:</span>
+          {{ dataCourse.course.name }}
         </p>
         <p>
-          <span class="fw-bold">Mô tả khoá học:</span> {{ dataCourse.course.description }}
+          <span class="fw-bold">Mô tả khoá học:</span>
+          {{ dataCourse.course.description }}
         </p>
         <p>
-          <span class="fw-bold">Giá khoá học:</span> {{ dataCourse.course.price }}
+          <span class="fw-bold">Giá khoá học:</span>
+          {{ dataCourse.course.price }}
         </p>
         <p>
-          <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
+          <span class="fw-bold">Đơn vị:</span>
+          {{ dataCourse.course.currencyUnit }}
         </p>
         <p>
           <span class="fw-bold">Tech stack: </span>
-          <span v-if="dataCourse.course && dataCourse.course.techStack && dataCourse.course.techStack.length > 0">
-            {{ dataCourse.course.techStack.map(stack => stack.name).join(', ') }}
+          <span
+            v-if="
+              dataCourse.course &&
+              dataCourse.course.techStack &&
+              dataCourse.course.techStack.length > 0
+            "
+          >
+            {{
+              dataCourse.course.techStack.map((stack) => stack.name).join(", ")
+            }}
           </span>
           <span v-else>N/A</span>
         </p>
       </div>
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50">
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px;">Danh sách chương</h5>
-  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
-    @delete-item="deleteChapter" @pageChange="handlePageChange"></Table>
-  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
-    @ok="handleDelete">
+  <hr class="border border-grey border-1 opacity-50" />
+  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
+    Danh sách chương
+  </h5>
+  <Table
+    :header="header"
+    :data="data.chapter"
+    :keys="keys"
+    :actions="actions"
+    :totalRows="totalRows"
+    :perPage="perPage"
+    @delete-item="deleteChapter"
+    @pageChange="handlePageChange"
+  ></Table>
+  <b-modal
+    v-model="isModalVisible"
+    title="Xác nhận xóa"
+    ok-title="Xóa"
+    cancel-title="Đóng"
+    ok-variant="danger"
+    @ok="handleDelete"
+  >
     <p>Bạn có chắc chắn muốn xóa chương không?</p>
   </b-modal>
 </template>
@@ -81,7 +116,7 @@ const actions = {
   view: (item) => `/lessons?idChapter=${item.id}&idCourse=${idCourse}`,
   edit: (item) => ({
     path: `/edit-chapter/${item.id}`,
-    query: { idCourse: idCourse }
+    query: { idCourse: idCourse },
   }),
   delete: (item) => `/courses/${item.id}`,
 };
@@ -92,25 +127,22 @@ const totalRows = ref(0);
 
 const fetchChapter = async () => {
   try {
-    const response = await axios.get(
-      `${rootAPI}/chapters`, {
+    const response = await axios.get(`${rootAPI}/chapters`, {
       params: {
         idCourse: idCourse,
         page: currentPage.value,
-      }
-    }
-    );
+      },
+    });
     data.chapter = response.data.data.items;
 
     console.log(response.data.data);
 
-    perPage.value = response.data.data.pageSize
+    perPage.value = response.data.data.pageSize;
     totalRows.value = response.data.data.totalPage;
   } catch (error) {
     console.error(error);
   }
 };
-
 
 const fetchCourse = async () => {
   try {
@@ -124,9 +156,7 @@ const fetchCourse = async () => {
 const handleDelete = async () => {
   try {
     await axios.delete(`${rootAPI}/chapters/${itemToDelete.value.id}`);
-    data.chapter = data.chapter.filter(
-      (item) => item.id !== itemToDelete.value.id
-    );
+    await fetchChapter();
     isModalVisible.value = false;
     toast.success("Xóa chương thành công");
   } catch (error) {
