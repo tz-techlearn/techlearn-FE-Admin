@@ -46,19 +46,6 @@
       </div>
     </div>
 
-    <div class="col-7">
-      <h2>Thêm Chương Mới</h2>
-      <form @submit.prevent="addChapter">
-        <div class="mb-3">
-          <label for="chapterName" class="form-label">Tên chương</label>
-          <input
-            type="text"
-            class="form-control"
-            id="chapterName"
-            v-model="chapterName"
-            required
-          />
-        </div>
 
         <div class="col-7">
             <h2>Thêm Chương Mới</h2>
@@ -90,22 +77,6 @@
                     placeholder="Chọn người hổ trợ"
                     />
                 </div>
-
-                <button type="submit" class="btn btn-primary">Thêm Chương</button>
-            </form>
-        </div>
-        <div class="mb-3">
-          <label for="supporter" class="form-label">Người hổ trợ</label>
-          <Multiselect
-            v-model="supporters"
-            :options="options"
-            :multiple="true"
-            :taggable="true"
-            @tag="addTeacher"
-            :close-on-select="false"
-          />
-        </div>
-
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
     </div>
