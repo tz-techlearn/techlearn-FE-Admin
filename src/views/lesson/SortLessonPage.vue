@@ -1,32 +1,33 @@
 <template>
     <div class="d-flex mt-3 justify-content-between align-items-center chapter-header">
-        <router-link :to="{ path: '/chapters', query: { idCourse: idCourse } }" class="text-decoration-none">
+        <router-link :to="{ path: '/lessons', query: { idChapter: idChapter, idCourse: idCourse } }" class="text-decoration-none">
+            <!-- http://localhost:8080/lessons?idChapter=1&idCourse=1 -->
             <div class="d-flex align-items-center gap-2">
                 <i class="fa-solid fa-arrow-left text-dark"></i>
-                <p class="mb-0 text-dark">Danh sách chương</p>
+                <p class="mb-0 text-dark">Danh sách bài học</p>
             </div>
         </router-link>
     </div>
     <hr class="border border-grey border-1 opacity-50">
-    <h5 class="mt-5 title-sort" style="margin-left: 30px">Sắp xếp danh sách chương</h5>
-    <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :isDraggable="true"
-        @updateOrder="handleDragUpdate" :totalRows="totalRows" :perPage="perPage" @pageChange="handlePageChange">
-    </Table>
-    <button class="d-flex mx-auto btn-save btn btn-warning" @click="saveOrder">Lưu thay đổi</button>
+    <h5 class="mt-4 title-sort" style="margin-left: 30px">Sắp xếp danh sách bài học</h5>
+    <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions" :isDraggable="true"
+        @updateOrder="handleDragUpdate" :viewPublic="false"></Table>
+    <button class="d-flex mx-auto btn-save btn btn-warning mb-4" @click="saveOrder">Lưu thay đổi</button>
 </template>
 <script setup>
 import Table from '@/components/Tables/Table.vue';
 import axios from "axios";
-import { reactive, onMounted, ref } from "vue";
+import { reactive, onMounted } from "vue";
 import { toast } from "vue3-toastify";
 import { useRoute } from 'vue-router';
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 const route = useRoute();
+const idChapter = route.query.idChapter;
 const idCourse = route.query.idCourse;
 
 const data = reactive({
-    chapter: [],
+    assignments: [],
     updatedOrder: []
 });
 
@@ -34,8 +35,8 @@ const dataCourse = reactive({
     course: {}
 });
 
-const header = ["STT", "Tên chương", "Mức độ truy cập"];
-const keys = ["name"];
+const header = ["STT", "Tên Bài Học"];
+const keys = ["title"];
 
 function handleDragUpdate(updatedData) {
     data.updatedOrder = updatedData.map((item, index) => ({
@@ -43,7 +44,6 @@ function handleDragUpdate(updatedData) {
         order: (index + 1)
     }));
 }
-
 
 async function saveOrder() {
     if (!data.updatedOrder.length) {
@@ -55,39 +55,45 @@ async function saveOrder() {
     }
 
     try {
-        await axios.patch(`${rootAPI}/chapters/update-order`, data.updatedOrder);
+        await axios.patch(`${rootAPI}/lessons/update-order`, data.updatedOrder);
         toast.success("Cập nhật thứ tự thành công", {
             position: "top-right",
             autoClose: 3000,
         });
         data.updatedOrder = [];  // Clear the local updated order after saving
     } catch (error) {
-        toast.error("Lỗi cập nhật thứ tự chương", {
+        toast.error("Lỗi cập nhật thứ tự", {
             position: "top-right",
             autoClose: 3000,
         });
-        console.error("Lỗi cập nhật thứ tự chương:", error);
+        console.error("Lỗi cập nhật thứ tự:", error);
     }
 }
 
-const currentPage = ref(1);
-const perPage = ref(50);
-const totalRows = ref(0);
-
 const fetchChapter = async () => {
     try {
-        const response = await axios.get(
-            `${rootAPI}/chapters`, {
-            params: {
-                idCourse: idCourse,
-                page: currentPage.value,
-                pageSize: perPage.value
+        const response = await axios.get(`${rootAPI}/lessons?idChapter=${idChapter}`);
+        data.assignments = response.data.data.items;
+        data.assignments = data.assignments.map((item) => {
+            let titleUpdated = item.title;
+
+            switch (item.type) {
+                case "LECTURES":
+                    titleUpdated = `[Bài giảng] - ${item.title}`;
+                    break;
+                case "READINGS":
+                    titleUpdated = `[Bài đọc] - ${item.title}`;
+                    break;
+                case "EXERCISES":
+                    titleUpdated = `[Bài tập] - ${item.title}`;
+                    break;
             }
-        }
-        );
-        data.chapter = response.data.data.items;
-        perPage.value = response.data.data.pageSize
-        totalRows.value = response.data.data.totalPage;
+
+            return {
+                ...item,
+                title: titleUpdated,
+            };
+        });
     } catch (error) {
         console.error(error);
     }

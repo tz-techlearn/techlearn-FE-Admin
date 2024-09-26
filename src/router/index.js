@@ -8,6 +8,7 @@ import CourseUpdateForm from "@/views/course/CourseUpdateForm.vue";
 import LessonsPage from "@/views/lesson/LessonsPage.vue";
 import ChapterPage from "@/views/chapter/ChapterPage.vue";
 import AddLessonPage from '@/views/lesson/AddLessonPage.vue';
+import SortLessonPage from '@/views/lesson/SortLessonPage.vue'
 
 const routes = [
   {
@@ -70,6 +71,11 @@ const routes = [
     name: 'UpdateLessonPage',
     component: AddLessonPage,
     props: true
+  },
+  {
+    path: "/sort-lessons",
+    name: "SortLessonPage",
+    component: SortLessonPage,
   },
 ]
 
