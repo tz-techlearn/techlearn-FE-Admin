@@ -8,7 +8,8 @@
       Thêm mới
     </button>
   </div>
-  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" @deleteItem="deleteCourse"></Table>
+  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @deleteItem="deleteCourse" @pageChange="handlePageChange"></Table>
   <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
     @ok="handleDelete">
     <p>Bạn có chắc chắn xóa khóa học không?</p>
@@ -17,11 +18,10 @@
 
 <script setup>
 import { useRouter } from 'vue-router';
-import { reactive, onMounted } from 'vue';
+import { reactive, onMounted, ref } from 'vue';
 import axios from 'axios';
 import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";;
-import { ref } from "vue";
 import { toast } from "vue3-toastify";
 
 
@@ -44,13 +44,28 @@ const actions = {
   delete: (item) => `/courses/${item.id}`,
 };
 
+const currentPage = ref(1);
+const perPage = ref(0);
+const totalRows = ref(0);
+
 const fetchCourses = async () => {
   try {
-    const response = await axios.get(`${rootAPI}/courses`);
+    const response = await axios.get(`${rootAPI}/courses`, {
+      params: {
+        page: currentPage.value,
+      }
+    });
     data.courses = response.data.data.items;
+    perPage.value = response.data.data.pageSize;
+    totalRows.value = response.data.data.totalPage;
   } catch (error) {
     console.error("Error fetching courses", error);
   }
+};
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  fetchCourses();
 };
 
 const deleteCourse = async (course) => {
