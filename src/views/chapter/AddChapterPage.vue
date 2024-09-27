@@ -31,7 +31,7 @@
           {{ dataCourse.course.currencyUnit }}
         </p>
         <p>
-          <span class="fw-bold">Tech stack:</span>
+          <span class="fw-bold">Công nghệ:</span>
           {{
             dataCourse.course.techStack
               ?.map((stack) => stack.name)
@@ -49,19 +49,28 @@
           <input type="text" class="form-control" id="chapterName" v-model="chapterName" required />
         </div>
 
-        <div class="mb-3">
-          <label for="isPublic" class="form-label">Chế độ</label>
-          <select v-model="isPublic" class="form-select" aria-label="Công khai">
-            <option v-for="option in publicOptions" :key="option.value" :value="option.value">
-              {{ option.text }}
-            </option>
-          </select>
-        </div>
-        <div class="mb-3">
-          <label for="supporter" class="form-label">Người hổ trợ</label>
-          <Multiselect v-model="mentors.data" :options="options.data" label="name" :multiple="true" :taggable="true"
-            @tag="addTeacher" @remove="removeTeacher" :close-on-select="false" placeholder="Chọn người hổ trợ" />
-        </div>
+                <div class="mb-3">
+                    <label for="isPublic" class="form-label">Trạng thái</label>
+                    <select v-model="isPublic" class="form-select" aria-label="Công khai">
+                        <option v-for="option in publicOptions" :key="option.value" :value="option.value">
+                            {{ option.text }}
+                        </option>
+                    </select>
+                </div>
+                <div class="mb-3">
+                    <label for="supporter" class="form-label">Người hỗ trợ</label>
+                    <Multiselect
+                    v-model="mentors.data"
+                    :options="options.data || []"
+                    label="name"
+                    :multiple="true"
+                    :taggable="true"
+                    @tag="addTeacher"
+                    @remove="removeTeacher"
+                    :close-on-select="false"
+                    placeholder="Chọn người hỗ trợ"
+                    />
+                </div>
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
     </div>
