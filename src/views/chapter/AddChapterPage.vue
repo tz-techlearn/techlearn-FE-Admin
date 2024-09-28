@@ -1,11 +1,6 @@
 <template>
-  <div
-    class="d-flex mt-3 justify-content-between align-items-center chapter-header"
-  >
-    <router-link
-      :to="{ path: '/chapters', query: { idCourse: idCourse } }"
-      class="text-decoration-none"
-    >
+  <div class="d-flex mt-3 justify-content-between align-items-center chapter-header">
+    <router-link :to="{ path: '/chapters', query: { idCourse: idCourse } }" class="text-decoration-none">
       <div class="d-flex align-items-center gap-2">
         <i class="fa-solid fa-arrow-left text-dark"></i>
         <p class="mb-0 text-dark">Danh sách chương</p>
@@ -45,38 +40,32 @@
         </p>
       </div>
     </div>
-
-
-        <div class="col-7">
-            <h2>Thêm Chương Mới</h2>
-            <form @submit.prevent="addChapter">
-                <div class="mb-3">
-                    <label for="chapterName" class="form-label">Tên chương</label>
-                    <input type="text" class="form-control" id="chapterName" v-model="chapterName" required />
-                </div>
-
-                <div class="mb-3">
-                    <label for="isPublic" class="form-label">Trạng thái</label>
-                    <select v-model="isPublic" class="form-select" aria-label="Công khai">
-                        <option v-for="option in publicOptions" :key="option.value" :value="option.value">
-                            {{ option.text }}
-                        </option>
-                    </select>
-                </div>
-                <div class="mb-3">
-                    <label for="supporter" class="form-label">Người hỗ trợ</label>
-                    <Multiselect
-                    v-model="mentors.data"
-                    :options="options.data || []"
-                    label="name"
-                    :multiple="true"
-                    :taggable="true"
-                    @tag="addTeacher"
-                    @remove="removeTeacher"
-                    :close-on-select="false"
-                    placeholder="Chọn người hỗ trợ"
-                    />
-                </div>
+    <div class="col-7">
+      <h2>Thêm Chương Mới</h2>
+      <form @submit.prevent="addChapter">
+        <div class="mb-3">
+          <label for="chapterName" class="form-label">Tên chương</label>
+          <input type="text" class="form-control" id="chapterName" v-model="chapterName" :class="{
+            'border-danger': errors.chapterName && chapterName === '',
+          }" @blur="isInputFocused = false" @input="onInputChange" />
+          <div v-if="errors.chapterName && !isInputFocused && !chapterName" class="text-danger">
+            {{ errors.chapterName }}
+          </div>
+        </div>
+        <div class="mb-3">
+          <label for="isPublic" class="form-label">Trạng thái</label>
+          <select v-model="isPublic" class="form-select" aria-label="Công khai">
+            <option v-for="option in publicOptions" :key="option.value" :value="option.value">
+              {{ option.text }}
+            </option>
+          </select>
+        </div>
+        <div class="mb-3">
+          <label for="supporter" class="form-label">Người hỗ trợ</label>
+          <Multiselect v-model="mentors.data" :options="options.data || []" label="name" :multiple="true"
+            :taggable="true" @tag="addTeacher" @remove="removeTeacher" :close-on-select="false"
+            placeholder="Chọn người hỗ trợ" />
+        </div>
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
     </div>
@@ -94,12 +83,17 @@ const rootAPI = process.env.VUE_APP_ROOT_API;
 
 const chapterName = ref("");
 const isPublic = ref(true);
+const isInputFocused = ref(false);
+
+const errors = reactive({
+  chapterName: "",
+});
 
 const mentors = reactive({
-    data:[]
+  data: []
 })
 const options = reactive({
-    data:[]
+  data: []
 })
 
 const publicOptions = [
@@ -112,28 +106,32 @@ const idCourse = route.query.idCourse;
 const existingChapters = ref([]);
 
 const addChapter = async () => {
-    try {
-        const newChapter = {
-            name: chapterName.value,
-            isPublic: isPublic.value,
-            courseId: idCourse,
-            mentor: mentors.data
-        };
-        const response = await axios.post(`${process.env.VUE_APP_ROOT_API}/chapters`, newChapter);
+  try {
+    const newChapter = {
+      name: chapterName.value,
+      isPublic: isPublic.value,
+      courseId: idCourse,
+      mentor: mentors.data,
+    };
 
-        toast.success("Thêm chương thành công", {
-            position: "top-right",
-            autoClose: 3000,
-        });
+    await axios.post(`${process.env.VUE_APP_ROOT_API}/chapters`, newChapter);
 
-    } catch (error) {
-        toast.error("Thêm chương thất bại", {
-            position: "top-right",
-            autoClose: 3000,
-        });
-        console.error('Thêm chương thất bại:', error);
+    toast.success("Thêm chương thành công", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+
+  } catch (error) {
+    if (error.response && error.response.data) {
+      const validationErrors = error.response.data;
+      errors.chapterName = validationErrors.name
     }
-
+    toast.error("Thêm chương thất bại", {
+      position: "top-right",
+      autoClose: 3000,
+    });
+    console.error('Thêm chương thất bại:', errors);
+  }
 };
 
 const dataCourse = reactive({
@@ -145,49 +143,42 @@ const fetchChapters = async () => {
     const response = await axios.get(
       `${rootAPI}/chapters?idCourse=${idCourse}`
     );
-    existingChapters.value = response.data.data.items; // Store existing chapters
+    existingChapters.value = response.data.data.items;
   } catch (error) {
     console.error(error);
   }
 };
 
 const fetchCourse = async () => {
-
-    try {
-        const response = await axios.get(`${rootAPI}/courses/${idCourse}`);
-        dataCourse.course = response.data.data;
-        // dataCourse.course = {...dataCourse.course, mentor:[]}
-        console.log("dataCourse", dataCourse.course);
-
-    } catch (error) {
-        console.error(error);
-    }
+  try {
+    const response = await axios.get(`${rootAPI}/courses/${idCourse}`);
+    dataCourse.course = response.data.data;
+  } catch (error) {
+    console.error(error);
+  }
 }
 
-
 const fetchMentors = async () => {
-    try {
-        const response = await axios.get(`${rootAPI}/mentors`);
-        options.data = response.data.data.items;
-    }catch(err){
-        console.log(err);
-    }
+  try {
+    const response = await axios.get(`${rootAPI}/mentors`);
+    options.data = response.data.data.items;
+  } catch (err) {
+    console.log(err);
+  }
 }
 
 const removeTeacher = (tagToRemove) => {
-    const teacherSet = new Set(mentors.data);
-    teacherSet.delete(tagToRemove);
-    mentors.data = Array.from(teacherSet);
-
+  const teacherSet = new Set(mentors.data);
+  teacherSet.delete(tagToRemove);
+  mentors.data = Array.from(teacherSet);
 };
 
 onMounted(async () => {
-
-    await fetchMentors();
-    await fetchChapters();
-    await fetchCourse();
-
+  await fetchMentors();
+  await fetchChapters();
+  await fetchCourse();
 });
+
 </script>
 
 <style scoped>
@@ -215,6 +206,10 @@ img {
   border-radius: 10px;
   max-width: 80%;
   height: auto;
+}
+
+input:focus {
+  border-color: initial !important;
 }
 
 .chapter-header {
