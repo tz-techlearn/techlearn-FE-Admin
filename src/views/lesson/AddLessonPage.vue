@@ -9,19 +9,19 @@
         </router-link>
     </div>
     <div class="container">
-        <h2 class="mb-4 mt-4">{{ isUpdate ? 'Cập nhật bài học' : 'Thêm bài học' }}</h2>
+        <h3 class="mb-4 mt-4">{{ isUpdate ? 'Cập nhật bài học' : 'Thêm bài học' }}</h3>
         <form @submit.prevent="submitLessons">
             <div class="row">
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="title" class="form-label">Tiêu đề</label>
+                        <label for="title" class="form-label h5">Tiêu đề</label>
                         <input type="text" class="form-control" id="title" v-model="dataLesson.title" />
                         <div v-if="errors.title" class="text-danger">{{ errors.title }}</div>
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-6">
-                        <label for="type" class="form-label">Loại</label>
+                        <label for="type" class="form-label h5">Loại</label>
                         <select class="form-select" id="type" v-model="dataLesson.type">
                             <option value="READINGS">Bài đọc</option>
                             <option value="LECTURES">Bài giảng</option>
@@ -31,21 +31,27 @@
                 </div>
                 <div class="row mb-3" v-if="dataLesson.type === 'LECTURES'">
                     <div class="col-md-12">
-                        <label for="video" class="form-label">Video URL</label>
-                        <input type="text" class="form-control" id="video" v-model="dataLesson.videoUrl" />
+                        <label for="video" class="form-label h5">Video URL</label>
+                        <input type="" class="form-control" id="video" v-model="dataLesson.videoUrl" />
+                        
                         <div v-if="errors.videoUrl" class="text-danger">{{ errors.videoUrl }}</div>
+
+                    </div>
+                    <div class="col-md-12 mt-3" >
+                        <iframe class="" :class="{'d-none' :  dataLesson.videoUrl.trim().length<1 }" width="100%" height="500" :src="renderVideo(dataLesson.videoUrl)" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+                           
                     </div>
                 </div>
                 <div class="row mb-3">
                     <div class="col-md-12">
-                        <label for="content" class="form-label">Nội dung</label>
+                        <label for="content" class="form-label h5">Nội dung</label>
                         <CKEditorComponent v-model="dataLesson.content" />
                         <div v-if="errors.content" class="text-danger">{{ errors.content }}</div>
                     </div>
                 </div>
                 <div class="row mb-3" v-if="dataLesson.type === 'EXERCISES'">
                     <div class="col-md-12">
-                        <label for="contentRefer" class="form-label">Ghi chú</label>
+                        <label for="contentRefer" class="form-label h5">Ghi chú</label>
                         <CKEditorComponent v-model="dataLesson.contentRefer" />
                         <div v-if="errors.contentRefer" class="text-danger">{{ errors.contentRefer }}</div>
                     </div>
@@ -73,6 +79,12 @@ const router = useRouter();
 const isUpdate = ref(false);
 const idChapter = route.query.idChapter
 const idCourse = route.query.idCourse
+const linkYoutubeEmbed = "https://www.youtube.com/embed/";
+
+function renderVideo(UrlYoutube) {
+    let idVideoYoutube =  UrlYoutube.substring(UrlYoutube.indexOf("=")+1,UrlYoutube.length)
+    return linkYoutubeEmbed + idVideoYoutube
+}
 
 const dataLesson = reactive({
     title: "",

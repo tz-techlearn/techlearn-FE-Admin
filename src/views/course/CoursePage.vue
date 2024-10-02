@@ -1,6 +1,5 @@
 <template>
-  <DashBoard></DashBoard>
-  <div class="d-flex justify-content-between align-items-center mt-4 container my-4">
+  <div class="d-flex justify-content-between align-items-center my-4 container">
     <p class="course-list-title">Danh sách khóa học</p>
     <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
       Thêm mới
@@ -18,7 +17,6 @@
 import { useRouter } from "vue-router";
 import { reactive, onMounted, ref } from "vue";
 import axios from "axios";
-import DashBoard from "@/components/DashBoard/DashBoard.vue";
 import Table from "@/components/Tables/Table.vue";
 import { toast } from "vue3-toastify";
 
@@ -31,6 +29,7 @@ const itemToDelete = ref();
 const data = reactive({
   courses: [],
 });
+const unit = ref();
 
 const header = ["STT", "Tên khóa học", "Giá tiền", "Đơn vị", "Hành động"];
 const keys = ["name", "price", "currencyUnit"];
@@ -42,7 +41,7 @@ const actions = {
 };
 
 const currentPage = ref(1);
-const perPage = ref(0);
+const perPage = ref(9);
 const totalRows = ref(0);
 
 const fetchCourses = async () => {
@@ -50,9 +49,16 @@ const fetchCourses = async () => {
     const response = await axios.get(`${rootAPI}/courses`, {
       params: {
         page: currentPage.value,
+        pageSize: perPage.value
       },
     });
-    data.courses = response.data.data.items;
+    data.courses = response.data.data.items.map(course => {
+      return {
+        ...course,
+        price: formatCurrency(course.price, course.currencyUnit)
+      };
+    });
+
     perPage.value = response.data.data.pageSize;
     totalRows.value = response.data.data.totalPage > 0 ? response.data.data.totalPage : 1;
   } catch (error) {
@@ -86,19 +92,38 @@ const createCourse = () => {
   router.push("/courses-create");
 };
 
-onMounted(fetchCourses);
+function formatCurrency(value, unit) {
+  if (typeof value !== "number") {
+    return value;
+  }
+  var formatter;
+  switch (unit) {
+    case "USD":
+      formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+      });
+      return formatter.format(value).replace('$', '');
+    case "VND":
+      formatter = new Intl.NumberFormat('vi-VN', {
+        style: 'decimal',
+        currency: 'VND'
+      });
+      return formatter.format(value);
+  }
+}
 
-// const viewItem = async (item) => {
-//   const idCourse = item.id;
-//   store.dispatch("updateIdCourse", idCourse);
-// };
+
+onMounted(async () => {
+  await fetchCourses()
+});
 </script>
 
 <style scoped>
 .course-list-title {
   margin-left: 20px !important;
   font-weight: 600;
-  font-size: 24px;
+  font-size: 25px;
   margin: 0;
 }
 
