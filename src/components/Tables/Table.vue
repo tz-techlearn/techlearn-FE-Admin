@@ -1,7 +1,7 @@
 <template>
-  <div class="container-fluid my-5" style="margin-left: 20px; margin-right: 20px">
-    <div class="container-fluid my-5" style="margin-left: 20px; margin-right: 20px">
-      <table class="table table-hover table-striped">
+  <div class="container-fluid my-3" style="margin-left: 20px; margin-right: 20px">
+    <div class="container-fluid my-3 px-3">
+      <table class="table table-hover table-striped w-100">
         <thead class="thead-lb">
           <tr>
             <th v-for="(header, index) in props.header" :key="index" :class="{ 'text-center': header === 'STT' }">

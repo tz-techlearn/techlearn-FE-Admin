@@ -65,6 +65,7 @@
           <Multiselect v-model="mentors.data" :options="options.data || []" label="name" :multiple="true"
             :taggable="true" @tag="addTeacher" @remove="removeTeacher" :close-on-select="false"
             placeholder="Chọn người hỗ trợ" />
+          <span v-if="errors.teacher" class="text-danger">{{ errors.teacher }}</span>
         </div>
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
@@ -87,6 +88,7 @@ const isInputFocused = ref(false);
 
 const errors = reactive({
   chapterName: "",
+  teacher: ""
 });
 
 const mentors = reactive({
@@ -124,7 +126,8 @@ const addChapter = async () => {
   } catch (error) {
     if (error.response && error.response.data) {
       const validationErrors = error.response.data;
-      errors.chapterName = validationErrors.name
+      errors.chapterName = validationErrors.name || '';
+      errors.teacher = validationErrors.teacher || '';
     }
     toast.error("Thêm chương thất bại", {
       position: "top-right",
