@@ -18,7 +18,6 @@
             @updateOrder="handleDragUpdate" :totalRows="totalRows" :perPage="perPage" @pageChange="handlePageChange">
         </Table>
     </div>
-
 </template>
 <script setup>
 import Table from '@/components/Tables/Table.vue';
