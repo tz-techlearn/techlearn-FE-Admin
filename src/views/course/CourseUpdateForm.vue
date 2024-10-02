@@ -12,15 +12,21 @@
           id="courseName"
           v-model="course.name"
         />
+        <span v-if="course.errors.name" class="text-danger">{{
+          course.errors.name
+        }}</span>
       </div>
       <div class="mb-3">
         <label for="courseDescription" class="form-label">Mô tả khóa học</label>
-        <textarea
+        <input
           type="text"
           class="form-control"
           id="courseDescription"
           v-model="course.description"
         />
+        <span v-if="course.errors.description" class="text-danger">{{
+          course.errors.description
+        }}</span>
       </div>
       <div class="price-container">
         <div class="mb-3" style="flex: 1">
@@ -31,6 +37,9 @@
             id="coursePrice"
             v-model="priceTemp"
           />
+          <span v-if="course.errors.price" class="text-danger">{{
+            course.errors.price
+          }}</span>
         </div>
         <div class="mb-3" style="flex: 1">
           <label for="courseUnit" class="form-label">Đơn vị</label>
@@ -71,14 +80,17 @@
             <p>Chọn ảnh của khóa học</p>
           </label>
         </div>
-        <div class="uploaded-image-container" v-if="imageUrl">
+        <div class="uploaded-image-container" v-if="course.thumbnailUrl">
           <img
-            :src="imageUrl"
+            :src="thumbnailImage"
             alt="Uploaded Course Image"
             class="uploaded-image"
           />
           <button class="remove-btn" @click="removeImage">X</button>
         </div>
+        <span v-if="course.errors.thumbnailUrl" class="text-danger">{{
+          course.errors.thumbnailUrl
+        }}</span>
       </div>
       <div class="mb-3">
         <label for="courseTechStacks" class="form-label">Công nghệ</label>
@@ -92,6 +104,9 @@
           @remove="removeTag"
           placeholder="Chọn công nghệ"
         />
+        <span v-if="course.errors.techStack" class="text-danger">{{
+          course.errors.techStack
+        }}</span>
       </div>
       <div class="mb-3">
         <label for="supporter" class="form-label">Giảng viên</label>
@@ -106,6 +121,9 @@
           @remove="removeTeacher"
           placeholder="Chọn người hỗ trợ"
         />
+        <span v-if="course.errors.teacher" class="text-danger">{{
+          course.errors.teacher
+        }}</span>
       </div>
       <div class="d-flex justify-content-between mb-3">
         <div class="me-2 flex-grow-1 d-flex gap-2 align-items-center">
@@ -181,9 +199,9 @@ export default {
     const rootAPI = process.env.VUE_APP_ROOT_API;
     const supporters = ref([]);
     const isUpdate = ref(false);
-    const imageUrl = ref(null);
     const showUploadArea = ref(true);
     const priceTemp = ref(0);
+    const thumbnailImage = ref();
     const course = reactive({
       id: null,
       name: "",
@@ -196,6 +214,14 @@ export default {
       isActive: true,
       isPublic: true,
       point: 30,
+      errors: {
+        name: "",
+        description: "",
+        price: "",
+        thumbnailUrl: "",
+        techStack: "",
+        teacher: "",
+      },
     });
 
     const techStack = reactive({
@@ -207,23 +233,53 @@ export default {
 
     const submitCourse = async () => {
       try {
-        const courseData = {
-          ...course,
-          techStack: course.techStack.map((tech) => tech.id),
-          price: priceTemp.value.replace(/,/g, ""),
-        };
+        course.price = priceTemp.value;
+        const formData = new FormData();
+        formData.append("name", course.name);
+        formData.append("price", course.price);
+        formData.append("point", course.point);
+        formData.append("description", course.description);
+        formData.append("currencyUnit", course.currencyUnit);
+        formData.append("isActive", course.isActive);
+
+        course.techStack.forEach((tech) => {
+          formData.append("techStack", tech.id);
+        });
+        console.log(course.thumbnailUrl);
+        if (course.thumbnailUrl) {
+          formData.append("file", course.thumbnailUrl);
+        }
         if (isUpdate.value) {
-          await axios.put(`${rootAPI}/courses/${course.id}`, courseData);
+          await axios.put(`${rootAPI}/courses/${course.id}`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
           toast.success("Cập nhật khóa học thành công!", {
             autoClose: 1000,
           });
         } else {
-          await axios.post(`${rootAPI}/courses`, courseData);
+          await axios.post(`${rootAPI}/courses`, formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
           toast.success("Tạo khóa học mới thành công!", {
             autoClose: 1000,
           });
         }
       } catch (error) {
+        if (error.response && error.response.data) {
+          const validationErrors = error.response.data;
+          course.errors = {
+            name: validationErrors.name || "",
+            description: validationErrors.description || "",
+            price: validationErrors.price || "",
+            thumbnailUrl: validationErrors.thumbnailUrl || "",
+            techStack: validationErrors.techStack || "",
+            teacher: validationErrors.teacher || "",
+          };
+        }
         toast.error(
           isUpdate.value
             ? "Cập nhật khóa học thất bại!"
@@ -263,7 +319,6 @@ export default {
       try {
         const response = await axios.get(`${rootAPI}/courses/${id}`);
         Object.assign(course, response.data.data);
-        console.log(course);
         priceTemp.value = formatCurrency(course.price, course.currencyUnit);
       } catch (error) {
         console.error("Error fetching course:", error);
@@ -287,21 +342,23 @@ export default {
 
     const handleUploadImage = (event) => {
       const file = event.target.files[0];
+      course.thumbnailUrl = file;
       if (file && file.type.startsWith("image/")) {
         const reader = new FileReader();
         reader.onload = (e) => {
-          imageUrl.value = e.target.result;
+          thumbnailImage.value = e.target.result;
         };
+        // console.log(course.thumbnailUrl);
         reader.readAsDataURL(file);
         showUploadArea.value = false;
-        //setting lai thumbnailurl tai day
       } else {
         alert("Vui lòng chọn một ảnh hợp lệ.");
       }
     };
 
     const removeImage = () => {
-      imageUrl.value = null;
+      // imageUrl.value = null;
+      course.thumbnailUrl = null;
       showUploadArea.value = true;
     };
 
@@ -343,13 +400,16 @@ export default {
         course.id = id;
         await fetchCourse(id);
       }
+      thumbnailImage.value = course.thumbnailUrl;
       priceTemp.value = formatCurrency(priceTemp.value, "VND");
+      if (course.thumbnailUrl) {
+        showUploadArea.value = false;
+      }
       await fetchTechStack();
       await fetchTeachers();
     });
 
     return {
-      imageUrl,
       course,
       techStack,
       teachers,
@@ -365,6 +425,7 @@ export default {
       removeImage,
       formatCurrency,
       priceTemp,
+      thumbnailImage,
     };
   },
 };

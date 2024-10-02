@@ -6,19 +6,6 @@
         <p class="mb-0 text-dark">Danh sách khoá học</p>
       </div>
     </router-link>
-    <div>
-      <router-link
-        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
-        type="button"
-        class="btn btn-primary mr-3"
-        >Thêm chương</router-link
-      >
-      <router-link
-        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
-        class="btn btn-primary"
-        >Sắp xếp chương</router-link
-      >
-    </div>
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="container text-center">
@@ -37,7 +24,12 @@
         </p>
         <p>
           <span class="fw-bold">Giá khoá học:</span>
-          {{ dataCourse.course.price }}
+          {{
+            formatCurrency(
+              dataCourse.course.price,
+              dataCourse.course.currencyUnit
+            )
+          }}
         </p>
         <p>
           <span class="fw-bold">Đơn vị:</span>
@@ -61,10 +53,23 @@
       </div>
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50" />
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
-    Danh sách chương
-  </h5>
+  <hr class="border border-grey border-1 opacity-50 mb-3" />
+  <div class="header-table">
+    <h5>Danh sách chương</h5>
+    <div>
+      <router-link
+        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Thêm chương</router-link
+      >
+      <router-link
+        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
+        class="btn btn-primary"
+        >Sắp xếp chương</router-link
+      >
+    </div>
+  </div>
   <Table
     :header="header"
     :data="data.chapter"
@@ -138,9 +143,9 @@ const fetchChapter = async () => {
     data.chapter = response.data.data.items;
 
     console.log(response.data.data);
-
     perPage.value = response.data.data.pageSize;
-    totalRows.value = response.data.data.totalPage;
+    totalRows.value =
+      response.data.data.totalPage > 0 ? response.data.data.totalPage : 1;
   } catch (error) {
     console.error(error);
   }
@@ -179,11 +184,33 @@ const handlePageChange = (page) => {
   fetchChapter();
 };
 
+const formatCurrency = (value, unit) => {
+  if (typeof value !== "number") {
+    return value;
+  }
+  var formatter;
+  switch (unit) {
+    case "USD":
+      formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+      break;
+    case "VND":
+      formatter = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
+
+      break;
+  }
+
+  return formatter.format(value);
+};
+
 onMounted(async () => {
   await fetchChapter();
   await fetchCourse();
-  // store.dispatch("updateIdCourse", route.query.idCourse);
-  // console.log(store.getters.getIdCourse)
 });
 </script>
 
@@ -200,5 +227,15 @@ img {
   border-radius: 10px;
   max-width: 80%;
   height: auto;
+}
+
+.header-table {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-table h5 {
+  margin-left: 30px;
+  margin-bottom: 0;
 }
 </style>
