@@ -18,7 +18,6 @@
             @updateOrder="handleDragUpdate">
         </Table>
     </div>
-
 </template>
 <script setup>
 import Table from '@/components/Tables/Table.vue';
