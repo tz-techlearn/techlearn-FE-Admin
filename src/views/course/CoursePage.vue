@@ -53,7 +53,7 @@ const fetchCourses = async () => {
       },
     });
     data.courses = response.data.data.items.map(course => {
-      return{
+      return {
         ...course,
         price: formatCurrency(course.price, course.currencyUnit)
       };
@@ -93,28 +93,26 @@ const createCourse = () => {
 };
 
 function formatCurrency(value, unit) {
-    if (typeof value !== "number") {
-        return value;
-    }
-    var formatter 
-    switch (unit) {
-      case "USD":
-       formatter  = new Intl.NumberFormat('en-US', {
-        style: 'decimal',
+  if (typeof value !== "number") {
+    return value;
+  }
+  var formatter;
+  switch (unit) {
+    case "USD":
+      formatter = new Intl.NumberFormat('en-US', {
+        style: 'currency',
         currency: 'USD'
-    });
-        break;
-      case "VND":
-      formatter  = new Intl.NumberFormat('vi-VN', {
+      });
+      return formatter.format(value).replace('$', '');
+    case "VND":
+      formatter = new Intl.NumberFormat('vi-VN', {
         style: 'decimal',
         currency: 'VND'
-    });
+      });
+      return formatter.format(value);
+  }
+}
 
-        break;
-    }
-
-    return formatter.format(value);
-};
 
 onMounted(async () => {
   await fetchCourses()
