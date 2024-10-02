@@ -29,7 +29,7 @@
         </p>
         <p>
           <span class="fw-bold">Giá khoá học:</span>
-          {{ dataCourse.course.price }}
+          {{ formatCurrency(dataCourse.course.price,dataCourse.course.currencyUnit) }}
         </p>
         <p>
           <span class="fw-bold">Đơn vị:</span>
@@ -52,31 +52,20 @@
             <form @submit.prevent="addChapter">
                 <div class="mb-3">
                     <label for="chapterName" class="form-label">Tên chương</label>
-                    <input type="text" class="form-control" id="chapterName" v-model="chapterName" required />
-                </div>
+                    <input  type="text"  class="form-control" id="chapterName" v-model="chapterName" required />
+                   
+                  </div>
 
                 <div class="mb-3">
                     <label for="isPublic" class="form-label">Trạng thái</label>
-                    <select v-model="isPublic" class="form-select" aria-label="Công khai">
-                        <option v-for="option in publicOptions" :key="option.value" :value="option.value">
-                            {{ option.text }}
-                        </option>
-                    </select>
+                   <br>
+                    <div v-for="option in publicOptions" :key="option.value" class="form-check form-check-inline">
+                      <input class="form-check-input" :checked="option.value" type="radio" name="publicOptions"  value="{{ option.value }}">
+                      <label class="form-check-label" for="inlineRadio1">  {{ option.text }}</label>
+                    </div>
+
                 </div>
-                <div class="mb-3">
-                    <label for="supporter" class="form-label">Người hỗ trợ</label>
-                    <Multiselect
-                    v-model="mentors.data"
-                    :options="options.data || []"
-                    label="name"
-                    :multiple="true"
-                    :taggable="true"
-                    @tag="addTeacher"
-                    @remove="removeTeacher"
-                    :close-on-select="false"
-                    placeholder="Chọn người hỗ trợ"
-                    />
-                </div>
+                
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
     </div>
@@ -90,7 +79,9 @@ import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import Multiselect from "vue-multiselect";
 
+
 const rootAPI = process.env.VUE_APP_ROOT_API;
+
 
 const chapterName = ref("");
 const isPublic = ref(true);
@@ -110,6 +101,30 @@ const publicOptions = [
 const route = useRoute();
 const idCourse = route.query.idCourse;
 const existingChapters = ref([]);
+
+ function formatCurrency(value, unit) {
+    if (typeof value !== "number") {
+        return value;
+    }
+    var formatter 
+    switch (unit) {
+      case "USD":
+       formatter  = new Intl.NumberFormat('en-US', {
+        style: 'currency',
+        currency: 'USD'
+    });
+        break;
+      case "VND":
+      formatter  = new Intl.NumberFormat('vi-VN', {
+        style: 'currency',
+        currency: 'VND'
+    });
+        
+        break;
+    }
+   
+    return formatter.format(value);
+};
 
 const addChapter = async () => {
     try {
