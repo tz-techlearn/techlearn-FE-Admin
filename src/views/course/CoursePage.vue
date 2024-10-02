@@ -2,6 +2,7 @@
   <div class="d-flex justify-content-between align-items-center my-4 container">
     <p class="course-list-title">Danh sách khóa học</p>
     <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
+    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
       Thêm mới
     </button>
   </div>
@@ -60,8 +61,7 @@ const fetchCourses = async () => {
     });
 
     perPage.value = response.data.data.pageSize;
-    totalRows.value = response.data.data.totalPage;
-    
+    totalRows.value = response.data.data.totalPage > 0 ? response.data.data.totalPage : 1;
   } catch (error) {
     console.error("Error fetching courses", error);
   }
