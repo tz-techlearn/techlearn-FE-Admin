@@ -2,7 +2,6 @@
   <div class="d-flex justify-content-between align-items-center my-4 container">
     <p class="course-list-title">Danh sách khóa học</p>
     <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
-    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
       Thêm mới
     </button>
   </div>
