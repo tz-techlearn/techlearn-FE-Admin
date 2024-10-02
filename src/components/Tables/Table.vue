@@ -4,11 +4,8 @@
       <table class="table table-hover table-striped w-100">
         <thead class="thead-lb">
           <tr>
-            <th
-              v-for="(header, index) in props.header"
-              :key="index"
-              :class="{ 'text-center': header === 'STT' }"
-            >
+            <th v-for="(header, index) in props.header" :key="index"
+              :class="{ 'text-center': header === 'STT', 'table-price': header === 'Giá tiền' }">
               {{ header }}
             </th>
           </tr>
@@ -48,8 +45,15 @@
               <th scope="row" class="text-center">
                 {{ (currentPage - 1) * props.perPage + index + 1 }}
               </th>
-              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
-                {{ item[key] || "N/A" }}
+              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex" :class="{ 'table-price': key === 'price' }">
+                <template v-if="key === 'name'">
+                  <router-link :to="props.actions.view(item)" class="course-name-link">
+                    {{ item[key] || 'N/A' }}
+                  </router-link>
+                </template>
+                <template v-else>
+                  {{ item[key] || "N/A" }}
+                </template>
               </td>
               <td class="action-button">
                 <router-link
@@ -157,6 +161,7 @@ watch(currentPage, (newPage) => {
 const pageChanged = () => {
   emit("pageChange", currentPage.value);
 };
+
 </script>
 
 <style scoped>
@@ -194,5 +199,15 @@ td {
 .pagination {
   display: flex;
   justify-content: center !important;
+}
+
+.table-price {
+  text-align: right;
+  padding-right: 50px;
+}
+
+.course-name-link {
+  color: #020202;
+  text-decoration: none;
 }
 </style>
