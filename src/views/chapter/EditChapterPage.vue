@@ -8,7 +8,7 @@
         </router-link>
     </div>
     <hr class="border border-grey border-1 opacity-50">
-    <div class="row mt-5">
+    <div class="row mt-4">
         <div class="col-5">
             <div class="col-md-12">
                 <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="">
