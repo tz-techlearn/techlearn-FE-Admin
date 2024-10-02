@@ -1,10 +1,10 @@
 <template>
   <div
-    class="container-fluid my-5"
+    class="container-fluid my-3"
     style="margin-left: 20px; margin-right: 20px"
   >
     <div
-      class="container-fluid my-5"
+      class="container-fluid my-3"
       style="margin-left: 20px; margin-right: 20px"
     >
       <table class="table table-hover table-striped">
@@ -19,7 +19,7 @@
             </th>
           </tr>
         </thead>
-        <draggable 
+        <draggable
           tag="tbody"
           v-if="isDraggable"
           :list="props.data"

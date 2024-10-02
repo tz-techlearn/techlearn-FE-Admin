@@ -6,19 +6,6 @@
         <p class="mb-0 text-dark">Danh sách khoá học</p>
       </div>
     </router-link>
-    <div>
-      <router-link
-        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
-        type="button"
-        class="btn btn-primary mr-3"
-        >Thêm chương</router-link
-      >
-      <router-link
-        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
-        class="btn btn-primary"
-        >Sắp xếp chương</router-link
-      >
-    </div>
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="container text-center">
@@ -61,10 +48,23 @@
       </div>
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50" />
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
-    Danh sách chương
-  </h5>
+  <hr class="border border-grey border-1 opacity-50 mb-3" />
+  <div class="header-table">
+    <h5>Danh sách chương</h5>
+    <div>
+      <router-link
+        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Thêm chương</router-link
+      >
+      <router-link
+        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
+        class="btn btn-primary"
+        >Sắp xếp chương</router-link
+      >
+    </div>
+  </div>
   <Table
     :header="header"
     :data="data.chapter"
@@ -182,8 +182,6 @@ const handlePageChange = (page) => {
 onMounted(async () => {
   await fetchChapter();
   await fetchCourse();
-  // store.dispatch("updateIdCourse", route.query.idCourse);
-  // console.log(store.getters.getIdCourse)
 });
 </script>
 
@@ -200,5 +198,15 @@ img {
   border-radius: 10px;
   max-width: 80%;
   height: auto;
+}
+
+.header-table {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.header-table h5 {
+  margin-left: 30px;
+  margin-bottom: 0;
 }
 </style>
