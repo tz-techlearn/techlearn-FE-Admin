@@ -15,7 +15,7 @@
                 đổi</button>
         </div>
         <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :isDraggable="true"
-            @updateOrder="handleDragUpdate" :totalRows="totalRows" :perPage="perPage" @pageChange="handlePageChange">
+            @updateOrder="handleDragUpdate">
         </Table>
     </div>
 

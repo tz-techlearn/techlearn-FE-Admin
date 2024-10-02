@@ -53,7 +53,7 @@
           </tbody>
         </template>
       </table>
-      <b-pagination class="pagination" v-model="currentPage" :total-rows="totalRows" :per-page="1"
+      <b-pagination v-if="totalRows > 0" class="pagination" v-model="currentPage" :total-rows="totalRows" :per-page="1"
         aria-controls="my-table" first-number last-number @change="pageChanged" />
     </div>
   </div>
@@ -87,7 +87,7 @@ const props = defineProps({
   },
   totalRows: {
     type: Number,
-    required: true,
+    required: false,
   },
   perPage: {
     type: Number,
