@@ -6,6 +6,12 @@
         <p class="mb-0 text-dark">Danh sách các chương</p>
       </div>
     </router-link>
+  </div>
+  <hr class="border border-grey border-1 opacity-50" />
+  <div class="px-4 d-flex justify-content-between align-items-center">
+    <h4 class="my-3 m-0" style="margin-left: 30px; margin-bottom: -20px">
+      Danh sách bài học
+    </h4>
     <div>
       <router-link :to="{
         path: '/add-lessons',
@@ -16,11 +22,8 @@
         query: { idChapter: idChapter, idCourse: idCourse },
       }" class="btn btn-primary">Sắp xếp bài học</router-link>
     </div>
+
   </div>
-  <hr class="border border-grey border-1 opacity-50" />
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
-    Danh sách bài học
-  </h5>
   <Table :header="header" :data="data.assignments" :keys="keys" :actions="actions" @delete-item="deleteLesson"
     :viewDetail="false" :totalRows="totalRows" :perPage="perPage" @pageChange="handlePageChange"></Table>
   <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
@@ -65,7 +68,7 @@ const actions = {
 };
 
 const currentPage = ref(1);
-const perPage = ref(0);
+const perPage = ref(8);
 const totalRows = ref(0);
 
 const fetchAssignments = async () => {
@@ -74,6 +77,7 @@ const fetchAssignments = async () => {
       params: {
         idChapter: idChapter,
         page: currentPage.value,
+        pageSize: perPage.value
       },
     });
     perPage.value = response.data.data.pageSize;
