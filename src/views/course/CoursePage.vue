@@ -1,33 +1,14 @@
 <template>
-  <div
-    class="d-flex justify-content-between align-items-center my-4 container"
-  >
+  <div class="d-flex justify-content-between align-items-center my-4 container">
     <p class="course-list-title">Danh sách khóa học</p>
-    <button
-      class="btn btn-primary create-course-btn align-items-center"
-      @click="createCourse"
-    >
+    <button class="btn btn-primary create-course-btn align-items-center" @click="createCourse">
       Thêm mới
     </button>
   </div>
-  <Table
-    :header="header"
-    :data="data.courses"
-    :keys="keys"
-    :actions="actions"
-    :totalRows="totalRows"
-    :perPage="perPage"
-    @deleteItem="deleteCourse"
-    @pageChange="handlePageChange"
-  ></Table>
-  <b-modal
-    v-model="isModalVisible"
-    title="Xác nhận xóa"
-    ok-title="Xóa"
-    cancel-title="Đóng"
-    ok-variant="danger"
-    @ok="handleDelete"
-  >
+  <Table :header="header" :data="data.courses" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @deleteItem="deleteCourse" @pageChange="handlePageChange"></Table>
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
     <p>Bạn có chắc chắn xóa khóa học không?</p>
   </b-modal>
 </template>
@@ -48,6 +29,7 @@ const itemToDelete = ref();
 const data = reactive({
   courses: [],
 });
+const unit = ref();
 
 const header = ["STT", "Tên khóa học", "Giá tiền", "Đơn vị", "Hành động"];
 const keys = ["name", "price", "currencyUnit"];
@@ -70,9 +52,16 @@ const fetchCourses = async () => {
         pageSize: perPage.value
       },
     });
-    data.courses = response.data.data.items;
+    data.courses = response.data.data.items.map(course => {
+      return{
+        ...course,
+        price: formatCurrency(course.price, course.currencyUnit)
+      };
+    });
+
     perPage.value = response.data.data.pageSize;
     totalRows.value = response.data.data.totalPage;
+    
   } catch (error) {
     console.error("Error fetching courses", error);
   }
@@ -104,12 +93,33 @@ const createCourse = () => {
   router.push("/courses-create");
 };
 
-onMounted(fetchCourses);
+function formatCurrency(value, unit) {
+    if (typeof value !== "number") {
+        return value;
+    }
+    var formatter 
+    switch (unit) {
+      case "USD":
+       formatter  = new Intl.NumberFormat('en-US', {
+        style: 'decimal',
+        currency: 'USD'
+    });
+        break;
+      case "VND":
+      formatter  = new Intl.NumberFormat('vi-VN', {
+        style: 'decimal',
+        currency: 'VND'
+    });
 
-// const viewItem = async (item) => {
-//   const idCourse = item.id;
-//   store.dispatch("updateIdCourse", idCourse);
-// };
+        break;
+    }
+
+    return formatter.format(value);
+};
+
+onMounted(async () => {
+  await fetchCourses()
+});
 </script>
 
 <style scoped>

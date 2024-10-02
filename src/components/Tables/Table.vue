@@ -43,7 +43,7 @@
                   </router-link>
                 </template>
                 <template v-else>
-                  {{ key === 'price' ? formatPrice(item[key]) : (item[key] || 'N/A') }}
+                  {{ item[key] || "N/A" }}
                 </template>
               </td>
               <td class="action-button">
@@ -131,14 +131,6 @@ watch(currentPage, (newPage) => {
 
 const pageChanged = () => {
   emit("pageChange", currentPage.value);
-};
-
-const formatPrice = (value) => {
-  console.log('Value before formatting:', value);
-  if (value == null || isNaN(value)) {
-    return 'N/A';
-  }
-  return Number(value).toLocaleString('en-US');
 };
 
 </script>
