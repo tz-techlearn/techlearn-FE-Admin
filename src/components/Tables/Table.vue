@@ -1,39 +1,21 @@
 <template>
-  <div
-    class="container-fluid my-5"
-    style="margin-left: 20px; margin-right: 20px"
-  >
-    <div
-      class="container-fluid my-5"
-      style="margin-left: 20px; margin-right: 20px"
-    >
+  <div class="container-fluid my-3" style="margin-left: 20px">
+    <div class="container-fluid my-3" style="margin-left: 20px">
       <table class="table table-hover table-striped">
         <thead class="thead-lb">
           <tr>
-            <th
-              v-for="(header, index) in props.header"
-              :key="index"
-              :class="{ 'text-center': header === 'STT' }"
-            >
+            <th v-for="(header, index) in props.header" :key="index"
+              :class="{ 'text-center': header === 'STT', 'table-price': header === 'Giá tiền' }">
               {{ header }}
             </th>
           </tr>
         </thead>
-        <draggable 
-          tag="tbody"
-          v-if="isDraggable"
-          :list="props.data"
-          :disabled="!enabled"
-          ghost-class="ghost"
-          :move="checkMove"
-          @start="dragging = true"
-          @end="
-            (evt) => {
-              dragging = false;
-              emit('updateOrder', props.data);
-            }
-          "
-        >
+        <draggable tag="tbody" v-if="isDraggable" :list="props.data" :disabled="!enabled" ghost-class="ghost"
+          :move="checkMove" @start="dragging = true" @end="(evt) => {
+            dragging = false;
+            emit('updateOrder', props.data);
+          }
+            ">
           <template #item="{ element, index }">
             <tr :key="element.id" class="w-100 drag-item">
               <th scope="row" class="text-center">
@@ -54,28 +36,24 @@
               <th scope="row" class="text-center">
                 {{ (currentPage - 1) * props.perPage + index + 1 }}
               </th>
-              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex">
-                {{ item[key] || "N/A" }}
+              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex" :class="{ 'table-price': key === 'price' }">
+                <template v-if="key === 'name'">
+                  <router-link :to="props.actions.view(item)" class="course-name-link">
+                    {{ item[key] || 'N/A' }}
+                  </router-link>
+                </template>
+                <template v-else>
+                  {{ key === 'price' ? formatPrice(item[key]) : (item[key] || 'N/A') }}
+                </template>
               </td>
               <td class="action-button">
-                <router-link
-                  v-if="viewDetail"
-                  :to="props.actions.view(item)"
-                  class="btn btn-primary btn-sm btn-action"
-                >
+                <router-link v-if="viewDetail" :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
                   <i class="fas fa-eye"></i>
                 </router-link>
-                <router-link
-                  :to="props.actions.edit(item)"
-                  class="btn btn-warning btn-sm btn-action"
-                >
+                <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
                   <i class="fas fa-edit"></i>
                 </router-link>
-                <router-link
-                  to=""
-                  @click="confirmDelete(item)"
-                  class="btn btn-danger btn-sm btn-action"
-                >
+                <router-link to="" @click="confirmDelete(item)" class="btn btn-danger btn-sm btn-action">
                   <i class="fas fa-trash"></i>
                 </router-link>
               </td>
@@ -83,22 +61,14 @@
           </tbody>
         </template>
       </table>
-      <b-pagination
-        class="pagination"
-        v-model="currentPage"
-        :total-rows="totalRows"
-        :per-page="1"
-        aria-controls="my-table"
-        first-number
-        last-number
-        @change="pageChanged"
-      />
+      <b-pagination class="pagination" v-model="currentPage" :total-rows="totalRows" :per-page="1"
+        aria-controls="my-table" first-number last-number @change="pageChanged" />
     </div>
   </div>
 </template>
 
 <script setup>
-import { defineProps, onMounted, ref, watch } from "vue";
+import { defineProps, ref, watch } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
 import draggable from "vuedraggable";
 
@@ -162,6 +132,15 @@ watch(currentPage, (newPage) => {
 const pageChanged = () => {
   emit("pageChange", currentPage.value);
 };
+
+const formatPrice = (value) => {
+  console.log('Value before formatting:', value);
+  if (value == null || isNaN(value)) {
+    return 'N/A';
+  }
+  return Number(value).toLocaleString('en-US');
+};
+
 </script>
 
 <style scoped>
@@ -199,5 +178,15 @@ td {
 .pagination {
   display: flex;
   justify-content: center !important;
+}
+
+.table-price {
+  text-align: right;
+  padding-right: 50px;
+}
+
+.course-name-link {
+  color: #020202;
+  text-decoration: none;
 }
 </style>
