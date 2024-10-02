@@ -1,13 +1,7 @@
 <template>
-  <div
-    class="container-fluid my-3"
-    style="margin-left: 20px; margin-right: 20px"
-  >
-    <div
-      class="container-fluid my-3"
-      style="margin-left: 20px; margin-right: 20px"
-    >
-      <table class="table table-hover table-striped">
+  <div class="container-fluid my-3">
+    <div class="container-fluid my-3 px-3">
+      <table class="table table-hover table-striped w-100">
         <thead class="thead-lb">
           <tr>
             <th
@@ -84,6 +78,7 @@
         </template>
       </table>
       <b-pagination
+        v-if="totalRows > 0"
         class="pagination"
         v-model="currentPage"
         :total-rows="totalRows"
@@ -98,7 +93,7 @@
 </template>
 
 <script setup>
-import { defineProps, onMounted, ref, watch } from "vue";
+import { defineProps, ref, watch } from "vue";
 import "@fortawesome/fontawesome-free/css/all.css";
 import draggable from "vuedraggable";
 
@@ -125,7 +120,7 @@ const props = defineProps({
   },
   totalRows: {
     type: Number,
-    required: true,
+    required: false,
   },
   perPage: {
     type: Number,

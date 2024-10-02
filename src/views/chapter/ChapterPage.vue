@@ -24,7 +24,12 @@
         </p>
         <p>
           <span class="fw-bold">Giá khoá học:</span>
-          {{ dataCourse.course.price }}
+          {{
+            formatCurrency(
+              dataCourse.course.price,
+              dataCourse.course.currencyUnit
+            )
+          }}
         </p>
         <p>
           <span class="fw-bold">Đơn vị:</span>
@@ -138,9 +143,9 @@ const fetchChapter = async () => {
     data.chapter = response.data.data.items;
 
     console.log(response.data.data);
-
     perPage.value = response.data.data.pageSize;
-    totalRows.value = response.data.data.totalPage;
+    totalRows.value =
+      response.data.data.totalPage > 0 ? response.data.data.totalPage : 1;
   } catch (error) {
     console.error(error);
   }
@@ -177,6 +182,30 @@ const deleteChapter = (chapter) => {
 const handlePageChange = (page) => {
   currentPage.value = page;
   fetchChapter();
+};
+
+const formatCurrency = (value, unit) => {
+  if (typeof value !== "number") {
+    return value;
+  }
+  var formatter;
+  switch (unit) {
+    case "USD":
+      formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+      break;
+    case "VND":
+      formatter = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
+
+      break;
+  }
+
+  return formatter.format(value);
 };
 
 onMounted(async () => {
