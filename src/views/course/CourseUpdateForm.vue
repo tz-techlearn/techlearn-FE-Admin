@@ -31,7 +31,7 @@
       </div>
       <div class="mb-3">
         <label for="courseTechStacks" class="form-label">Công nghệ</label>
-        <Multiselect v-model="course.techStack" :options="techStack.data" label="name" :multiple="true" :taggable="true"
+        <Multiselect v-model="course.techStack" :options="techStack.data" label="name" track-by="id" :multiple="true" :taggable="true"
           @tag="addTag" @remove="removeTag" placeholder="Chọn công nghệ" />
         <span v-if="course.errors.techStack" class="text-danger">{{ course.errors.techStack }}</span>
       </div>
@@ -160,9 +160,9 @@ export default {
     };
 
     const removeTag = (tagToRemove) => {
-      const techStackSet = new Set(course.techStack.map(tag => tag.name));
-      techStackSet.delete(tagToRemove.name);
-      course.techStack = Array.from(techStackSet).map(name => ({ name }));
+    const techStackMap = new Map(course.techStack.map(tag => [tag.name, tag]));
+    techStackMap.delete(tagToRemove.name);
+    course.techStack = Array.from(techStackMap.values());
     };
 
     const removeTeacher = (tToRemove) => {
