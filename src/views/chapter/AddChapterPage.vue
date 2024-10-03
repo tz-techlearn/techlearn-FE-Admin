@@ -9,7 +9,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="row mt-4">
-    <div class="col-5">
+    <div class="col-lg-5 mb-3 col-md-12 ">
       <div class="col-md-12">
         <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
       </div>
@@ -42,7 +42,9 @@
     </div>
 
 
-        <div class="col-7">
+        <div class="col-lg-7  col-md-12 pb-3">
+          <!-- <hr class="border border-grey border-1 opacity-50" /> -->
+
             <h2>Thêm Chương Mới</h2>
             <form @submit.prevent="addChapter">
                 <div class="mb-3">
