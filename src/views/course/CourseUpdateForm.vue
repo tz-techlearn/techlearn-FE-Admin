@@ -31,7 +31,7 @@
       </div>
       <div class="mb-3">
         <label for="courseTechStacks" class="form-label">Công nghệ</label>
-        <Multiselect v-model="course.techStack" :options="techStack.data" label="name" :multiple="true" :taggable="true"
+        <Multiselect v-model="course.techStack" :options="techStack.data" label="name" track-by="id" :multiple="true" :taggable="true"
           @tag="addTag" @remove="removeTag" placeholder="Chọn công nghệ" />
         <span v-if="course.errors.techStack" class="text-danger">{{ course.errors.techStack }}</span>
       </div>
