@@ -10,10 +10,10 @@
   <hr class="border border-grey border-1 opacity-50" />
   <div class="container text-center">
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-lg-5 mb-3 col-md-12 ">
         <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
       </div>
-      <div class="col-md-7 text-start">
+      <div class="col-lg-7  col-md-12 text-start">
         <p>
           <span class="fw-bold">Tên khoá học:</span>
           {{ dataCourse.course.name }}
@@ -60,12 +60,12 @@
       <router-link
         :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
         type="button"
-        class="btn btn-primary mr-3"
+        class="btn btn-primary mr-3  btn-sm"
         >Thêm chương</router-link
       >
       <router-link
         :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
-        class="btn btn-primary"
+        class="btn btn-primary btn-sm"
         >Sắp xếp chương</router-link
       >
     </div>
