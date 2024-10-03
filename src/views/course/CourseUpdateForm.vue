@@ -280,7 +280,10 @@ export default {
         course.techStack.forEach((tech) => {
           formData.append("techStack", tech.id);
         });
-        console.log(course.thumbnailUrl);
+        course.teacher.forEach((tch) => {
+          formData.append("teacher", tch.id);
+        });
+        console.log(course);
         if (typeof course.thumbnailUrl === "object") {
           formData.append("file", course.thumbnailUrl);
         }
