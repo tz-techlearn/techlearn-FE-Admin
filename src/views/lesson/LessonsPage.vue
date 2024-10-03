@@ -9,7 +9,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="px-4 d-flex justify-content-between align-items-center">
-    <h4 class="my-3 m-0" style="margin-left: 30px; margin-bottom: -20px">
+    <h4 class=" m-0" style="margin-left: 30px; margin-bottom: -20px">
       Danh sách bài học
     </h4>
     <div>
