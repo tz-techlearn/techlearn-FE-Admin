@@ -9,7 +9,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="row mt-4">
-    <div class="col-5">
+    <div class="col-lg-5 mb-3 col-md-12 ">
       <div class="col-md-12">
         <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
       </div>
@@ -40,17 +40,13 @@
         </p>
       </div>
     </div>
-
-
     <div class="col-7">
       <h2>Thêm Chương Mới</h2>
       <form @submit.prevent="addChapter">
         <div class="mb-3">
           <label for="chapterName" class="form-label">Tên chương</label>
           <input type="text" class="form-control" id="chapterName" v-model="chapterName" required />
-
         </div>
-
         <div class="mb-3">
           <label for="isPublic" class="form-label">Trạng thái</label>
           <br>
@@ -59,9 +55,7 @@
               value="{{ option.value }}">
             <label class="form-check-label" for="inlineRadio1"> {{ option.text }}</label>
           </div>
-
         </div>
-
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
     </div>

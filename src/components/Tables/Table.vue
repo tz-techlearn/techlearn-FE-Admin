@@ -1,14 +1,24 @@
 <template>
   <div class="container-fluid">
     <div class="container-fluid my-3 px-3">
+      
+     
       <table class="table table-hover table-striped w-100">
         <thead class="thead-lb">
           <tr>
-            <th v-for="(header, index) in props.header" :key="index"
-              :class="{ 'text-center': header === 'STT', 'table-price': header === 'Giá tiền' }">
+            <th class="" v-for="(header, index) in props.header" :key="index"
+              :class="{ 
+                'd-none' : widthScreen<1000 && header ==='Giá tiền' ||  widthScreen<1000 && header ==='Đơn vị',
+                'text-center': header === 'STT', 'table-price': header === 'Giá tiền'
+                        
+               }"
+              
+              >
               {{ header }}
             </th>
+            
           </tr>
+          <!-- <tr v-if="widthScreen>700" ></tr> -->
         </thead>
         <draggable tag="tbody" v-if="isDraggable" :list="props.data" :disabled="!enabled" ghost-class="ghost"
           :move="checkMove" @start="dragging = true" @end="(evt) => {
@@ -36,7 +46,7 @@
               <th scope="row" class="text-center">
                 {{ (currentPage - 1) * props.perPage + index + 1 }}
               </th>
-              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex" :class="{ 'table-price': key === 'price' }">
+              <td v-for="(key, keyIndex) in props.keys" :key="keyIndex" :class="{ 'd-none' : widthScreen<1000 && key ==='price' ||  widthScreen<1000 && key ==='currencyUnit',  'table-price': key === 'price' }">
                 <template v-if="key === 'name'">
                   <router-link :to="props.actions.view(item)" class="course-name-link">
                     {{ item[key] || 'N/A' }}
@@ -110,6 +120,14 @@ const props = defineProps({
     default: true,
   },
 });
+
+var widthScreen = ref(9999) ;
+
+window.addEventListener('resize', function() {
+     widthScreen.value = window.innerWidth || document.documentElement.clientWidth;
+  
+});
+
 
 const currentPage = ref(1);
 
