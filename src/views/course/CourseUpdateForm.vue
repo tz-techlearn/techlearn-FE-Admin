@@ -36,6 +36,7 @@
             class="form-control"
             id="coursePrice"
             v-model="priceTemp"
+            @input="handleChange"
           />
           <span v-if="course.errors.price" class="text-danger">{{
             course.errors.price
@@ -233,7 +234,12 @@ export default {
 
     const submitCourse = async () => {
       try {
-        course.price = priceTemp.value;
+        // course.price = priceTemp.value;
+        if (course.currencyUnit === "VND") {
+          course.price = priceTemp.value.replace(/\./g, "");
+        } else {
+          course.price = priceTemp.value.replace(/\,/g, "");
+        }
         const formData = new FormData();
         formData.append("name", course.name);
         formData.append("price", course.price);
@@ -369,28 +375,37 @@ export default {
       }
     );
 
+    const handleChange = () => {
+      priceTemp.value = formatCurrency(priceTemp.value, course.currencyUnit);
+    };
+
     const formatCurrency = (value, unit) => {
-      if (typeof value !== "number") {
-        return value;
+      value = value.toString();
+      if (unit == "VND") {
+        value = value.replace(/\./g, ""); // Xóa dấu chấm cho VND
+      } else {
+        value = value.replace(/\,/g, ""); // Xóa dấu phẩy cho USD
       }
-
-      // Phân chia hàng nghìn
-      const formattedValue = value.toLocaleString();
-
-      let currencySymbol;
+      if (typeof value !== "number" && value !== "") {
+        value = parseFloat(value);
+      } else {
+        return 0;
+      }
+      var formatter;
       switch (unit) {
         case "USD":
-          currencySymbol = "$"; // Ký hiệu USD
-          break;
+          formatter = new Intl.NumberFormat("en-US", {
+            style: "decimal",
+            currency: "USD",
+          });
+          return formatter.format(value).replace("$", "");
         case "VND":
-          currencySymbol = "₫"; // Ký hiệu VND
-          break;
-        default:
-          return formattedValue; // Trả về giá trị đã định dạng nếu đơn vị không hợp lệ
+          formatter = new Intl.NumberFormat("vi-VN", {
+            style: "decimal",
+            currency: "VND",
+          });
+          return formatter.format(value);
       }
-
-      // Trả về giá trị đã định dạng cùng với ký hiệu tiền tệ
-      return `${currencySymbol}${formattedValue}`;
     };
 
     onMounted(async () => {
@@ -401,7 +416,7 @@ export default {
         await fetchCourse(id);
       }
       thumbnailImage.value = course.thumbnailUrl;
-      priceTemp.value = formatCurrency(priceTemp.value, "VND");
+      priceTemp.value = formatCurrency(priceTemp.value, course.currencyUnit);
       if (course.thumbnailUrl) {
         showUploadArea.value = false;
       }
@@ -426,6 +441,7 @@ export default {
       formatCurrency,
       priceTemp,
       thumbnailImage,
+      handleChange,
     };
   },
 };
