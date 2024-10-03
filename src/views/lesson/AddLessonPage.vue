@@ -15,7 +15,7 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <label for="title" class="form-label h5">Tiêu đề</label>
-                        <input type="text" class="form-control" id="title" v-model="dataLesson.title" />
+                        <input   type="text" class="form-control" id="title" v-model="dataLesson.title" />
                         <div v-if="errors.title" class="text-danger">{{ errors.title }}</div>
                     </div>
                 </div>
@@ -32,7 +32,7 @@
                 <div class="row mb-3" v-if="dataLesson.type === 'LECTURES'">
                     <div class="col-md-12">
                         <label for="video" class="form-label h5">Video URL</label>
-                        <input type="" class="form-control" id="video" v-model="dataLesson.videoUrl" />
+                        <input type=""  class="form-control" id="video" v-model="dataLesson.videoUrl" />
                         
                         <div v-if="errors.videoUrl" class="text-danger">{{ errors.videoUrl }}</div>
 
@@ -45,7 +45,7 @@
                 <div class="row mb-3">
                     <div class="col-md-12">
                         <label for="content" class="form-label h5">Nội dung</label>
-                        <CKEditorComponent v-model="dataLesson.content" />
+                        <CKEditorComponent  v-model="dataLesson.content" />
                         <div v-if="errors.content" class="text-danger">{{ errors.content }}</div>
                     </div>
                 </div>
@@ -86,6 +86,23 @@ function renderVideo(UrlYoutube) {
     return linkYoutubeEmbed + idVideoYoutube
 }
 
+
+function validForm() {
+    
+    errors.title = dataLesson.title ===""? "Tiêu đề yêu cầu nhập" : "";
+    errors.content = dataLesson.content ===""? "Nội Dung yêu cầu nhập" : "";
+    if(dataLesson.type==="LECTURES"){
+        if(!dataLesson.videoUrl.startsWith("https://www.youtube.com/watch?v=")){
+            errors.videoUrl = "Vui lòng copy link video từ youtube"
+        } else {
+            errors.videoUrl = dataLesson.videoUrl ===""? "Video Url yêu cầu nhập" : ""
+        }
+        
+    }
+
+    return   errors.title =="" && errors.videoUrl =="" && errors.content ==""
+}
+
 const dataLesson = reactive({
     title: "",
     type: "READINGS",
@@ -104,13 +121,19 @@ const errors = reactive({
 });
 
 const submitLessons = async () => {
+    if(!validForm()){
+        return false;
+    }
     if (isUpdate.value) {
         try {
             await axios.put(`${rootAPI}/lessons/${dataLesson.id}`, dataLesson);
             toast.success("Cập nhật bài tập thành công", {
                 position: "top-right",
-                autoClose: 3000,
+                autoClose: 2100,
             });
+            setTimeout(() => {
+        router.push("/lessons?idChapter="+idChapter+"&idCourse=" + idCourse);
+          }, 2100);
         } catch (error) {
             toast.error("Cập nhật bài tập thất bại", {
                 position: "top-right",
@@ -124,8 +147,11 @@ const submitLessons = async () => {
         await axios.post(`${rootAPI}/lessons`, dataLesson);
         toast.success("Thêm bài tập thành công", {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 2000,
         });
+        setTimeout(() => {
+        router.push("/lessons?idChapter="+idChapter+"&idCourse=" + idCourse);
+          }, 2100);
     } catch (error) {
         if (error.response && error.response.data) {
             const validationErrors = error.response.data; // Lấy lỗi từ phản hồi API

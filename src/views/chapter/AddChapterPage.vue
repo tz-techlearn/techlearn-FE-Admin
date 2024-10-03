@@ -75,6 +75,7 @@ import { toast } from "vue3-toastify";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import Multiselect from "vue-multiselect";
+import router from "@/router";
 
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
@@ -142,8 +143,13 @@ const addChapter = async () => {
 
     toast.success("Thêm chương thành công", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 2000,
     });
+    setTimeout(() => {
+      router.push("/chapters?idCourse=" + idCourse);
+    }, 2100);
+    
+
 
   } catch (error) {
     if (error.response && error.response.data) {

@@ -73,6 +73,7 @@ import axios from "axios";
 import { toast } from "vue3-toastify";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
+import router from "@/router";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
@@ -147,8 +148,11 @@ const updateChapter = async () => {
         await axios.put(`${rootAPI}/chapters/${chapterId}`, updatedChapter);
         toast.success("Cập nhật chương thành công", {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 2000,
         });
+        setTimeout(() => {
+      router.push("/chapters?idCourse=" + idCourse);
+    }, 2100);
 
     } catch (error) {
         toast.error("Cập nhật chương thất bại", {

@@ -16,11 +16,11 @@
       <router-link :to="{
         path: '/add-lessons',
         query: { idChapter: idChapter, idCourse: idCourse },
-      }" type="button" class="btn btn-primary mr-3">Thêm bài học</router-link>
+      }" type="button" class="btn btn-primary  btn-sm mr-3">Thêm bài học</router-link>
       <router-link :to="{
         path: '/sort-lessons',
         query: { idChapter: idChapter, idCourse: idCourse },
-      }" class="btn btn-primary">Sắp xếp bài học</router-link>
+      }" class="btn btn-primary  btn-sm">Sắp xếp bài học</router-link>
     </div>
 
   </div>
