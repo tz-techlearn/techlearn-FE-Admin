@@ -190,13 +190,18 @@
         </div> -->
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label">Lượt hỗ trợ</label>
-          <input type="number" class="form-control" v-model="course.point" />
+          <input
+            type="number"
+            class="form-control"
+            v-model="course.point"
+            required
+          />
         </div>
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label"
             >Lượt hỗ trợ công khai</label
           >
-          <input type="number" class="form-control" />
+          <input type="number" class="form-control" required />
         </div>
       </div>
       <div class="d-flex justify-content-center mb-4">
@@ -304,9 +309,12 @@ export default {
             },
           });
           toast.success("Tạo khóa học mới thành công!", {
-            autoClose: 1000,
+            autoClose: 500,
           });
         }
+        setTimeout(() => {
+          goBack();
+        }, 1000);
       } catch (error) {
         if (error.response && error.response.data) {
           const validationErrors = error.response.data;
