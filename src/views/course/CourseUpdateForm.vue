@@ -43,15 +43,31 @@
           }}</span>
         </div>
         <div class="mb-3" style="flex: 1">
-          <label for="courseUnit" class="form-label">Đơn vị</label>
-          <select
-            class="form-select"
-            id="courseUnit"
-            v-model="course.currencyUnit"
-          >
-            <option value="VND">VND</option>
-            <option value="USD">USD</option>
-          </select>
+          <label class="form-label">Đơn vị</label>
+          <div class="d-flex gap-3 align-items-center mt-2">
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="currencyUnit"
+                id="vnd"
+                value="VND"
+                v-model="course.currencyUnit"
+              />
+              <label class="form-check-label" for="vnd">VND</label>
+            </div>
+            <div class="form-check">
+              <input
+                class="form-check-input"
+                type="radio"
+                name="currencyUnit"
+                id="usd"
+                value="USD"
+                v-model="course.currencyUnit"
+              />
+              <label class="form-check-label" for="usd">USD</label>
+            </div>
+          </div>
         </div>
       </div>
       <div class="mb-3 image-container">
@@ -128,29 +144,36 @@
       </div>
       <div class="d-flex justify-content-between mb-3">
         <div class="me-2 flex-grow-1 d-flex gap-2 align-items-center">
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="courseActivation"
-              id="activated"
-              value="true"
-              v-model="course.isActive"
-            />
-            <label class="form-check-label" for="activated"> Kích hoạt </label>
-          </div>
-          <div class="form-check">
-            <input
-              class="form-check-input"
-              type="radio"
-              name="courseActivation"
-              id="deactivated"
-              value="false"
-              v-model="course.isActive"
-            />
-            <label class="form-check-label" for="deactivated">
-              Không kích hoạt
-            </label>
+          <div class="d-flex flex-column">
+            <label class="form-label">Trạng thái</label>
+            <div class="d-flex flex-row gap-3">
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="courseActivation"
+                  id="activated"
+                  value="true"
+                  v-model="course.isActive"
+                />
+                <label class="form-check-label" for="activated">
+                  Kích hoạt
+                </label>
+              </div>
+              <div class="form-check">
+                <input
+                  class="form-check-input"
+                  type="radio"
+                  name="courseActivation"
+                  id="deactivated"
+                  value="false"
+                  v-model="course.isActive"
+                />
+                <label class="form-check-label" for="deactivated">
+                  Không kích hoạt
+                </label>
+              </div>
+            </div>
           </div>
         </div>
         <!-- <div class="ms-2 flex-grow-1">
@@ -167,6 +190,12 @@
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label">Lượt hỗ trợ</label>
           <input type="number" class="form-control" v-model="course.point" />
+        </div>
+        <div class="ms-2 flex-grow-1">
+          <label for="coursePublicity" class="form-label"
+            >Lượt hỗ trợ công khai</label
+          >
+          <input type="number" class="form-control" />
         </div>
       </div>
       <div class="d-flex justify-content-center mb-4">
@@ -252,7 +281,7 @@ export default {
           formData.append("techStack", tech.id);
         });
         console.log(course.thumbnailUrl);
-        if (course.thumbnailUrl) {
+        if (typeof course.thumbnailUrl === "object") {
           formData.append("file", course.thumbnailUrl);
         }
         if (isUpdate.value) {
@@ -382,9 +411,9 @@ export default {
     const formatCurrency = (value, unit) => {
       value = value.toString();
       if (unit == "VND") {
-        value = value.replace(/\./g, ""); // Xóa dấu chấm cho VND
+        value = value.replace(/\./g, "");
       } else {
-        value = value.replace(/\,/g, ""); // Xóa dấu phẩy cho USD
+        value = value.replace(/\,/g, "");
       }
       if (typeof value !== "number" && value !== "") {
         value = parseFloat(value);
