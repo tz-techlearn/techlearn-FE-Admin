@@ -6,27 +6,14 @@
         <p class="mb-0 text-dark">Danh sách khoá học</p>
       </div>
     </router-link>
-    <div>
-      <router-link
-        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
-        type="button"
-        class="btn btn-primary mr-3"
-        >Thêm chương</router-link
-      >
-      <router-link
-        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
-        class="btn btn-primary"
-        >Sắp xếp chương</router-link
-      >
-    </div>
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="container text-center">
     <div class="row">
-      <div class="col-md-5">
+      <div class="col-lg-5 mb-3 col-md-12 ">
         <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
       </div>
-      <div class="col-md-7 text-start">
+      <div class="col-lg-7  col-md-12 text-start">
         <p>
           <span class="fw-bold">Tên khoá học:</span>
           {{ dataCourse.course.name }}
@@ -37,7 +24,12 @@
         </p>
         <p>
           <span class="fw-bold">Giá khoá học:</span>
-          {{ dataCourse.course.price }}
+          {{
+            formatCurrency(
+              dataCourse.course.price,
+              dataCourse.course.currencyUnit
+            )
+          }}
         </p>
         <p>
           <span class="fw-bold">Đơn vị:</span>
@@ -45,13 +37,11 @@
         </p>
         <p>
           <span class="fw-bold">Công nghệ: </span>
-          <span
-            v-if="
-              dataCourse.course &&
-              dataCourse.course.techStack &&
-              dataCourse.course.techStack.length > 0
-            "
-          >
+          <span v-if="
+            dataCourse.course &&
+            dataCourse.course.techStack &&
+            dataCourse.course.techStack.length > 0
+          ">
             {{
               dataCourse.course.techStack.map((stack) => stack.name).join(", ")
             }}
@@ -76,28 +66,20 @@
       </div>
     </div>
   </div>
-  <hr class="border border-grey border-1 opacity-50" />
-  <h5 class="mt-4" style="margin-left: 30px; margin-bottom: -20px">
-    Danh sách chương
-  </h5>
-  <Table
-    :header="header"
-    :data="data.chapter"
-    :keys="keys"
-    :actions="actions"
-    :totalRows="totalRows"
-    :perPage="perPage"
-    @delete-item="deleteChapter"
-    @pageChange="handlePageChange"
-  ></Table>
-  <b-modal
-    v-model="isModalVisible"
-    title="Xác nhận xóa"
-    ok-title="Xóa"
-    cancel-title="Đóng"
-    ok-variant="danger"
-    @ok="handleDelete"
-  >
+  <hr class="border border-grey border-1 opacity-50 mb-3" />
+  <div class="header-table px-4">
+    <h5 class="m-0">Danh sách chương</h5>
+    <div>
+      <router-link :to="{ path: '/add-chapter', query: { idCourse: idCourse } }" type="button"
+        class="btn btn-primary mr-3">Thêm chương</router-link>
+      <router-link :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }" class="btn btn-primary">Sắp xếp
+        chương</router-link>
+    </div>
+  </div>
+  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @delete-item="deleteChapter" @pageChange="handlePageChange"></Table>
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
     <p>Bạn có chắc chắn muốn xóa chương không?</p>
   </b-modal>
 </template>
@@ -153,9 +135,9 @@ const fetchChapter = async () => {
     data.chapter = response.data.data.items;
 
     console.log(response.data.data);
-
     perPage.value = response.data.data.pageSize;
-    totalRows.value = response.data.data.totalPage;
+    totalRows.value =
+      response.data.data.totalPage > 0 ? response.data.data.totalPage : 1;
   } catch (error) {
     console.error(error);
   }
@@ -194,11 +176,33 @@ const handlePageChange = (page) => {
   fetchChapter();
 };
 
+const formatCurrency = (value, unit) => {
+  if (typeof value !== "number") {
+    return value;
+  }
+  var formatter;
+  switch (unit) {
+    case "USD":
+      formatter = new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+      });
+      break;
+    case "VND":
+      formatter = new Intl.NumberFormat("vi-VN", {
+        style: "currency",
+        currency: "VND",
+      });
+
+      break;
+  }
+
+  return formatter.format(value);
+};
+
 onMounted(async () => {
   await fetchChapter();
   await fetchCourse();
-  // store.dispatch("updateIdCourse", route.query.idCourse);
-  // console.log(store.getters.getIdCourse)
 });
 </script>
 
@@ -215,5 +219,16 @@ img {
   border-radius: 10px;
   max-width: 80%;
   height: auto;
+}
+
+.header-table {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-table h5 {
+  margin-left: 30px;
+  margin-bottom: 0;
 }
 </style>
