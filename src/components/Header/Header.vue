@@ -1,9 +1,6 @@
 <template>
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <nav class="navbar-expand-lg navbar">
     <div class="container-fluid">
-      <!-- Logo -->
-      <a class="navbar-brand" href="#">MyWebsite</a>
-
       <!-- Nút toggle cho di động -->
       <button
         class="navbar-toggler"
@@ -21,9 +18,9 @@
       <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item">
-            <router-link class="nav-link" href="#">
-              <i class="fas fa-sign-out-alt"></i> Đăng xuất
-            </router-link>
+              <router-link class="nav-link" href="#">
+                <i class="fas fa-sign-out-alt"></i> Đăng xuất
+              </router-link>
           </li>
         </ul>
       </div>
@@ -37,7 +34,8 @@
 
 <style scoped>
 .navbar {
-  background-color: #8aaac8;
+  background-color: #ffffff;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
 }
 
 .navbar-nav .nav-link {
