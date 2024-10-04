@@ -37,7 +37,6 @@
                         <th>Profile</th>
                         <th>Name</th>
                         <th>Email</th>
-                        <th>Company</th>
                         <th style="min-width: 100px">Action</th>
                     </tr>
                     </thead>
@@ -47,7 +46,6 @@
                                 src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
                         <td>Anna Sthesia</td>
                         <td>annasthesia@gmail.com</td>
-                        <td>Acme Corporation</td>
                         <td>
                             <div class="flex align-items-center list-user-action">
                                 <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
@@ -63,7 +61,6 @@
                                 src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
                         <td>Brock Lee</td>
                         <td>brocklee@gmail.com</td>
-                        <td>Soylent Corp</td>
                         <td>
                             <div class="flex align-items-center list-user-action">
                                 <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
@@ -78,7 +75,6 @@
                                 src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
                         <td>Dan Druff</td>
                         <td>dandruff@gmail.com</td>
-                        <td>Umbrella Corporation</td>
                         <td>
                             <div class="flex align-items-center list-user-action">
                                 <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
