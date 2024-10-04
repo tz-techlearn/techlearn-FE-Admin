@@ -3,7 +3,7 @@
         <div class="card-body">
             <div class="table-responsive">
                 <div class="row justify-content-between">
-                    <div class="col-sm-6 col-md-6">
+                    <div class="col-sm-5 col-md-5">
                     <div id="user_list_datatable_info" class="dataTables_filter">
                         <form class="mr-3 position-relative">
                             <div class="form-group mb-0">
@@ -13,7 +13,16 @@
                         </form>
                     </div>
                     </div>
-                    <div class="col-sm-6 col-md-6">
+                    <div class="col-sm-5 col-md-5">
+                    <div class="d-flex">
+                        <div class="icon-search">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-search search" viewBox="0 0 16 16">
+                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
+                        </svg>
+                        </div>
+                    </div>
+                    </div>
+                    <div class="col-sm-2 col-md-2">
                     <div class="user-list-files d-flex">
                         <a class="bg-primary" href="/create-user">
                             Thêm mới
@@ -89,6 +98,16 @@
 <script setup>
 </script>
 <style scoped>
+.icon-search{
+    background-color: #38bdf8; 
+    padding: 5px; color: white; 
+    font-size: 0.9rem; 
+    margin-top: 3px; 
+    width: 10%; 
+    text-align: center; 
+    border-radius: 4px;
+}
+
 .card-body {
     background-color: white;
     border-radius: 8px;
@@ -116,7 +135,7 @@ h2 {
     background-color: #38bdf8;
     color: white;
     padding: 0.5rem 1rem;
-    border-radius: 20px;
+    border-radius: 4px;
     font-size: 0.9rem;
     text-decoration: none;
     transition: background-color 0.3s ease;

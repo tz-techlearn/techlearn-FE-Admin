@@ -1,122 +1,160 @@
 <template>
-<div class="container-fluid p-5">
-<div>
-    <div class="card-header d-flex justify-content-between">
-        <div class="header-title">
-            <h4 class="card-title">Thêm thông tin người dùng</h4>
+    <div class="container-fluid p-5">
+    <div class="mb-4 d-flex justify-content-between align-items-center">
+    <router-link to="/user" class="text-decoration-none">
+        <div class="d-flex align-items-center gap-2">
+        <i class="fa-solid fa-arrow-left text-dark"></i>
+        <p class="mb-0 text-dark">Quản lý người dùng</p>
+        </div>
+    </router-link>
+    </div>
+    <div class="card no-border">
+    <div class="card-header mt-2">
+        <h4 class="card-title">Thêm thông tin người dùng</h4>
+    </div>
+    <div class="card-body">
+        <form @submit.prevent="submitForm">
+            <div class="row">
+            <div class="col-md-7">
+                <div class="form-group">
+                        <label for="fullName">Họ và tên</label>
+                        <input type="text" id="fullName" v-model="fullName" class="form-control" placeholder="Nhập họ và tên" required>
+                </div>
+                    <div class="form-group">
+                        <label for="email">Email</label>
+                        <input type="email" id="email" v-model="email" class="form-control" placeholder="Nhập Email" required>
+                </div>
+                    <div class="form-group">
+                        <label for="password">Mật khẩu</label>
+                        <input type="password" id="password" v-model="password" class="form-control" placeholder="Nhập mật khẩu" required>
+                    </div>
+            </div>
+            <div class="col-md-5">
+                <div class="image-preview-container">
+                    <img :src="imagePreview" alt="Ảnh xem trước" class="image-preview" />
+                    <input type="file" ref="fileInput" @change="handleFileChange" accept="image/*" class="d-none">
+                    <button type="button" @click="triggerFileInput" class="btn btn-secondary mt-3">Chọn ảnh</button>
+                </div>
+            </div>
+            </div>
+                    <div class="d-flex justify-content-center"> 
+                        <button type="submit" class="btn btn-primary me-2">Thêm mới</button> 
+                        <button type="reset" class="btn btn-outline-danger">Hủy</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
-    <hr/>
-    <div class="card-body">
-        <form action="page-list-users.html" data-toggle="validator">
-            <div class="row"> 
-                <div class="col-md-6">                      
-                    <div class="form-group">
-                        <label>Họ và tên</label>
-                        <input type="text" class="form-control" placeholder="Nhập họ và tên" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div>  
-                <!-- <div class="col-md-6">                      
-                    <div class="form-group">
-                        <label>User Name *</label>
-                        <input type="text" class="form-control" placeholder="Nhập User Name" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div>   -->
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Email *</label>
-                        <input type="text" class="form-control" placeholder="Nhập Email" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div> 
-                <div class="col-md-12">
-                    <div class="form-group">
-                        <label>Giới tính</label>
-                        <select name="type" class="selectpicker form-control" data-style="py-0">
-                            <option>Nữ</option>
-                            <option>Nam</option>
-                        </select>
-                    </div>
-                </div> 
-                                
-                <div class="col-md-6">                      
-                    <div class="form-group">
-                        <label>Mật khẩu</label>
-                        <input type="text" class="form-control" placeholder="Nhập Mật khẩu" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div>  
-                <div class="col-md-6">                      
-                    <div class="form-group">
-                        <label>Xác nhận mật khẩu</label>
-                        <input type="text" class="form-control" placeholder="Xác nhận mật khẩu" required>
-                        <div class="help-block with-errors"></div>
-                    </div>
-                </div> 
-                <!-- <div class="col-md-12">
-                    <div class="checkbox d-inline-block mb-3">
-                        <input type="checkbox" class="checkbox-input mr-2" id="checkbox1" checked="">
-                        <label for="checkbox1">Notify User by Email</label>
-                    </div>
-                </div>                                -->
-            </div>                            
-            <button type="submit" class="btn btn-primary mr-2">Thêm người dùng</button>
-            <button type="reset" class="btn btn-danger">Quay lại</button>
-        </form>
-    </div>
-</div>
-</div>
 </template>
+
 <script setup>
+import { ref } from 'vue';
+
+const fullName = ref('');
+const email = ref('');
+const password = ref('');
+const imagePreview = ref('https://i.pinimg.com/564x/b6/9d/ed/b69dedbefb0f4516cc537b67519db790.jpg');
+const fileInput = ref(null);
+
+    const triggerFileInput = () => {
+    fileInput.value.click();
+    };
+
+    const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+        imagePreview.value = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    }
+    };
+
+    const submitForm = () => {
+    console.log( { fullName: fullName.value, email: email.value, password: password.value });
+    };
 </script>
+
 <style scoped>
-.form-group {
-  margin-bottom: 15px;
+.container-fluid {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+  overflow-x: hidden;
+  overflow-y: hidden;
 }
 
-input[type="text"],
-input[type="email"],
-input[type="password"],
-select {
-  border: 1px solid #ced4da;
-  border-radius: 4px;
-  padding: 10px;
-  width: 100%;
+.card.no-border {
+  box-shadow: none; 
+  border: none;
 }
 
-.selectpicker {
-height: 100%;
+.card-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #e9ecef;
+  padding: 1rem;
 }
 
-.form-group label {
+.card-title {
+  margin-bottom: 0;
   font-weight: 600;
 }
 
-button.btn-primary {
-  background-color: #3498db;
-  border-color: #3498db;
-  color: white;
+.form-group {
+  margin-bottom: 1.5rem;
 }
 
-button.btn-danger {
-  background-color: #f8d7da;
-  border-color: #f8d7da;
-  color: #721c24;
-}
-
-.checkbox-input {
-  margin-right: 5px;
-}
-
-button {
-  padding: 10px 20px;
+.form-control {
+  border: 1px solid #ced4da;
   border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 1rem;
 }
 
 .btn {
-  font-size: 16px;
-  margin-top: 10px;
+  font-size: 1rem;
+  padding: 0.5rem 1rem;
+  border-radius: 4px;
 }
-</style>
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-outline-danger {
+  color: #dc3545;
+  border-color: #dc3545;
+}
+
+.image-preview-container {
+    margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 60%;
+  width: 60%;
+  margin-left: 5rem;
+}
+
+.image-preview {
+  width: 100%;
+  height: 300px; 
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 1rem;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.small-image {
+  max-width: 150px; 
+  max-height: 150px;
+}
+
+.mt-4.d-flex.justify-content-between {
+  display: flex;
+  justify-content: space-between;
+}
+
+  </style>
