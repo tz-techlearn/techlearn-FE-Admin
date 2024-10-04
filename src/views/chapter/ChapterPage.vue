@@ -37,13 +37,11 @@
         </p>
         <p>
           <span class="fw-bold">Công nghệ: </span>
-          <span
-            v-if="
-              dataCourse.course &&
-              dataCourse.course.techStack &&
-              dataCourse.course.techStack.length > 0
-            "
-          >
+          <span v-if="
+            dataCourse.course &&
+            dataCourse.course.techStack &&
+            dataCourse.course.techStack.length > 0
+          ">
             {{
               dataCourse.course.techStack.map((stack) => stack.name).join(", ")
             }}
@@ -54,40 +52,19 @@
     </div>
   </div>
   <hr class="border border-grey border-1 opacity-50 mb-3" />
-  <div class="header-table">
-    <h5>Danh sách chương</h5>
+  <div class="header-table px-4">
+    <h5 class="m-0">Danh sách chương</h5>
     <div>
-      <router-link
-        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
-        type="button"
-        class="btn btn-primary mr-3  btn-sm"
-        >Thêm chương</router-link
-      >
-      <router-link
-        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
-        class="btn btn-primary btn-sm"
-        >Sắp xếp chương</router-link
-      >
+      <router-link :to="{ path: '/add-chapter', query: { idCourse: idCourse } }" type="button"
+        class="btn btn-primary mr-3">Thêm chương</router-link>
+      <router-link :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }" class="btn btn-primary">Sắp xếp
+        chương</router-link>
     </div>
   </div>
-  <Table
-    :header="header"
-    :data="data.chapter"
-    :keys="keys"
-    :actions="actions"
-    :totalRows="totalRows"
-    :perPage="perPage"
-    @delete-item="deleteChapter"
-    @pageChange="handlePageChange"
-  ></Table>
-  <b-modal
-    v-model="isModalVisible"
-    title="Xác nhận xóa"
-    ok-title="Xóa"
-    cancel-title="Đóng"
-    ok-variant="danger"
-    @ok="handleDelete"
-  >
+  <Table :header="header" :data="data.chapter" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @delete-item="deleteChapter" @pageChange="handlePageChange"></Table>
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
     <p>Bạn có chắc chắn muốn xóa chương không?</p>
   </b-modal>
 </template>
@@ -234,6 +211,7 @@ img {
   justify-content: space-between;
   align-items: center;
 }
+
 .header-table h5 {
   margin-left: 30px;
   margin-bottom: 0;

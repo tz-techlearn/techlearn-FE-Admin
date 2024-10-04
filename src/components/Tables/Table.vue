@@ -1,5 +1,5 @@
 <template>
-  <div class="container-fluid my-3">
+  <div class="container-fluid">
     <div class="container-fluid my-3 px-3">
       
      
@@ -20,21 +20,12 @@
           </tr>
           <!-- <tr v-if="widthScreen>700" ></tr> -->
         </thead>
-        <draggable
-          tag="tbody"
-          v-if="isDraggable"
-          :list="props.data"
-          :disabled="!enabled"
-          ghost-class="ghost"
-          :move="checkMove"
-          @start="dragging = true"
-          @end="
-            (evt) => {
-              dragging = false;
-              emit('updateOrder', props.data);
-            }
-          "
-        >
+        <draggable tag="tbody" v-if="isDraggable" :list="props.data" :disabled="!enabled" ghost-class="ghost"
+          :move="checkMove" @start="dragging = true" @end="(evt) => {
+            dragging = false;
+            emit('updateOrder', props.data);
+          }
+            ">
           <template #item="{ element, index }">
             <tr :key="element.id" class="w-100 drag-item">
               <th scope="row" class="text-center">
@@ -66,24 +57,13 @@
                 </template>
               </td>
               <td class="action-button">
-                <router-link
-                  v-if="viewDetail"
-                  :to="props.actions.view(item)"
-                  class="btn btn-primary btn-sm btn-action"
-                >
+                <router-link v-if="viewDetail" :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
                   <i class="fas fa-eye"></i>
                 </router-link>
-                <router-link
-                  :to="props.actions.edit(item)"
-                  class="btn btn-warning btn-sm btn-action"
-                >
+                <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
                   <i class="fas fa-edit"></i>
                 </router-link>
-                <router-link
-                  to=""
-                  @click="confirmDelete(item)"
-                  class="btn btn-danger btn-sm btn-action"
-                >
+                <router-link to="" @click="confirmDelete(item)" class="btn btn-danger btn-sm btn-action">
                   <i class="fas fa-trash"></i>
                 </router-link>
               </td>
@@ -91,17 +71,8 @@
           </tbody>
         </template>
       </table>
-      <b-pagination
-        v-if="totalRows > 0"
-        class="pagination"
-        v-model="currentPage"
-        :total-rows="totalRows"
-        :per-page="1"
-        aria-controls="my-table"
-        first-number
-        last-number
-        @change="pageChanged"
-      />
+      <b-pagination v-if="totalRows > 0" class="pagination" v-model="currentPage" :total-rows="totalRows" :per-page="1"
+        aria-controls="my-table" first-number last-number @change="pageChanged" />
     </div>
   </div>
 </template>

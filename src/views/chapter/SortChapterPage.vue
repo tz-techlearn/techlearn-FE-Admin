@@ -10,7 +10,7 @@
     <hr class="border border-grey border-1 opacity-50">
     <div class="d-flex justify-content-center flex-column align-items-center">
         <div class="d-flex justify-content-between w-100 px-4 align-items-center">
-            <h4 class="title-sort m-0 mt-3">Sắp xếp danh sách chương</h4>
+            <h4 class="title-sort m-0">Sắp xếp danh sách chương</h4>
             <button class="d-flex btn-save btn btn-warning align-self-end" @click="saveOrder">Lưu thay
                 đổi</button>
         </div>
@@ -114,16 +114,4 @@ onMounted(async () => {
 
 </script>
 
-<style scoped>
-/* .title-sort {
-    margin-bottom: -35px;
-} */
-
-/* .btn-save {
-    margin-top: -25px;
-} */
-
-.chapter-header {
-    height: 37.6px;
-}
-</style>
+<style scoped></style>
