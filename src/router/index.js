@@ -9,6 +9,7 @@ import LessonsPage from "@/views/lesson/LessonsPage.vue";
 import ChapterPage from "@/views/chapter/ChapterPage.vue";
 import AddLessonPage from '@/views/lesson/AddLessonPage.vue';
 import SortLessonPage from '@/views/lesson/SortLessonPage.vue'
+import ChapterMentorManagement from '@/views/chapter/ChapterMentorManagement.vue';
 
 const routes = [
   {
@@ -77,6 +78,11 @@ const routes = [
     name: "SortLessonPage",
     component: SortLessonPage,
   },
+  {
+    path: "/chapter-mentor-management",
+    name: "ChapterMentorManagement",
+    component: ChapterMentorManagement
+  }
 ]
 
 const router = createRouter({

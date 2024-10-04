@@ -8,6 +8,12 @@
     </router-link>
     <div>
       <router-link
+        :to="{ path: '/chapter-mentor-management', query: { idCourse: idCourse } }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Quản lý chương người hỗ trợ
+      </router-link>
+      <router-link
         :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
         type="button"
         class="btn btn-primary mr-3"
