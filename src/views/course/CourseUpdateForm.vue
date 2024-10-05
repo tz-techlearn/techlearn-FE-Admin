@@ -19,7 +19,7 @@
       </div>
       <div class="mb-3">
         <label for="courseDescription" class="form-label">Mô tả khóa học</label>
-        <input
+        <textarea
           type="text"
           class="form-control"
           id="courseDescription"
@@ -195,11 +195,11 @@
           <input
             type="number"
             class="form-control"
-            v-model="course.point"
+            v-model="course.privatePoint"
             @input="validateForm"
           />
-          <span v-if="course.errors.point" class="text-danger">{{
-            course.errors.point
+          <span v-if="course.errors.privatePoint" class="text-danger">{{
+            course.errors.privatePoint
           }}</span>
         </div>
         <div class="ms-2 flex-grow-1">
@@ -237,6 +237,7 @@ import { useRouter, useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { watch } from "vue";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 export default {
   components: {
@@ -251,6 +252,7 @@ export default {
     const showUploadArea = ref(true);
     const priceTemp = ref(0);
     const thumbnailImage = ref();
+    const submitOnetime = ref(false);
     const course = reactive({
       id: null,
       name: "",
@@ -262,7 +264,7 @@ export default {
       teacher: [],
       isActive: true,
       isPublic: true,
-      point: 30,
+      privatePoint: 30,
       publicPoint: 15,
       errors: {
         name: "",
@@ -271,6 +273,7 @@ export default {
         thumbnailUrl: "",
         techStack: "",
         teacher: "",
+        privatePoint: "",
         publicPoint: "",
       },
     });
@@ -283,6 +286,7 @@ export default {
     });
 
     const submitCourse = async () => {
+      submitOnetime.value = true;
       // console.log(validateForm());
       if (validateForm()) {
         try {
@@ -295,7 +299,8 @@ export default {
           const formData = new FormData();
           formData.append("name", course.name);
           formData.append("price", course.price);
-          formData.append("point", course.point);
+          formData.append("privatePoint", course.privatePoint);
+          formData.append("publicPoint", course.publicPoint);
           formData.append("description", course.description);
           formData.append("currencyUnit", course.currencyUnit);
           formData.append("isActive", course.isActive);
@@ -467,35 +472,39 @@ export default {
     };
 
     const validateForm = () => {
-      course.errors.name =
-        course.name === "" ? "Tên khóa học không được để trống" : "";
-      course.errors.description =
-        course.description === "" ? "Mô tả khóa học không được để trống" : "";
-      course.errors.price =
-        priceTemp.value == "0" ? "Giá khóa học không được để trống" : "";
-      course.errors.thumbnailUrl =
-        course.thumbnailUrl === "" ? "Vui lòng chọn ảnh khóa học" : "";
-      course.errors.techStack =
-        course.techStack.length == 0 ? "Vui lòng chọn công nghệ" : "";
-      course.errors.teacher =
-        course.teacher.length == 0
-          ? "Vui lòng chọn giảng viên cho khóa học"
-          : "";
-      course.errors.publicPoint =
-        course.publicPoint == "" ? "Vui lòng chọn lượt hỗ trợ công khai" : "";
-      course.errors.point =
-        course.point == "" ? "Vui lòng chọn lượt hỗ trợ" : "";
-      console.log(course.description === "");
-      return (
-        course.name !== "" &&
-        course.description !== "" &&
-        priceTemp.value !== "0" &&
-        course.thumbnailUrl !== "" &&
-        course.techStack.length !== 0 &&
-        course.teacher.length !== 0 &&
-        course.publicPoint !== "" &&
-        course.point !== ""
-      );
+      if (submitOnetime.value) {
+        course.errors.name =
+          course.name === "" ? "Tên khóa học không được để trống" : "";
+        course.errors.description =
+          course.description === "" ? "Mô tả khóa học không được để trống" : "";
+        course.errors.price =
+          priceTemp.value == "0" ? "Giá khóa học không được để trống" : "";
+        course.errors.thumbnailUrl =
+          course.thumbnailUrl === "" ? "Vui lòng chọn ảnh khóa học" : "";
+        course.errors.techStack =
+          course.techStack.length == 0 ? "Vui lòng chọn công nghệ" : "";
+        course.errors.teacher =
+          course.teacher.length == 0
+            ? "Vui lòng chọn giảng viên cho khóa học"
+            : "";
+        course.errors.publicPoint =
+          course.publicPoint == "" ? "Vui lòng chọn lượt hỗ trợ công khai" : "";
+        course.errors.privatePoint =
+          course.privatePoint == "" ? "Vui lòng chọn lượt hỗ trợ" : "";
+        console.log(course.description === "");
+        return (
+          course.name !== "" &&
+          course.description !== "" &&
+          priceTemp.value !== "0" &&
+          course.thumbnailUrl !== "" &&
+          course.techStack.length !== 0 &&
+          course.teacher.length !== 0 &&
+          course.publicPoint !== "" &&
+          course.privatePoint !== ""
+        );
+      } else {
+        return null;
+      }
     };
 
     onMounted(async () => {
