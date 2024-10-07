@@ -21,25 +21,24 @@
                     <span class="fw-bold">Mô tả khoá học:</span> {{ dataCourse.course.description }}
                 </p>
                 <p>
-                    <span class="fw-bold">Giá khoá học:</span> {{ formatCurrency(dataCourse.course.price,dataCourse.course.currencyUnit) }}
+                    <span class="fw-bold">Giá khoá học:</span> {{
+                        formatCurrency(dataCourse.course.price, dataCourse.course.currencyUnit) }}
                 </p>
                 <p>
                     <span class="fw-bold">Đơn vị:</span> {{ dataCourse.course.currencyUnit }}
                 </p>
                 <p>
-          <span class="fw-bold">Công nghệ: </span>
-          <span
-            v-if="
-              dataCourse.course &&
-              dataCourse.course.techStack &&
-              dataCourse.course.techStack.length > 0
-            "
-          >
-            {{
-              dataCourse.course.techStack.map((stack) => stack.name).join(", ")
-            }}
-          </span>
-          <span v-else>N/A</span>
+                    <span class="fw-bold">Công nghệ: </span>
+                    <span v-if="
+                        dataCourse.course &&
+                        dataCourse.course.techStack &&
+                        dataCourse.course.techStack.length > 0
+                    ">
+                        {{
+                            dataCourse.course.techStack.map((stack) => stack.name).join(", ")
+                        }}
+                    </span>
+                    <span v-else>N/A</span>
                 </p>
             </div>
         </div>
@@ -50,13 +49,14 @@
                     <label for="chapterName" class="form-label">Tên chương</label>
                     <input type="text" id="chapterName" class="form-control" v-model="chapterName" required />
                 </div>
-                  
+
                 <div class="mb-3">
                     <label for="isPublic" class="form-label">Trạng thái</label>
-                   <br>
+                    <br>
                     <div v-for="option in publicOptions" :key="option.value" class="form-check form-check-inline">
-                      <input class="form-check-input" v-model="isPublic" :checked="option.value==isPublic"  type="radio" name="isPublic"  :value=" option.value">
-                      <label class="form-check-label"  for="inlineRadio1">  {{ option.text }}</label>
+                        <input class="form-check-input" v-model="isPublic" :checked="option.value == isPublic"
+                            type="radio" name="isPublic" :value="option.value">
+                        <label class="form-check-label" for="inlineRadio1"> {{ option.text }}</label>
                     </div>
 
                 </div>
@@ -73,6 +73,7 @@ import axios from "axios";
 import { toast } from "vue3-toastify";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
+import router from "@/router";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
 
@@ -81,10 +82,10 @@ const route = useRoute();
 const chapterId = route.params.id;
 const idCourse = route.query.idCourse;
 const mentors = reactive({
-    data:[]
+    data: []
 })
 const options = reactive({
-    data:[]
+    data: []
 })
 const chapterName = ref('');
 const isPublic = ref(true);
@@ -100,23 +101,23 @@ function formatCurrency(value, unit) {
     if (typeof value !== "number") {
         return value;
     }
-    var formatter 
+    var formatter
     switch (unit) {
-      case "USD":
-       formatter  = new Intl.NumberFormat('en-US', {
-        style: 'currency',
-        currency: 'USD'
-    });
-        break;
-      case "VND":
-      formatter  = new Intl.NumberFormat('vi-VN', {
-        style: 'currency',
-        currency: 'VND'
-    });
-        
-        break;
+        case "USD":
+            formatter = new Intl.NumberFormat('en-US', {
+                style: 'currency',
+                currency: 'USD'
+            });
+            break;
+        case "VND":
+            formatter = new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            });
+
+            break;
     }
-   
+
     return formatter.format(value);
 };
 
@@ -133,22 +134,25 @@ const fetchChapter = async () => {
 };
 
 const updateChapter = async () => {
-   
+
     try {
         const updatedChapter = {
             name: chapterName.value,
             chapterOrder: chapterOrder.value,
             isPublic: isPublic.value,
             courseId: idCourse,
-            mentor:mentors.data,
-            id:chapterId
+            mentor: mentors.data,
+            id: chapterId
         };
 
         await axios.put(`${rootAPI}/chapters/${chapterId}`, updatedChapter);
         toast.success("Cập nhật chương thành công", {
             position: "top-right",
-            autoClose: 3000,
+            autoClose: 2000,
         });
+        setTimeout(() => {
+      router.push("/chapters?idCourse=" + idCourse);
+    }, 2100);
 
     } catch (error) {
         toast.error("Cập nhật chương thất bại", {
@@ -175,16 +179,16 @@ const fetchMentors = async () => {
     try {
         const response = await axios.get(`${rootAPI}/mentors`);
         options.data = response.data.data.items;
-    }catch(err){
+    } catch (err) {
         console.log(err);
     }
 }
 
-    const removeTeacher = (tagToRemove) => {
-        const teacherSet = new Set( mentors.data);
-        teacherSet.delete(tagToRemove);
-        mentors.data = Array.from(teacherSet)
-    };
+const removeTeacher = (tagToRemove) => {
+    const teacherSet = new Set(mentors.data);
+    teacherSet.delete(tagToRemove);
+    mentors.data = Array.from(teacherSet)
+};
 
 onMounted(async () => {
     await fetchChapter();
@@ -215,9 +219,5 @@ img {
     border-radius: 10px;
     max-width: 80%;
     height: auto;
-}
-
-.chapter-header {
-    height: 37.6px;
 }
 </style>

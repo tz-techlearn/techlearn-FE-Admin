@@ -9,7 +9,7 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="row mt-4">
-    <div class="col-5">
+    <div class="col-lg-5 mb-3 col-md-12 ">
       <div class="col-md-12">
         <img class="img-fluid" :src="dataCourse.course.thumbnailUrl" alt="" />
       </div>
@@ -24,7 +24,7 @@
         </p>
         <p>
           <span class="fw-bold">Giá khoá học:</span>
-          {{ formatCurrency(dataCourse.course.price,dataCourse.course.currencyUnit) }}
+          {{ formatCurrency(dataCourse.course.price, dataCourse.course.currencyUnit) }}
         </p>
         <p>
           <span class="fw-bold">Đơn vị:</span>
@@ -40,27 +40,22 @@
         </p>
       </div>
     </div>
-
-
-        <div class="col-7">
-            <h2>Thêm Chương Mới</h2>
-            <form @submit.prevent="addChapter">
-                <div class="mb-3">
-                    <label for="chapterName" class="form-label">Tên chương</label>
-                    <input  type="text"  class="form-control" id="chapterName" v-model="chapterName" required />
-                   
-                  </div>
-
-                <div class="mb-3">
-                    <label for="isPublic" class="form-label">Trạng thái</label>
-                   <br>
-                    <div v-for="option in publicOptions" :key="option.value" class="form-check form-check-inline">
-                      <input class="form-check-input" :checked="option.value" type="radio" name="publicOptions"  value="{{ option.value }}">
-                      <label class="form-check-label" for="inlineRadio1">  {{ option.text }}</label>
-                    </div>
-
-                </div>
-                
+    <div class="col-7">
+      <h2>Thêm Chương Mới</h2>
+      <form @submit.prevent="addChapter">
+        <div class="mb-3">
+          <label for="chapterName" class="form-label">Tên chương</label>
+          <input type="text" class="form-control" id="chapterName" v-model="chapterName" required />
+        </div>
+        <div class="mb-3">
+          <label for="isPublic" class="form-label">Trạng thái</label>
+          <br>
+          <div v-for="option in publicOptions" :key="option.value" class="form-check form-check-inline">
+            <input class="form-check-input" :checked="option.value" type="radio" name="publicOptions"
+              value="{{ option.value }}">
+            <label class="form-check-label" for="inlineRadio1"> {{ option.text }}</label>
+          </div>
+        </div>
         <button type="submit" class="btn btn-primary">Thêm Chương</button>
       </form>
     </div>
@@ -73,6 +68,7 @@ import { toast } from "vue3-toastify";
 import { ref, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import Multiselect from "vue-multiselect";
+import router from "@/router";
 
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
@@ -103,28 +99,28 @@ const route = useRoute();
 const idCourse = route.query.idCourse;
 const existingChapters = ref([]);
 
- function formatCurrency(value, unit) {
-    if (typeof value !== "number") {
-        return value;
-    }
-    var formatter 
-    switch (unit) {
-      case "USD":
-       formatter  = new Intl.NumberFormat('en-US', {
+function formatCurrency(value, unit) {
+  if (typeof value !== "number") {
+    return value;
+  }
+  var formatter
+  switch (unit) {
+    case "USD":
+      formatter = new Intl.NumberFormat('en-US', {
         style: 'currency',
         currency: 'USD'
-    });
-        break;
-      case "VND":
-      formatter  = new Intl.NumberFormat('vi-VN', {
+      });
+      break;
+    case "VND":
+      formatter = new Intl.NumberFormat('vi-VN', {
         style: 'currency',
         currency: 'VND'
-    });
-        
-        break;
-    }
-   
-    return formatter.format(value);
+      });
+
+      break;
+  }
+
+  return formatter.format(value);
 };
 
 const addChapter = async () => {
@@ -140,8 +136,13 @@ const addChapter = async () => {
 
     toast.success("Thêm chương thành công", {
       position: "top-right",
-      autoClose: 3000,
+      autoClose: 2000,
     });
+    setTimeout(() => {
+      router.push("/chapters?idCourse=" + idCourse);
+    }, 2100);
+    
+
 
   } catch (error) {
     if (error.response && error.response.data) {
@@ -229,9 +230,5 @@ img {
 
 input:focus {
   border-color: initial !important;
-}
-
-.chapter-header {
-  height: 37.6px;
 }
 </style>

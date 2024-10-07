@@ -128,7 +128,6 @@ onMounted(async () => {
 }
 
 .create-course-btn {
-  height: 30px;
   margin-right: 40px;
   display: flex;
   align-items: center;

@@ -9,18 +9,18 @@
   </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="px-4 d-flex justify-content-between align-items-center">
-    <h4 class="my-3 m-0" style="margin-left: 30px; margin-bottom: -20px">
+    <h4 class=" m-0" style="margin-left: 30px; margin-bottom: -20px">
       Danh sách bài học
     </h4>
     <div>
       <router-link :to="{
         path: '/add-lessons',
         query: { idChapter: idChapter, idCourse: idCourse },
-      }" type="button" class="btn btn-primary mr-3">Thêm bài học</router-link>
+      }" type="button" class="btn btn-primary  btn-sm mr-3">Thêm bài học</router-link>
       <router-link :to="{
         path: '/sort-lessons',
         query: { idChapter: idChapter, idCourse: idCourse },
-      }" class="btn btn-primary">Sắp xếp bài học</router-link>
+      }" class="btn btn-primary  btn-sm">Sắp xếp bài học</router-link>
     </div>
 
   </div>
