@@ -19,61 +19,58 @@
           </div>
         </div>
         <div class="form-group flex-group">
-          <div class="form-group flex-group">
-            <div class="flex-item points">
-              <label for="points">Số lượt:</label>
-              <input
-                type="number"
-                v-model="point.points"
-                id="points"
-                required
-                class="form-control"
-                :class="{ 'is-invalid': errors.points }"
-              />
-              <div v-if="errors.points" class="invalid-feedback">
-                {{ errors.points }}
-              </div>
+          <div class="flex-item points">
+            <label for="points">Số lượt:</label>
+            <input
+              type="number"
+              v-model="point.points"
+              id="points"
+              required
+              class="form-control"
+              :class="{ 'is-invalid': errors.points }"
+            />
+            <div v-if="errors.points" class="invalid-feedback">
+              {{ errors.points }}
             </div>
-            <div class="flex-item price">
-              <label for="price">Giá:</label>
-              <input
-                type="number"
-                v-model="point.price"
-                id="price"
-                required
-                class="form-control"
-                :class="{ 'is-invalid': errors.price }"
-              />
-              <div v-if="errors.price" class="invalid-feedback">
-                {{ errors.price }}
-              </div>
+          </div>
+          <div class="flex-item price">
+            <label for="price">Giá:</label>
+            <input
+              type="number"
+              v-model="point.price"
+              id="price"
+              required
+              class="form-control"
+              :class="{ 'is-invalid': errors.price }"
+            />
+            <div v-if="errors.price" class="invalid-feedback">
+              {{ errors.price }}
             </div>
-            <div class="flex-item currency">
-              <label for="idCurrency">Đơn vị:</label>
-              <div class="select-wrapper">
-                <select
-                  v-model="point.idCurrency"
-                  id="idCurrency"
-                  class="form-control"
+          </div>
+          <div class="flex-item currency">
+            <label for="idCurrency">Đơn vị:</label>
+            <div class="select-wrapper">
+              <select
+                v-model="point.idCurrency"
+                id="idCurrency"
+                class="form-control"
+              >
+                <option value="" disabled selected hidden>Chọn đơn vị</option>
+                <option
+                  v-for="currency in currencies"
+                  :key="currency.id"
+                  :value="currency.id"
                 >
-                  <option value="" disabled selected hidden>Chọn đơn vị</option>
-                  <option
-                    v-for="currency in currencies"
-                    :key="currency.id"
-                    :value="currency.id"
-                  >
-                    {{ currency.units }}
-                  </option>
-                </select>
-                <span class="select-arrow">&#9662;</span>
-              </div>
-              <div v-if="errors.idCurrency" class="invalid-feedback">
-                {{ errors.idCurrency }}
-              </div>
+                  {{ currency.units }}
+                </option>
+              </select>
+              <span class="select-arrow">&#9662;</span>
+            </div>
+            <div v-if="errors.idCurrency" class="invalid-feedback">
+              {{ errors.idCurrency }}
             </div>
           </div>
         </div>
-
         <button type="submit" class="btn btn-primary">Thêm Mới</button>
       </form>
     </div>
@@ -113,10 +110,24 @@ export default {
           "http://localhost:8282/api/v1/currencies"
         );
         this.currencies = response.data;
-        this.point.idCurrency = 3;
+        const defaultCurrency = this.currencies.find(
+          (currency) => currency.id === 3
+        );
+        if (defaultCurrency) {
+          this.point.idCurrency = defaultCurrency.id;
+        }
       } catch (error) {
         console.error("Error fetching currencies:", error);
       }
+    },
+    resetForm() {
+      this.point = {
+        name: "",
+        points: "",
+        price: "",
+        idCurrency: 3,
+      };
+      this.errors = {};
     },
     validate() {
       this.errors = {};
@@ -126,14 +137,14 @@ export default {
       if (!this.point.points) {
         this.errors.points = "Số lượt hỗ trợ là bắt buộc.";
       } else if (this.point.points <= 0) {
-        this.errors.points = "Số lượt hỗ  phải lớn hơn 0.";
+        this.errors.points = "Số lượt phải lớn hơn 0.";
       }
       if (!this.point.price) {
         this.errors.price = "Giá là bắt buộc.";
       } else if (this.point.price <= 0) {
         this.errors.price = "Giá phải lớn hơn 0.";
       }
-      if (!this.point === "") {
+      if (!this.point.idCurrency) {
         this.errors.idCurrency = "Vui lòng chọn loại tiền tệ.";
       }
       return Object.keys(this.errors).length === 0;
@@ -151,13 +162,13 @@ export default {
       }
     },
     closeModal() {
+      this.resetForm(); // Reset form khi đóng modal
       this.$emit("close");
     },
   },
 };
 </script>
 
-  
 <style scoped>
 .modal {
   display: flex;
@@ -251,15 +262,6 @@ select.form-control {
   background-size: 12px;
 }
 
-.modal-body .form-group input[type="text"],
-.modal-body .form-group input[type="number"] {
-  width: calc(50% - 10px);
-}
-
-.modal-body .form-group select {
-  width: calc(50% - 10px);
-}
-
 .form-control:focus {
   border-color: #007bff;
   box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
@@ -286,33 +288,6 @@ select.form-control {
 
 .btn:hover {
   background-color: #0056b3;
-}
-.flex-group {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.flex-item {
-  flex-basis: 0;
-  flex-grow: 1;
-  margin-right: 10px;
-}
-
-.points {
-  flex: 3;
-}
-
-.price {
-  flex: 4;
-}
-
-.currency {
-  flex: 3;
-}
-
-.flex-item:last-child {
-  margin-right: 0;
 }
 .select-wrapper {
   position: relative;
