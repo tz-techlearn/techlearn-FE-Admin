@@ -36,17 +36,19 @@
           <div class="flex-item price">
             <label for="price">Giá:</label>
             <input
-              type="number"
-              v-model="point.price"
+              type="text"
+              :value="formattedPrice"
               id="price"
               required
               class="form-control"
+              @input="onPriceInput($event.target.value)"
               :class="{ 'is-invalid': errors.price }"
             />
             <div v-if="errors.price" class="invalid-feedback">
               {{ errors.price }}
             </div>
           </div>
+
           <div class="flex-item currency">
             <label for="idCurrency">Đơn vị:</label>
             <div class="select-wrapper">
@@ -168,6 +170,26 @@ export default {
     },
     closeModal() {
       this.$emit("close");
+    },
+    formatPrice(price, currency) {
+      if (price === null || price === undefined) return "";
+
+      if (currency === "VND") {
+        return new Intl.NumberFormat("vi-VN").format(price);
+      } else {
+        return new Intl.NumberFormat("en-US").format(price);
+      }
+    },
+    parsePrice(value) {
+      return Number(value.replace(/[.,]/g, ""));
+    },
+    onPriceInput(value) {
+      this.point.price = this.parsePrice(value);
+    },
+  },
+  computed: {
+    formattedPrice() {
+      return this.formatPrice(this.point.price, this.point.idCurrency);
     },
   },
 };
