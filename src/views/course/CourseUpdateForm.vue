@@ -11,6 +11,7 @@
           class="form-control"
           id="courseName"
           v-model="course.name"
+          @input="validateForm"
         />
         <span v-if="course.errors.name" class="text-danger">{{
           course.errors.name
@@ -18,11 +19,12 @@
       </div>
       <div class="mb-3">
         <label for="courseDescription" class="form-label">Mô tả khóa học</label>
-        <input
+        <textarea
           type="text"
           class="form-control"
           id="courseDescription"
           v-model="course.description"
+          @input="validateForm"
         />
         <span v-if="course.errors.description" class="text-danger">{{
           course.errors.description
@@ -122,7 +124,7 @@
           @remove="removeTag"
           placeholder="Chọn công nghệ"
         />
-        <span v-if="course.errors.techStack" class="text-danger">{{
+        <span v-if="course.techStack.length == 0" class="text-danger">{{
           course.errors.techStack
         }}</span>
       </div>
@@ -139,7 +141,7 @@
           @remove="removeTeacher"
           placeholder="Chọn người hỗ trợ"
         />
-        <span v-if="course.errors.teacher" class="text-danger">{{
+        <span v-if="course.teacher.length == 0" class="text-danger">{{
           course.errors.teacher
         }}</span>
       </div>
@@ -193,15 +195,26 @@
           <input
             type="number"
             class="form-control"
-            v-model="course.point"
-            required
+            v-model="course.privatePoint"
+            @input="validateForm"
           />
+          <span v-if="course.errors.privatePoint" class="text-danger">{{
+            course.errors.privatePoint
+          }}</span>
         </div>
         <div class="ms-2 flex-grow-1">
           <label for="coursePublicity" class="form-label"
             >Lượt hỗ trợ công khai</label
           >
-          <input type="number" class="form-control" required />
+          <input
+            type="number"
+            class="form-control"
+            v-model="course.publicPoint"
+            @input="validateForm"
+          />
+          <span v-if="course.errors.publicPoint" class="text-danger">{{
+            course.errors.publicPoint
+          }}</span>
         </div>
       </div>
       <div class="d-flex justify-content-center mb-4">
@@ -224,6 +237,7 @@ import { useRouter, useRoute } from "vue-router";
 import { toast } from "vue3-toastify";
 import "vue3-toastify/dist/index.css";
 import { watch } from "vue";
+import { faL } from "@fortawesome/free-solid-svg-icons";
 
 export default {
   components: {
@@ -238,6 +252,7 @@ export default {
     const showUploadArea = ref(true);
     const priceTemp = ref(0);
     const thumbnailImage = ref();
+    const submitOnetime = ref(false);
     const course = reactive({
       id: null,
       name: "",
@@ -249,7 +264,8 @@ export default {
       teacher: [],
       isActive: true,
       isPublic: true,
-      point: 30,
+      privatePoint: 30,
+      publicPoint: 15,
       errors: {
         name: "",
         description: "",
@@ -257,6 +273,8 @@ export default {
         thumbnailUrl: "",
         techStack: "",
         teacher: "",
+        privatePoint: "",
+        publicPoint: "",
       },
     });
 
@@ -268,74 +286,69 @@ export default {
     });
 
     const submitCourse = async () => {
-      try {
-        // course.price = priceTemp.value;
-        if (course.currencyUnit === "VND") {
-          course.price = priceTemp.value.replace(/\./g, "");
-        } else {
-          course.price = priceTemp.value.replace(/\,/g, "");
-        }
-        const formData = new FormData();
-        formData.append("name", course.name);
-        formData.append("price", course.price);
-        formData.append("point", course.point);
-        formData.append("description", course.description);
-        formData.append("currencyUnit", course.currencyUnit);
-        formData.append("isActive", course.isActive);
-
-        course.techStack.forEach((tech) => {
-          formData.append("techStack", tech.id);
-        });
-        course.teacher.forEach((tch) => {
-          formData.append("teacher", tch.id);
-        });
-        console.log(course);
-        if (typeof course.thumbnailUrl === "object") {
-          formData.append("file", course.thumbnailUrl);
-        }
-        if (isUpdate.value) {
-          await axios.put(`${rootAPI}/courses/${course.id}`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          toast.success("Cập nhật khóa học thành công!", {
-            autoClose: 1000,
-          });
-        } else {
-          await axios.post(`${rootAPI}/courses`, formData, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          toast.success("Tạo khóa học mới thành công!", {
-            autoClose: 500,
-          });
-        }
-        setTimeout(() => {
-          goBack();
-        }, 1000);
-      } catch (error) {
-        if (error.response && error.response.data) {
-          const validationErrors = error.response.data;
-          course.errors = {
-            name: validationErrors.name || "",
-            description: validationErrors.description || "",
-            price: validationErrors.price || "",
-            thumbnailUrl: validationErrors.thumbnailUrl || "",
-            techStack: validationErrors.techStack || "",
-            teacher: validationErrors.teacher || "",
-          };
-        }
-        toast.error(
-          isUpdate.value
-            ? "Cập nhật khóa học thất bại!"
-            : "Tạo khóa học mới thất bại!",
-          {
-            autoClose: 1000,
+      submitOnetime.value = true;
+      // console.log(validateForm());
+      if (validateForm()) {
+        try {
+          // course.price = priceTemp.value;
+          if (course.currencyUnit === "VND") {
+            course.price = priceTemp.value.replace(/\./g, "");
+          } else {
+            course.price = priceTemp.value.replace(/\,/g, "");
           }
-        );
-        console.error("Error submitting course:", error);
+          const formData = new FormData();
+          formData.append("name", course.name);
+          formData.append("price", course.price);
+          formData.append("privatePoint", course.privatePoint);
+          formData.append("publicPoint", course.publicPoint);
+          formData.append("description", course.description);
+          formData.append("currencyUnit", course.currencyUnit);
+          formData.append("isActive", course.isActive);
+
+          course.techStack.forEach((tech) => {
+            formData.append("techStack", tech.id);
+          });
+          course.teacher.forEach((tch) => {
+            formData.append("teacher", tch.id);
+          });
+          console.log(course);
+          if (typeof course.thumbnailUrl === "object") {
+            formData.append("file", course.thumbnailUrl);
+          }
+          if (isUpdate.value) {
+            await axios.put(`${rootAPI}/courses/${course.id}`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            toast.success("Cập nhật khóa học thành công!", {
+              autoClose: 1000,
+            });
+          } else {
+            await axios.post(`${rootAPI}/courses`, formData, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            toast.success("Tạo khóa học mới thành công!", {
+              autoClose: 500,
+            });
+          }
+          setTimeout(() => {
+            goBack();
+          }, 1000);
+        } catch (error) {
+          validateForm();
+          toast.error(
+            isUpdate.value
+              ? "Cập nhật khóa học thất bại!"
+              : "Tạo khóa học mới thất bại!",
+            {
+              autoClose: 1000,
+            }
+          );
+          console.error("Error submitting course:", error);
+        }
       }
     };
 
@@ -345,9 +358,11 @@ export default {
 
     const addTag = (newTag) => {
       course.techStack.push({ name: newTag });
+      validateForm();
     };
     const addTeacher = (newTeacher) => {
       course.teacher.push({ name: newTeacher });
+      validateForm();
     };
 
     const removeTag = (tagToRemove) => {
@@ -356,12 +371,14 @@ export default {
       );
       techStackMap.delete(tagToRemove.name);
       course.techStack = Array.from(techStackMap.values());
+      validateForm();
     };
 
     const removeTeacher = (tToRemove) => {
       const teacherSet = new Set(course.teacher);
       teacherSet.delete(tToRemove.name);
       course.teacher = Array.from(teacherSet);
+      validateForm();
     };
 
     const fetchCourse = async (id) => {
@@ -403,12 +420,14 @@ export default {
       } else {
         alert("Vui lòng chọn một ảnh hợp lệ.");
       }
+      validateForm();
     };
 
     const removeImage = () => {
       // imageUrl.value = null;
-      course.thumbnailUrl = null;
+      course.thumbnailUrl = "";
       showUploadArea.value = true;
+      validateForm();
     };
 
     watch(
@@ -420,6 +439,7 @@ export default {
 
     const handleChange = () => {
       priceTemp.value = formatCurrency(priceTemp.value, course.currencyUnit);
+      validateForm();
     };
 
     const formatCurrency = (value, unit) => {
@@ -448,6 +468,42 @@ export default {
             currency: "VND",
           });
           return formatter.format(value);
+      }
+    };
+
+    const validateForm = () => {
+      if (submitOnetime.value) {
+        course.errors.name =
+          course.name === "" ? "Tên khóa học không được để trống" : "";
+        course.errors.description =
+          course.description === "" ? "Mô tả khóa học không được để trống" : "";
+        course.errors.price =
+          priceTemp.value == "0" ? "Giá khóa học không được để trống" : "";
+        course.errors.thumbnailUrl =
+          course.thumbnailUrl === "" ? "Vui lòng chọn ảnh khóa học" : "";
+        course.errors.techStack =
+          course.techStack.length == 0 ? "Vui lòng chọn công nghệ" : "";
+        course.errors.teacher =
+          course.teacher.length == 0
+            ? "Vui lòng chọn giảng viên cho khóa học"
+            : "";
+        course.errors.publicPoint =
+          course.publicPoint == "" ? "Vui lòng chọn lượt hỗ trợ công khai" : "";
+        course.errors.privatePoint =
+          course.privatePoint == "" ? "Vui lòng chọn lượt hỗ trợ" : "";
+        console.log(course.description === "");
+        return (
+          course.name !== "" &&
+          course.description !== "" &&
+          priceTemp.value !== "0" &&
+          course.thumbnailUrl !== "" &&
+          course.techStack.length !== 0 &&
+          course.teacher.length !== 0 &&
+          course.publicPoint !== "" &&
+          course.privatePoint !== ""
+        );
+      } else {
+        return null;
       }
     };
 
@@ -485,6 +541,7 @@ export default {
       priceTemp,
       thumbnailImage,
       handleChange,
+      validateForm,
     };
   },
 };
