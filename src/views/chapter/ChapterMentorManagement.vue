@@ -1,57 +1,58 @@
 <template>
     <div class="mt-3">
-        <div class="d-flex justify-content-between">
-            <div class="mt-4" style="height: 37.6px;">
-                <router-link :to="{ path: '/chapters', query: { idCourse: idCourse } }" class="text-decoration-none">
-                    <div class="d-flex align-items-center gap-2">
-                        <i class="fa-solid fa-arrow-left text-dark"></i>
-                        <p class="mb-0 text-dark">Danh sách chương</p>
-                    </div>
-                </router-link>
-            </div>
-            <div v-if="addMentorStateButton" class="mt-3 d-flex justify-content-center align-items-center">
-                <div>
-                    <Multiselect v-model="selectedMentor" :options="mentors" label="name" :multiple="false"
-                        placeholder="Chọn người hỗ trợ cho tất cả các chương"
-                        @change="(mentor) => selectedMentor = mentor.id" />
-
+    <div class="d-flex justify-content-between">
+        <div class="mt-4" style="height: 37.6px;">
+            <router-link :to="{ path: '/chapters', query: { idCourse: idCourse } }" class="text-decoration-none">
+                <div class="d-flex align-items-center gap-2">
+                    <i class="fa-solid fa-arrow-left text-dark"></i>
+                    <p class="mb-0 text-dark">Danh sách chương</p>
                 </div>
-                <div class="ms-2">
-                    <button class="btn btn-primary" @click="addMentorToAllChapters">Add</button>
-                </div>
-            </div>
+            </router-link>
         </div>
-        <div class="mt-4">
-            <div class="table-responsive">
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th><input type="checkbox" @change="selectAll" /></th>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tên chương</th>
-                            <th scope="col">Người hỗ trợ</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr v-for="(item, index) in currentItems" :key="index">
-                            <td><input type="checkbox" v-model="selectedItems" :value="item" /></td>
-                            <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
-                            <td>{{ item.name }}</td>
-                            <td>
-                                <Multiselect v-model="item.mentor" :options="availableMentorsForChapter(item) || []"
-                                    label="name" :multiple="true" :taggable="true"
-                                    @select="(mentor) => addMentorToChapter(mentor, item)"
-                                    @remove="(mentor) => removeMentor(mentor, item)" :close-on-select="false"
-                                    placeholder="Người hỗ trợ" />
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div v-if="addMentorStateButton" class="mt-3 d-flex justify-content-center align-items-center">
+            <div>
+                <Multiselect v-model="selectedMentor" :options="mentors" label="name" :multiple="false"
+                    placeholder="Chọn người hỗ trợ cho tất cả các chương"
+                    @change="(mentor) => selectedMentor = mentor.id" />
             </div>
-            <b-pagination v-model="currentPage" :total-rows="totalRows" :per-page="pageSize" aria-controls="my-table"
-                first-number last-number @change="pageChanged" />
+            <div class="ms-2">
+                <button class="btn btn-primary" @click="addMentorToAllChapters">Thêm mới</button>
+            </div>
         </div>
     </div>
+    <div class="mt-4">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th><input type="checkbox" @change="selectAll" /></th>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên chương</th>
+                    <th scope="col">Người hỗ trợ</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr v-for="(item, index) in currentItems" :key="index">
+                    <td><input type="checkbox" v-model="selectedItems" :value="item" /></td>
+                    <td>{{ (currentPage - 1) * pageSize + index + 1 }}</td>
+                    <td>{{ item.name }}</td>
+                    <td>
+                        <Multiselect v-model="item.mentor" :options="availableMentorsForChapter(item) || []"
+                            label="name" :multiple="true" :taggable="true"
+                            @select="(mentor) => addMentorToChapter(mentor, item)"
+                            @remove="(mentor) => removeMentor(mentor, item)" :close-on-select="false"
+                            placeholder="Người hỗ trợ">
+                            <template v-slot:option="{ option }">
+                                <span class="option__title">{{ option.name }}</span>
+                            </template>
+                        </Multiselect>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+        <b-pagination v-model="currentPage" :total-rows="totalRows" :per-page="pageSize" aria-controls="my-table"
+            first-number last-number @change="pageChanged" />
+    </div>
+</div>
 </template>
 
 <script setup>
@@ -213,76 +214,56 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.table-responsive {
-    overflow-x: auto;
-}
-
-table {
+.table {
     width: 100%;
-    border-collapse: collapse;
+    border-collapse: separate;
+    border-spacing: 0;
 }
 
-table th,
-table td {
-    border-top: 1px solid #000;
-    padding: 8px;
+.table th,
+.table td {
+    padding: 12px;
     text-align: left;
+    border-bottom: 1px solid #e0e0e0;
 }
 
-table th:first-child,
-table td:first-child {
-    width: 50px;
+.table th {
+    background-color: #f8f9fa;
+    font-weight: 600;
 }
 
-table th:nth-child(2),
-table td:nth-child(2) {
-    width: 80px;
+.table tr:hover {
+    background-color: #f5f5f5;
 }
 
-table th:nth-child(3),
-table td:nth-child(3) {
-    width: 200px;
+.multiselect__tags {
+    min-height: 40px;
+    padding: 5px 40px 0 8px;
 }
 
-table th:last-child,
-table td:last-child {
-    width: auto;
+.multiselect__select {
+    height: 38px;
 }
 
-table td {
-    border-left: none;
-    border-right: none;
+.multiselect__input, .multiselect__single {
+    font-size: 14px;
 }
 
-table th {
-    background-color: #f2f2f2;
+.multiselect__option {
+    padding: 10px;
+    min-height: 40px;
+    line-height: 20px;
+}
+
+.multiselect__option--highlight {
+    background: #41b883;
+    color: white;
 }
 
 @media (max-width: 768px) {
-
-    table th,
-    table td {
-        padding: 4px;
-    }
-
-    table th:first-child,
-    table td:first-child {
-        width: 40px;
-    }
-
-    table th:nth-child(2),
-    table td:nth-child(2) {
-        width: 60px;
-    }
-
-    table th:nth-child(3),
-    table td:nth-child(3) {
-        width: 150px;
-    }
-
-    table th:last-child,
-    table td:last-child {
-        width: auto;
+    .table th,
+    .table td {
+        padding: 8px;
     }
 }
 </style>

@@ -1,4 +1,5 @@
 <template>
+
   <div class="container-fluid p-5">
   <div class="card no-border">
   <div class="card-header mt-2">
@@ -31,6 +32,7 @@
                           <option>Người hỗ trợ</option>
                       </select> -->
                 </div>
+
               <div class="form-group">
                   <label for="email">Email</label>
                   <input type="email" id="email" v-model="email" class="form-control" placeholder="Nhập Email">
@@ -140,6 +142,7 @@ const submitForm = handleSubmit(async(values) => {
 const goBack = () => {
       router.go(-1);
     };
+
 
 const goToUserPage = () => {
   router.push("/user")

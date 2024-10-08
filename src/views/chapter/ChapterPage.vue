@@ -1,31 +1,4 @@
 <template>
-  <div class="d-flex mt-3 justify-content-between align-items-center">
-    <router-link to="/" class="text-decoration-none">
-      <div class="d-flex align-items-center gap-2">
-        <i class="fa-solid fa-arrow-left text-dark"></i>
-        <p class="mb-0 text-dark">Danh sách khoá học</p>
-      </div>
-    </router-link>
-    <div>
-      <router-link
-        :to="{ path: '/chapter-mentor-management', query: { idCourse: idCourse } }"
-        type="button"
-        class="btn btn-primary mr-3"
-        >Quản lý chương người hỗ trợ
-      </router-link>
-      <router-link
-        :to="{ path: '/add-chapter', query: { idCourse: idCourse } }"
-        type="button"
-        class="btn btn-primary mr-3"
-        >Thêm chương</router-link
-      >
-      <router-link
-        :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }"
-        class="btn btn-primary"
-        >Sắp xếp chương</router-link
-      >
-    </div>
-  </div>
   <hr class="border border-grey border-1 opacity-50" />
   <div class="container text-center">
     <div class="row">
@@ -89,6 +62,12 @@
   <div class="header-table px-4">
     <h5 class="m-0">Danh sách chương</h5>
     <div>
+      <router-link
+        :to="{ path: '/chapter-mentor-management', query: { idCourse: idCourse } }"
+        type="button"
+        class="btn btn-primary mr-3"
+        >Chương & Hỗ trợ
+      </router-link>
       <router-link :to="{ path: '/add-chapter', query: { idCourse: idCourse } }" type="button"
         class="btn btn-primary mr-3">Thêm chương</router-link>
       <router-link :to="{ path: '/sort-chapter', query: { idCourse: idCourse } }" class="btn btn-primary">Sắp xếp

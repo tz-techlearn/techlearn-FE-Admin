@@ -1,4 +1,5 @@
 <template>
+
     <div class="d-flex justify-content-between align-items-center my-4 container">
     <p class="course-list-title">Danh sách người dùng</p>
     <button class="btn btn-primary create-course-btn align-items-center" @click="createUser">
@@ -81,14 +82,8 @@ await getAllUser();
 
 </script>
 <style scoped>
-.icon-search{
-    background-color: #38bdf8; 
-    padding: 5px; color: white; 
-    font-size: 0.9rem; 
-    margin-top: 3px; 
-    width: 10%; 
-    text-align: center; 
-    border-radius: 4px;
+.course-list-title {
+  font-weight: bold;
 }
 
 .card-body {
@@ -115,7 +110,7 @@ h2 {
 }
 
 .user-list-files a {
-    background-color: #38bdf8;
+    background-color: #0B5ED7;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 4px;
@@ -126,7 +121,7 @@ h2 {
 }
 
 .user-list-files a:hover {
-    background-color: #0ea5e9;
+    background-color: #0B5ED7;
 }
 
 .table {
@@ -194,12 +189,7 @@ td:nth-child(7)  {
 
 
 .badge.bg-primary {
-    background-color: #38bdf8 !important;
     color: white;
-}
-
-.bg-primary{
-    background-color: #38bdf8 !important;
 }
 
 .bg-edit{
@@ -238,7 +228,7 @@ td:nth-child(7)  {
 }
 
 .btn-sm:hover {
-    background-color: #0ea5e9;
+    background-color: #0B5ED7;
 }
 
 .btn-sm i {
