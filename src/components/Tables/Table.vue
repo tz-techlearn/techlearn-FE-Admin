@@ -57,7 +57,7 @@
                 </template>
                 <template v-else-if="key === 'roles'">
                   <span v-if="item[key] && item[key].length > 0">
-                    {{ item[key][0]}}
+                    {{ item[key][0].name}}
                   </span>
                   <span v-else>N/A</span>
                 </template>

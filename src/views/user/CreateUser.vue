@@ -67,12 +67,13 @@ import Multiselect from 'vue-multiselect';
 import { toast } from "vue3-toastify";
 
 const rootAPI = process.env.VUE_APP_ROOT_API;
-const imagePreview = ref('https://i.pinimg.com/564x/b6/9d/ed/b69dedbefb0f4516cc537b67519db790.jpg');
+const imagePreview = ref('');
 const fileInput = ref(null);
 const listRole = reactive ({
   data: []
 })
-const role = ref([])
+const  avatarFile= ref();
+const role = ref([]);
 const triggerFileInput = () => {
 fileInput.value.click();
 };
@@ -92,7 +93,8 @@ const { value: fullName, errorMessage: nameError } = useField('fullName');
 const { value: email, errorMessage: emailError } = useField('email');
 const handleFileChange = (event) => {
 const file = event.target.files[0];
-if (file) {
+if (file ) {
+  avatarFile.value = file;
     const reader = new FileReader();
     reader.onload = (e) => {
     imagePreview.value = e.target.result;
@@ -119,8 +121,8 @@ const submitForm = handleSubmit(async(values) => {
   formData.append('email', email._value);
   formData.append('password', '123456');
   formData.append('roles', selectedRoles);
-  formData.append('avatar',  imagePreview.value);
-
+  formData.append('avatar',  avatarFile.value);
+  console.log(formData);
   try {
     const res = await axios.post(`${rootAPI}/users`,formData,{
       headers: {
