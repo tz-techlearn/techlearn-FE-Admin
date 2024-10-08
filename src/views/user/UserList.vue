@@ -1,97 +1,84 @@
 <template>
-    <div class="container-fluid p-5">
-        <div class="card-body">
-            <div class="table-responsive">
-                <div class="row justify-content-between">
-                    <div class="col-sm-5 col-md-5">
-                    <div id="user_list_datatable_info" class="dataTables_filter">
-                        <form class="mr-3 position-relative">
-                            <div class="form-group mb-0">
-                                <input type="search" class="form-control" id="exampleInputSearch" placeholder="Search"
-                                aria-controls="user-list-table">
-                            </div>
-                        </form>
-                    </div>
-                    </div>
-                    <div class="col-sm-5 col-md-5">
-                    <div class="d-flex">
-                        <div class="icon-search">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-search search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                        </div>
-                    </div>
-                    </div>
-                    <div class="col-sm-2 col-md-2">
-                    <div class="user-list-files d-flex">
-                        <a class="bg-primary" href="/create-user">
-                            Thêm mới
-                        </a>
-                    </div>
-                    </div>
-                </div>
-                <table id="user-list-table" class="table table-striped dataTable mt-4" role="grid"
-                    aria-describedby="user-list-page-info">
-                    <thead>
-                    <tr class="ligth">
-                        <th>Profile</th>
-                        <th>Name</th>
-                        <th>Email</th>
-                        <th style="min-width: 100px">Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="text-center"><img class="rounded img-fluid avatar-40"
-                                src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
-                        <td>Anna Sthesia</td>
-                        <td>annasthesia@gmail.com</td>
-                        <td>
-                            <div class="flex align-items-center list-user-action">
-                                <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Edit" href="#"><i class="fas fa-edit" style="color: white"></i>
-                            </a>
-                                <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Delete" href="#"> <i class="fas fa-trash " style="color: white"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img class="rounded img-fluid avatar-40"
-                                src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
-                        <td>Brock Lee</td>
-                        <td>brocklee@gmail.com</td>
-                        <td>
-                            <div class="flex align-items-center list-user-action">
-                                <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Edit" href="#"><i class="fas fa-edit" style="color: white"></i></a>
-                                <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Delete" href="#"> <i class="fas fa-trash" style="color: white"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img class="rounded img-fluid avatar-40"
-                                src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
-                        <td>Dan Druff</td>
-                        <td>dandruff@gmail.com</td>
-                        <td>
-                            <div class="flex align-items-center list-user-action">
-                                <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Edit" href="#"><i class="fas fa-edit" style="color: white"></i></a>
-                                <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Delete" href="#"> <i class="fas fa-trash" style="color: white"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        </div>
-
-    </div>
+    <div class="d-flex justify-content-between align-items-center my-4 container">
+    <p class="course-list-title">Danh sách người dùng</p>
+    <button class="btn btn-primary create-course-btn align-items-center" @click="createUser">
+      Thêm mới
+    </button>
+  </div>
+  <Table :header="header" :data="listUser.data" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @deleteItem="deleteUser" @pageChange="handlePageChange" :isUserPage=true></Table>
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
+    <p>Bạn có chắc chắn xóa khóa học không?</p>
+  </b-modal>
 </template>
 <script setup>
+
+import axios from 'axios';
+import { onMounted, reactive,ref } from 'vue';
+import { toast } from "vue3-toastify";
+import Table from "@/components/Tables/Table.vue";
+import router from '@/router';
+
+const rootAPI = process.env.VUE_APP_ROOT_API;
+const header = ["STT","Ảnh", "Họ và tên", "Email", "vai trò", "Hành động"];
+const keys = ["avatar", "fullName", "email", "roles"];
+const actions = {
+  edit: (item) => `/users-update/${item.id}`,
+  delete: (item) => `/users/${item.id}`,
+};
+const isModalVisible = ref(false);
+const itemToDelete = ref();
+const currentPage = ref(1);
+const perPage = ref(9);
+const totalRows = ref(0);
+
+const listUser = reactive({
+    data:[]
+})
+
+const deleteUser = (user) => {
+  isModalVisible.value = true;
+  itemToDelete.value = user;
+};
+
+const getAllUser = async () => {
+    try{
+        const res = await axios.get(`${rootAPI}/users`);
+        listUser.data = res.data.data.items;
+        console.log(res.data.data.items);
+        perPage.value = res.data.data.pageSize;
+        totalRows.value = res.data.data.totalPage > 0 ? res.data.data.totalPage : 1;
+    }catch(err) {
+        toast.error("Lấy danh sách người dùng thất bại");
+    }
+}
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  getAllUser();
+};
+
+const createUser = () => {
+    router.push("/create-user");
+}
+
+const handleDelete = async () => {
+  try {
+    await axios.delete(`${rootAPI}/users/${itemToDelete.value.id}`);
+    await getAllUser();
+    isModalVisible.value = false;
+    toast.success("Xóa khóa học thành công");
+  } catch (error) {
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
+  }
+}
+
+onMounted(async() => {
+await getAllUser();
+})
+
 </script>
 <style scoped>
 .icon-search{
