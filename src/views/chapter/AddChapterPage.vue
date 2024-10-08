@@ -84,7 +84,7 @@ const errors = reactive({
 });
 
 const mentors = reactive({
-  data: []
+  data: [""]
 })
 const options = reactive({
   data: []

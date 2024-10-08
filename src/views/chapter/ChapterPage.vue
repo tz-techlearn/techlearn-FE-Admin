@@ -48,6 +48,21 @@
           </span>
           <span v-else>N/A</span>
         </p>
+        <p>
+          <span class="fw-bold">Giảng viên: </span>
+          <span
+            v-if="
+              dataCourse.course &&
+              dataCourse.course.teacher &&
+              dataCourse.course.teacher.length > 0
+            "
+          >
+            {{
+              dataCourse.course.teacher.map((teacher) => teacher.name).join(", ")
+            }}
+          </span>
+          <span v-else>N/A</span>
+        </p>
       </div>
     </div>
   </div>

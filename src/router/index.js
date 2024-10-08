@@ -9,7 +9,8 @@ import LessonsPage from "@/views/lesson/LessonsPage.vue";
 import ChapterPage from "@/views/chapter/ChapterPage.vue";
 import AddLessonPage from '@/views/lesson/AddLessonPage.vue';
 import SortLessonPage from '@/views/lesson/SortLessonPage.vue'
-
+import UserList from '@/views/user/UserList.vue';
+import CreateUser from '@/views/user/CreateUser.vue';
 const routes = [
   {
     path: "/",
@@ -77,6 +78,16 @@ const routes = [
     name: "SortLessonPage",
     component: SortLessonPage,
   },
+  {
+    path: "/user",
+    name: "UserList",
+    component: UserList,
+  },
+  {
+    path: "/create-user",
+    name: "CreateUser",
+    component: CreateUser
+  }
 ]
 
 const router = createRouter({

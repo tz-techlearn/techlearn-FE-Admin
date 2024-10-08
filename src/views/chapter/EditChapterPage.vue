@@ -141,9 +141,10 @@ const updateChapter = async () => {
             chapterOrder: chapterOrder.value,
             isPublic: isPublic.value,
             courseId: idCourse,
-            mentor: mentors.data,
-            id: chapterId
+            // mentorId:mentors.data,
+            id:chapterId
         };
+        // updatedChapter.mentorId = mentors.data.map(i =>i.id);
 
         await axios.put(`${rootAPI}/chapters/${chapterId}`, updatedChapter);
         toast.success("Cập nhật chương thành công", {
