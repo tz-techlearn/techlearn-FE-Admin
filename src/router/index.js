@@ -15,7 +15,7 @@ import UserList from '@/views/user/UserList.vue';
 import CreateUser from '@/views/user/CreateUser.vue';
 import Points from '@/components/points/Points.vue';
 import PointDetail from '@/components/points/PointDetailModal.vue';
-
+import EditUser from '@/views/user/EditUser.vue';
 const routes = [
   {
     path: "/",
@@ -97,6 +97,11 @@ const routes = [
     path: "/create-user",
     name: "CreateUser",
     component: CreateUser
+  },
+  {
+    path: "/users-update/:id",
+    name: "EditUser",
+    component: EditUser
   },
   {
     path: '/points',

@@ -1,55 +1,85 @@
 <template>
-    <div class="container-fluid p-5">
-        <div class="card-body">
-            <div class="table-responsive">
-                <div class="row justify-content-between">
-                    <div class="col-sm-5 col-md-5">
-                        <p class="course-list-title h4">Danh sách gói hỗ trợ</p>
-                    </div>
-                    <div class="col-sm-2 col-md-2">
-                    <div class="user-list-files d-flex">
-                        <router-link class="bg-primary" to="/create-user">
-                            Thêm mới
-                        </router-link>
-                    </div>
-                    </div>
-                </div>
-                <table id="user-list-table" class="table table-striped dataTable mt-4" role="grid"
-                    aria-describedby="user-list-page-info">
-                    <thead>
-                    <tr class="ligth">
-                        <th>Ảnh</th>
-                        <th>Họ và Tên</th>
-                        <th>Email</th>
-                        <th>Vai trò</th>
-                        <th style="min-width: 100px">Hành động</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr>
-                        <td class="text-center"><img class="rounded img-fluid avatar-40"
-                                src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
-                        <td>Anna Sthesia</td>
-                        <td>annasthesia@gmail.com</td>
-                        <td>Giảng viên</td>
-                        <td>
-                            <div class="flex align-items-center list-user-action">
-                                <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Edit" href="#"><i class="fas fa-edit" style="color: white"></i>
-                            </a>
-                                <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Delete" href="#"> <i class="fas fa-trash " style="color: white"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        </div>
-        </div>
 
-    </div>
+    <div class="d-flex justify-content-between align-items-center my-4 container">
+    <p class="course-list-title">Danh sách người dùng</p>
+    <button class="btn btn-primary create-course-btn align-items-center" @click="createUser">
+      Thêm mới
+    </button>
+  </div>
+  <Table :header="header" :data="listUser.data" :keys="keys" :actions="actions" :totalRows="totalRows" :perPage="perPage"
+    @deleteItem="deleteUser" @pageChange="handlePageChange" :isUserPage=true></Table>
+  <b-modal v-model="isModalVisible" title="Xác nhận xóa" ok-title="Xóa" cancel-title="Đóng" ok-variant="danger"
+    @ok="handleDelete">
+    <p>Bạn có chắc chắn xóa khóa học không?</p>
+  </b-modal>
 </template>
 <script setup>
+
+import axios from 'axios';
+import { onMounted, reactive,ref } from 'vue';
+import { toast } from "vue3-toastify";
+import Table from "@/components/Tables/Table.vue";
+import router from '@/router';
+
+const rootAPI = process.env.VUE_APP_ROOT_API;
+const header = ["STT","Ảnh", "Họ và tên", "Email", "vai trò", "Hành động"];
+const keys = ["avatar", "fullName", "email", "roles"];
+const actions = {
+  edit: (item) => `/users-update/${item.id}`,
+  delete: (item) => `/users/${item.id}`,
+};
+const isModalVisible = ref(false);
+const itemToDelete = ref();
+const currentPage = ref(1);
+const perPage = ref(9);
+const totalRows = ref(0);
+
+const listUser = reactive({
+    data:[]
+})
+
+const deleteUser = (user) => {
+  isModalVisible.value = true;
+  itemToDelete.value = user;
+};
+
+const getAllUser = async () => {
+    try{
+        const res = await axios.get(`${rootAPI}/users`);
+        listUser.data = res.data.data.items;
+        console.log(res.data.data.items);
+        perPage.value = res.data.data.pageSize;
+        totalRows.value = res.data.data.totalPage > 0 ? res.data.data.totalPage : 1;
+    }catch(err) {
+        toast.error("Lấy danh sách người dùng thất bại");
+    }
+}
+
+const handlePageChange = (page) => {
+  currentPage.value = page;
+  getAllUser();
+};
+
+const createUser = () => {
+    router.push("/create-user");
+}
+
+const handleDelete = async () => {
+  try {
+    await axios.delete(`${rootAPI}/users/${itemToDelete.value.id}`);
+    await getAllUser();
+    isModalVisible.value = false;
+    toast.success("Xóa khóa học thành công");
+  } catch (error) {
+    console.log(error);
+    toast.error("Có lỗi xảy ra");
+  }
+}
+
+onMounted(async() => {
+await getAllUser();
+})
+
 </script>
 <style scoped>
 .course-list-title {
