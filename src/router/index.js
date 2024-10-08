@@ -97,7 +97,8 @@ const routes = [
     path: "/create-user",
     name: "CreateUser",
     component: CreateUser
-  }
+  },
+  {
     path: '/points',
     name: 'Points',
     component: Points,
