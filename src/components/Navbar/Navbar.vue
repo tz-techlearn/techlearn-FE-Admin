@@ -6,15 +6,6 @@
         <span>Techlearn</span>
       </router-link>
       <ul class="nav flex-column">
-        <li class="nav-item" v-on:click="changeActive(0)">
-          <router-link
-            to="/dashboard"
-            :class="active == 0 ? 'nav-link active' : 'nav-link'"
-            exact
-          >
-            <i class="bi bi-house-door-fill"></i> Dashboard
-          </router-link>
-        </li>
         <li class="nav-item" v-on:click="changeActive(1)">
           <router-link
             to="/"
@@ -24,11 +15,20 @@
             <i class="bi bi-house-door-fill"></i> Khoá học
           </router-link>
         </li>
-        <li class="nav-item">
-          <router-link to="/user" class="nav-link" active-class="active" exact>
-            <i class="bi bi-house-door-fill"></i> Quản lý người dùng
+        <li class="nav-item" v-on:click="changeActive(2)">
+          <router-link
+            to="/points"
+            :class="active == 2 ? 'nav-link active' : 'nav-link'"
+            exact
+          >
+            <i class="bi bi-house-door-fill"></i> Gói hỗ trợ
           </router-link>
         </li>
+        <li class="nav-item"  v-on:click="changeActive(3)">
+          <router-link to="/user" :class="active == 3 ? 'nav-link active' : 'nav-link'" exact>
+            <i class="bi bi-house-door-fill"></i> Quản lý tài khoản
+            </router-link>
+          </li>
       </ul>
     </div>
   </div>
