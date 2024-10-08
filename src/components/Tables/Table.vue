@@ -2,7 +2,6 @@
   <div class="container-fluid">
     <div class="container-fluid my-3 px-3">
       
-     
       <table class="table table-hover table-striped w-100">
         <thead class="thead-lb">
           <tr>
@@ -10,13 +9,10 @@
               :class="{ 
                 'd-none' : widthScreen<1000 && header ==='Giá tiền' ||  widthScreen<1000 && header ==='Đơn vị',
                 'text-center': header === 'STT', 'table-price': header === 'Giá tiền'
-                        
                }"
-              
               >
               {{ header }}
             </th>
-            
           </tr>
           <!-- <tr v-if="widthScreen>700" ></tr> -->
         </thead>
@@ -52,14 +48,26 @@
                     {{ item[key] || 'N/A' }}
                   </router-link>
                 </template>
-                <template v-else>
+                <template v-else-if="key !== 'avatar' && key !== 'roles'">
                   {{ item[key] || "N/A" }}
+                </template>
+                <template  v-if="key === 'avatar'">
+                  <img v-if="item[key]" :src="item[key]" alt="Avatar" class="rounded img-fluid avatar-40" />
+                  <span v-else>N/A</span>
+                </template>
+                <template v-else-if="key === 'roles'">
+                  <span v-if="item[key] && item[key].length > 0">
+                    {{ item[key][0]}}
+                  </span>
+                  <span v-else>N/A</span>
                 </template>
               </td>
               <td class="action-button">
-                <router-link v-if="viewDetail" :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
-                  <i class="fas fa-eye"></i>
-                </router-link>
+                <span v-if="!props.isUserPage">
+                  <router-link v-if="viewDetail" :to="props.actions.view(item)" class="btn btn-primary btn-sm btn-action">
+                    <i class="fas fa-eye"></i>
+                  </router-link>
+                </span>
                 <router-link :to="props.actions.edit(item)" class="btn btn-warning btn-sm btn-action">
                   <i class="fas fa-edit"></i>
                 </router-link>
@@ -118,6 +126,10 @@ const props = defineProps({
   viewDetail: {
     type: Boolean,
     default: true,
+  },
+  isUserPage: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -198,5 +210,11 @@ td {
 .course-name-link {
   color: #020202;
   text-decoration: none;
+}
+
+.avatar-40 {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
 }
 </style>
