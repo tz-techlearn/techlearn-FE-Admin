@@ -24,6 +24,15 @@
             <i class="bi bi-house-door-fill"></i> Khoá học
           </router-link>
         </li>
+        <li class="nav-item" v-on:click="changeActive(2)">
+          <router-link
+            to="/points"
+            :class="active == 2 ? 'nav-link active' : 'nav-link'"
+            exact
+          >
+            <i class="bi bi-house-door-fill"></i> Gói hỗ trợ
+          </router-link>
+        </li>
       </ul>
     </div>
   </div>

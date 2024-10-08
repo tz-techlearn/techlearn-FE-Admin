@@ -9,6 +9,8 @@ import LessonsPage from "@/views/lesson/LessonsPage.vue";
 import ChapterPage from "@/views/chapter/ChapterPage.vue";
 import AddLessonPage from '@/views/lesson/AddLessonPage.vue';
 import SortLessonPage from '@/views/lesson/SortLessonPage.vue'
+import Points from '@/components/points/Points.vue';
+import PointDetail from '@/components/points/PointDetailModal.vue';
 
 const routes = [
   {
@@ -76,6 +78,18 @@ const routes = [
     path: "/sort-lessons",
     name: "SortLessonPage",
     component: SortLessonPage,
+  },
+  {
+    path: '/points',
+    name: 'Points',
+    component: Points,
+    props: true
+  },
+  {
+    path: "/points/:id",
+    name: "PointDetail",
+    component: PointDetail,
+    props: true
   },
 ]
 
