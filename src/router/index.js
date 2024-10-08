@@ -9,8 +9,13 @@ import LessonsPage from "@/views/lesson/LessonsPage.vue";
 import ChapterPage from "@/views/chapter/ChapterPage.vue";
 import AddLessonPage from '@/views/lesson/AddLessonPage.vue';
 import SortLessonPage from '@/views/lesson/SortLessonPage.vue'
+import ChapterMentorManagement from '@/views/chapter/ChapterMentorManagement.vue';
+
 import UserList from '@/views/user/UserList.vue';
 import CreateUser from '@/views/user/CreateUser.vue';
+import Points from '@/components/points/Points.vue';
+import PointDetail from '@/components/points/PointDetailModal.vue';
+
 const routes = [
   {
     path: "/",
@@ -79,6 +84,11 @@ const routes = [
     component: SortLessonPage,
   },
   {
+    path: "/chapter-mentor-management",
+    name: "ChapterMentorManagement",
+    component: ChapterMentorManagement
+  },
+  {
     path: "/user",
     name: "UserList",
     component: UserList,
@@ -87,7 +97,19 @@ const routes = [
     path: "/create-user",
     name: "CreateUser",
     component: CreateUser
-  }
+  },
+  {
+    path: '/points',
+    name: 'Points',
+    component: Points,
+    props: true
+  },
+  {
+    path: "/points/:id",
+    name: "PointDetail",
+    component: PointDetail,
+    props: true
+  },
 ]
 
 const router = createRouter({

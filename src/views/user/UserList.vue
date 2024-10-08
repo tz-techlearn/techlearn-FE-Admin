@@ -4,29 +4,13 @@
             <div class="table-responsive">
                 <div class="row justify-content-between">
                     <div class="col-sm-5 col-md-5">
-                    <div id="user_list_datatable_info" class="dataTables_filter">
-                        <form class="mr-3 position-relative">
-                            <div class="form-group mb-0">
-                                <input type="search" class="form-control" id="exampleInputSearch" placeholder="Search"
-                                aria-controls="user-list-table">
-                            </div>
-                        </form>
-                    </div>
-                    </div>
-                    <div class="col-sm-5 col-md-5">
-                    <div class="d-flex">
-                        <div class="icon-search">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="23" height="23" fill="currentColor" class="bi bi-search search" viewBox="0 0 16 16">
-                            <path d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001q.044.06.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1 1 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0"/>
-                        </svg>
-                        </div>
-                    </div>
+                        <p class="course-list-title h4">Danh sách gói hỗ trợ</p>
                     </div>
                     <div class="col-sm-2 col-md-2">
                     <div class="user-list-files d-flex">
-                        <a class="bg-primary" href="/create-user">
+                        <router-link class="bg-primary" to="/create-user">
                             Thêm mới
-                        </a>
+                        </router-link>
                     </div>
                     </div>
                 </div>
@@ -34,10 +18,11 @@
                     aria-describedby="user-list-page-info">
                     <thead>
                     <tr class="ligth">
-                        <th>Profile</th>
-                        <th>Name</th>
+                        <th>Ảnh</th>
+                        <th>Họ và Tên</th>
                         <th>Email</th>
-                        <th style="min-width: 100px">Action</th>
+                        <th>Vai trò</th>
+                        <th style="min-width: 100px">Hành động</th>
                     </tr>
                     </thead>
                     <tbody>
@@ -46,6 +31,7 @@
                                 src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
                         <td>Anna Sthesia</td>
                         <td>annasthesia@gmail.com</td>
+                        <td>Giảng viên</td>
                         <td>
                             <div class="flex align-items-center list-user-action">
                                 <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
@@ -53,34 +39,6 @@
                             </a>
                                 <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
                                 data-original-title="Delete" href="#"> <i class="fas fa-trash " style="color: white"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img class="rounded img-fluid avatar-40"
-                                src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
-                        <td>Brock Lee</td>
-                        <td>brocklee@gmail.com</td>
-                        <td>
-                            <div class="flex align-items-center list-user-action">
-                                <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Edit" href="#"><i class="fas fa-edit" style="color: white"></i></a>
-                                <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Delete" href="#"> <i class="fas fa-trash" style="color: white"></i></a>
-                            </div>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td class="text-center"><img class="rounded img-fluid avatar-40"
-                                src="https://i.pinimg.com/564x/38/b5/0b/38b50b2961c574dca380b9e4cb847e26.jpg" alt="profile"></td>
-                        <td>Dan Druff</td>
-                        <td>dandruff@gmail.com</td>
-                        <td>
-                            <div class="flex align-items-center list-user-action">
-                                <a class="btn btn-sm bg-edit" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Edit" href="#"><i class="fas fa-edit" style="color: white"></i></a>
-                                <a class="btn btn-sm bg-delete" data-toggle="tooltip" data-placement="top" title=""
-                                data-original-title="Delete" href="#"> <i class="fas fa-trash" style="color: white"></i></a>
                             </div>
                         </td>
                     </tr>
@@ -94,14 +52,8 @@
 <script setup>
 </script>
 <style scoped>
-.icon-search{
-    background-color: #38bdf8; 
-    padding: 5px; color: white; 
-    font-size: 0.9rem; 
-    margin-top: 3px; 
-    width: 10%; 
-    text-align: center; 
-    border-radius: 4px;
+.course-list-title {
+  font-weight: bold;
 }
 
 .card-body {
@@ -128,7 +80,7 @@ h2 {
 }
 
 .user-list-files a {
-    background-color: #38bdf8;
+    background-color: #0B5ED7;
     color: white;
     padding: 0.5rem 1rem;
     border-radius: 4px;
@@ -139,7 +91,7 @@ h2 {
 }
 
 .user-list-files a:hover {
-    background-color: #0ea5e9;
+    background-color: #0B5ED7;
 }
 
 .table {
@@ -207,12 +159,7 @@ td:nth-child(7)  {
 
 
 .badge.bg-primary {
-    background-color: #38bdf8 !important;
     color: white;
-}
-
-.bg-primary{
-    background-color: #38bdf8 !important;
 }
 
 .bg-edit{
@@ -251,7 +198,7 @@ td:nth-child(7)  {
 }
 
 .btn-sm:hover {
-    background-color: #0ea5e9;
+    background-color: #0B5ED7;
 }
 
 .btn-sm i {

@@ -1,13 +1,5 @@
 <template>
     <div class="container-fluid p-5">
-    <div class="mb-4 d-flex justify-content-between align-items-center">
-    <router-link to="/user" class="text-decoration-none">
-        <div class="d-flex align-items-center gap-2">
-        <i class="fa-solid fa-arrow-left text-dark"></i>
-        <p class="mb-0 text-dark">Quản lý người dùng</p>
-        </div>
-    </router-link>
-    </div>
     <div class="card no-border">
     <div class="card-header mt-2">
         <h4 class="card-title">Thêm thông tin người dùng</h4>
@@ -39,7 +31,7 @@
             </div>
                     <div class="d-flex justify-content-center"> 
                         <button type="submit" class="btn btn-primary me-2">Thêm mới</button> 
-                        <button type="reset" class="btn btn-outline-danger">Hủy</button>
+                        <button @click="handleNavigatePage" class="btn btn-danger">Hủy</button>
                     </div>
                 </form>
             </div>
@@ -49,12 +41,13 @@
 
 <script setup>
 import { ref } from 'vue';
-
+import { useRouter } from "vue-router";
 const fullName = ref('');
 const email = ref('');
 const password = ref('');
 const imagePreview = ref('https://i.pinimg.com/564x/b6/9d/ed/b69dedbefb0f4516cc537b67519db790.jpg');
 const fileInput = ref(null);
+const router = useRouter();
 
     const triggerFileInput = () => {
     fileInput.value.click();
@@ -74,6 +67,10 @@ const fileInput = ref(null);
     const submitForm = () => {
     console.log( { fullName: fullName.value, email: email.value, password: password.value });
     };
+
+    const handleNavigatePage = () => {
+    router.push({ path: '/user' });
+    }
 </script>
 
 <style scoped>

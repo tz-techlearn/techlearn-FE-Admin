@@ -120,7 +120,7 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-.course-list-title {
+/* .course-list-title {
   margin-left: 20px !important;
   font-weight: 600;
   font-size: 25px;
@@ -132,5 +132,5 @@ onMounted(async () => {
   display: flex;
   align-items: center;
   justify-content: center;
-}
+} */
 </style>
